@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace fastretro_api.Controllers
+namespace Fastretro.API.Controllers
 {
     [ApiController]
     [Route("[controller]")]
