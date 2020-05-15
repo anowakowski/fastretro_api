@@ -1,10 +1,12 @@
 using Fastretro.Infrastructure.ApplicationStartup;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using System;
 
 namespace Fastretro.API
@@ -23,7 +25,27 @@ namespace Fastretro.API
         {
             services.AddControllers();
             services.AddCors();
-            services.AddAndConfigureAuthentication(Configuration);
+            services
+                .AddAuthentication(x =>
+                {
+                    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
+                .AddJwtBearer(options =>
+                {
+                    options.RequireHttpsMetadata = false;
+                    options.SaveToken = true;
+
+                    options.Authority = "https://securetoken.google.com/fastretro-64ade";
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidIssuer = "https://securetoken.google.com/fastretro-64ade",
+                        ValidateAudience = true,
+                        ValidAudience = "fastretro-64ade",
+                        ValidateLifetime = true
+                    };
+                });
             services.AddOptions();
         }
 

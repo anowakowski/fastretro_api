@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Fastretro.Infrastructure.ApplicationStartup
 {
@@ -18,15 +19,15 @@ namespace Fastretro.Infrastructure.ApplicationStartup
                 options.RequireHttpsMetadata = false;
                 options.SaveToken = true;
 
-                var issuerKeyProvider = new FirebaseIssuerKeyProvider(configuration.GetSection("Authentication:PublicKeysRequestUri").Value);
-                var signingKeys = issuerKeyProvider.GetSigningKeys().Result;
-
-                options.Authority = configuration.GetSection("Authentication:Authority").Value;
-                options.TokenValidationParameters =
-                    new FirebaseTokenValidationParameters(
-                        configuration.GetSection("Authentication:FirebaseProjectId").Value,
-                        signingKeys,
-                        configuration.GetSection("Authentication:ValidIssuer").Value);
+                options.Authority = "https://securetoken.google.com/fastretro-64ade";
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidIssuer = "https://securetoken.google.com/fastretro-64ade",
+                    ValidateAudience = true,
+                    ValidAudience = "fastretro-64ade",
+                    ValidateLifetime = true
+                };
             });
         }
     }
