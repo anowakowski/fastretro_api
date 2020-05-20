@@ -1,4 +1,6 @@
 using Fastretro.API.Data;
+using Fastretro.API.Data.Repositories;
+using Fastretro.API.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -27,6 +29,8 @@ namespace Fastretro.API
             services.AddControllers();
             services.AddCors();
             services.AddDbContext<DataContext>(db => db.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly(typeof(Startup).Namespace)));
+            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+            services.AddScoped<ICurrentUsersInRetroBoardServices, CurrentUsersInRetroBoardServices>();
             services
                 .AddAuthentication(x =>
                 {

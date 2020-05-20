@@ -9,7 +9,7 @@ namespace Fastretro.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CurrentUserInRetroBoardController : ControllerBase
+    public class CurrentUsersInRetroBoardController : ControllerBase
     {
         // GET: api/CurrentUserInRetroBoard
         [HttpGet]
