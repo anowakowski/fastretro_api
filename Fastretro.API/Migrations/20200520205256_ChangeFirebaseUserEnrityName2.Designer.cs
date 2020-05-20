@@ -4,14 +4,16 @@ using Fastretro.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Fastretro.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20200520205256_ChangeFirebaseUserEnrityName2")]
+    partial class ChangeFirebaseUserEnrityName2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -43,9 +45,6 @@ namespace Fastretro.API.Migrations
 
                     b.Property<int?>("CurrentUserInRetroBoardId")
                         .HasColumnType("int");
-
-                    b.Property<string>("DateOfExistingCheck")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FirebaseUserDocId")
                         .HasColumnType("nvarchar(max)");

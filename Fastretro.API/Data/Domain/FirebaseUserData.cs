@@ -5,9 +5,10 @@ using System.Threading.Tasks;
 
 namespace Fastretro.API.Data.Domain
 {
-    public class FirebaseUser : Entity
+    public class FirebaseUserData : Entity
     {
         public string FirebaseUserDocId { get; set; }
         public CurrentUserInRetroBoard CurrentUserInRetroBoard { get; set; }
+        public string DateOfExistingCheck { get; set; }
     }
 }

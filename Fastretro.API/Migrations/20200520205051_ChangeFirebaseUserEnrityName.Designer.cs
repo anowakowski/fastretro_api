@@ -4,14 +4,16 @@ using Fastretro.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Fastretro.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20200520205051_ChangeFirebaseUserEnrityName")]
+    partial class ChangeFirebaseUserEnrityName
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -44,9 +46,6 @@ namespace Fastretro.API.Migrations
                     b.Property<int?>("CurrentUserInRetroBoardId")
                         .HasColumnType("int");
 
-                    b.Property<string>("DateOfExistingCheck")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("FirebaseUserDocId")
                         .HasColumnType("nvarchar(max)");
 
@@ -54,13 +53,13 @@ namespace Fastretro.API.Migrations
 
                     b.HasIndex("CurrentUserInRetroBoardId");
 
-                    b.ToTable("FirebaseUsersData");
+                    b.ToTable("FirebaseUsers");
                 });
 
             modelBuilder.Entity("Fastretro.API.Data.Domain.FirebaseUserData", b =>
                 {
                     b.HasOne("Fastretro.API.Data.Domain.CurrentUserInRetroBoard", "CurrentUserInRetroBoard")
-                        .WithMany("firebaseUsersData")
+                        .WithMany("firebaseUsers")
                         .HasForeignKey("CurrentUserInRetroBoardId");
                 });
 #pragma warning restore 612, 618
