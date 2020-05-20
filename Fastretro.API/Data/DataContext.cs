@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Fastretro.API.Data.Domain;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,5 +10,9 @@ namespace Fastretro.API.Data
     public class DataContext : DbContext
     {
         public DataContext(DbContextOptions<DataContext> options) : base(options) { }
+
+        public DbSet<CurrentUserInRetroBoard> CurrentUserInRetroBoards { get; set; }
+
+        public DbSet<FirebaseUser> FirebaseUsers { get; set; }
     }
 }
