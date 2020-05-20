@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Fastretro.API.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,6 +12,13 @@ namespace Fastretro.API.Controllers
     [ApiController]
     public class CurrentUsersInRetroBoardController : ControllerBase
     {
+        private readonly ICurrentUsersInRetroBoardServices currentUsersInRetroBoardServices;
+
+        public CurrentUsersInRetroBoardController(ICurrentUsersInRetroBoardServices currentUsersInRetroBoardServices)
+        {
+            this.currentUsersInRetroBoardServices = currentUsersInRetroBoardServices;
+        }
+
         // GET: api/CurrentUserInRetroBoard
         [HttpGet]
         public IEnumerable<string> Get()
@@ -22,7 +30,7 @@ namespace Fastretro.API.Controllers
         [HttpGet("{id}", Name = "Get")]
         public string Get(int id)
         {
-
+            this.currentUsersInRetroBoardServices.GetCurrentUsersInRetroBoard("test", id.ToString());
             return "value";
         }
 
