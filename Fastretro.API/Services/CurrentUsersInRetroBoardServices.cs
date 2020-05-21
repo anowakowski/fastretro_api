@@ -1,4 +1,5 @@
-﻿using Fastretro.API.Data.Domain;
+﻿using Fastretro.API.Data;
+using Fastretro.API.Data.Domain;
 using Fastretro.API.Data.Repositories;
 using System;
 using System.Collections.Generic;
@@ -11,11 +12,16 @@ namespace Fastretro.API.Services
     {
         private readonly IRepository<FirebaseUserData> firebaseUserDataRepository;
         private readonly IRepository<CurrentUserInRetroBoard> currentUserInRetroBoardRepository;
+        private readonly IUnitOfWork unitOfWork;
 
-        public CurrentUsersInRetroBoardServices(IRepository<FirebaseUserData> firebaseUserDataRepository, IRepository<CurrentUserInRetroBoard> currentUserInRetroBoardRepository)
+        public CurrentUsersInRetroBoardServices(
+            IRepository<FirebaseUserData> firebaseUserDataRepository,
+            IRepository<CurrentUserInRetroBoard> currentUserInRetroBoardRepository,
+            IUnitOfWork unitOfWork)
         {
             this.firebaseUserDataRepository = firebaseUserDataRepository;
             this.currentUserInRetroBoardRepository = currentUserInRetroBoardRepository;
+            this.unitOfWork = unitOfWork;
         }
         public async Task<IEnumerable<FirebaseUserData>> GetCurrentUsersInRetroBoard(string retroBoardId, string firebaseUserDocId)
         {
@@ -41,6 +47,8 @@ namespace Fastretro.API.Services
             };
 
             await this.currentUserInRetroBoardRepository.AddAsync(newCurrentUserInRetroBoard);
+
+            await this.unitOfWork.CompleteAsync();
         }
     }
 }
