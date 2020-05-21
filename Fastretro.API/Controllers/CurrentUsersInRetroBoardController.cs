@@ -34,6 +34,21 @@ namespace Fastretro.API.Controllers
             return "value";
         }
 
+        [HttpPost]
+        public async Task<IActionResult> SetUpCurrentUser(string docUserId, string retroBoardId)
+        {
+            try
+            {
+                await Task.Run(() => this.currentUsersInRetroBoardServices.SetUpCurrentUserInRetroBoard(docUserId, retroBoardId));
+
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return BadRequest("Can't unfollow that user");
+            }
+        }
+
         // POST: api/CurrentUserInRetroBoard
         [HttpPost]
         public void Post([FromBody] string value)
