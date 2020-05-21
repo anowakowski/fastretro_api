@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Fastretro.API.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Fastretro.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Authorize]
+    //[Route("api/forCurrentUsersInRetroBoard/{retroBoardId}/RetroBoards")]
+    [Route("api/[controller]/{retroBoardId}/retroBoards")]
     [ApiController]
     public class CurrentUsersInRetroBoardController : ControllerBase
     {
@@ -19,27 +22,25 @@ namespace Fastretro.API.Controllers
             this.currentUsersInRetroBoardServices = currentUsersInRetroBoardServices;
         }
 
-        // GET: api/CurrentUserInRetroBoard
-        [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
-
-        // GET: api/CurrentUserInRetroBoard/5
-        [HttpGet("{id}", Name = "Get")]
-        public string Get(int id)
-        {
-            this.currentUsersInRetroBoardServices.GetCurrentUsersInRetroBoard("test", id.ToString());
-            return "value";
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> SetUpCurrentUser(string docUserId, string retroBoardId)
+        [HttpGet("{id}/users")]
+        public async Task<IActionResult> Get(int retroBoardId, int id)
         {
             try
             {
-                await Task.Run(() => this.currentUsersInRetroBoardServices.SetUpCurrentUserInRetroBoard(docUserId, retroBoardId));
+                return Ok(await this.currentUsersInRetroBoardServices.GetCurrentUsersInRetroBoard("", ""));
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpPost("{id}/setCurrentUser")]
+        public async Task<IActionResult> SetUpCurrentUser(string retroBoardId, string id)
+        {
+            try
+            {
+                await Task.Run(() => this.currentUsersInRetroBoardServices.SetUpCurrentUserInRetroBoard(id, retroBoardId));
 
                 return Ok();
             }

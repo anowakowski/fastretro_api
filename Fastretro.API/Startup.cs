@@ -28,9 +28,11 @@ namespace Fastretro.API
         {
             services.AddControllers();
             services.AddCors();
+            services.AddScoped<DbContext, DataContext>();
             services.AddDbContext<DataContext>(db => db.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly(typeof(Startup).Namespace)));
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddScoped<ICurrentUsersInRetroBoardServices, CurrentUsersInRetroBoardServices>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
             services
                 .AddAuthentication(x =>
                 {
