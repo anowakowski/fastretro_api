@@ -25,5 +25,6 @@ namespace Fastretro.API.Data.Repositories
         Task<IEnumerable<TEntity>> GetAllAsync();
 
         Task<TEntity> SingleOrDefaultAsync(Expression<Func<TEntity, bool>> predicate);
+        Task<TEntity> FirstOrDefaultWithIncludedEntityAsync(Expression<Func<TEntity, bool>> predicate, Expression<Func<TEntity, object>> includeEntity);
     }
 }

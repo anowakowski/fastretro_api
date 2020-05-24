@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Fastretro.API.Models;
 using Fastretro.API.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -11,7 +12,7 @@ namespace Fastretro.API.Controllers
 {
     [Authorize]
     //[Route("api/forCurrentUsersInRetroBoard/{retroBoardId}/RetroBoards")]
-    [Route("api/[controller]/{retroBoardId}/retroBoards")]
+    [Route("api/[controller]")]
     [ApiController]
     public class CurrentUsersInRetroBoardController : ControllerBase
     {
@@ -35,12 +36,12 @@ namespace Fastretro.API.Controllers
             }
         }
 
-        [HttpPost("{id}/setCurrentUser")]
-        public async Task<IActionResult> SetUpCurrentUserProcess(string retroBoardId, string id)
+        [HttpPost("setCurrentUser")]
+        public async Task<IActionResult> SetUpCurrentUserProcess([FromBody] CurrentUserDataModel currentUserDataModel)
         {
             try
             {
-                await Task.Run(() => this.currentUsersInRetroBoardServices.SetUpCurrentUserInRetroBoard(id, retroBoardId));
+                await Task.Run(() => this.currentUsersInRetroBoardServices.SetUpCurrentUserInRetroBoard(currentUserDataModel.UserId, currentUserDataModel.RetroBoardId));
 
                 return Ok();
             }

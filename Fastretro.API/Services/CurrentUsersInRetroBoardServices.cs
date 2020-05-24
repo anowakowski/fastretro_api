@@ -30,20 +30,35 @@ namespace Fastretro.API.Services
 
         public async Task SetUpCurrentUserInRetroBoard(string docUserId, string retroBoardId)
         {
-            await updateIfCurrentUserDataExist(docUserId, retroBoardId);
-            await addNewIfNotExistInCurrentRetroBoard(docUserId, retroBoardId);
+            if (await this.firebaseUserDataRepository.AnyAsync(x => x.FirebaseUserDocId == docUserId && x.CurrentUserInRetroBoard.RetroBoardId == retroBoardId))
+            {
+                await UpdateUserIfCurrentUserDataExist(docUserId, retroBoardId);
+            } 
+            else
+            {
+                await AddNewUserIfNotExistInCurrentRetroBoard(docUserId, retroBoardId);
+            }
         }
 
-        private async Task addNewIfNotExistInCurrentRetroBoard(string docUserId, string retroBoardId)
+        private async Task AddNewUserIfNotExistInCurrentRetroBoard(string docUserId, string retroBoardId)
         {
-            if (await this.firebaseUserDataRepository.AnyAsync(x => x.FirebaseUserDocId != docUserId && x.CurrentUserInRetroBoard.RetroBoardId == retroBoardId))
+            var firebaseUserData = new FirebaseUserData
             {
-                var firebaseUserData = new FirebaseUserData
-                {
-                    FirebaseUserDocId = docUserId,
-                    DateOfExistingCheck = DateTime.Now.ToString()
-                };
+                FirebaseUserDocId = docUserId,
+                DateOfExistingCheck = DateTime.Now.ToString()
+            };
 
+            if (await this.currentUserInRetroBoardRepository.AnyAsync(x => x.RetroBoardId == retroBoardId))
+            {
+                var findedCurrentUserInRetroBoard = await this.currentUserInRetroBoardRepository.FirstOrDefaultWithIncludedEntityAsync(x => x.RetroBoardId == retroBoardId, x => x.firebaseUsersData);
+                findedCurrentUserInRetroBoard.firebaseUsersData.Add(firebaseUserData);
+
+                this.currentUserInRetroBoardRepository.Update(findedCurrentUserInRetroBoard);
+
+                await this.unitOfWork.CompleteAsync();
+            } 
+            else
+            {
                 var firebaseUsersData = new List<FirebaseUserData> { firebaseUserData };
 
                 await this.firebaseUserDataRepository.AddAsync(firebaseUserData);
@@ -60,16 +75,13 @@ namespace Fastretro.API.Services
             }
         }
 
-        private async Task updateIfCurrentUserDataExist(string docUserId, string retroBoardId)
+        private async Task UpdateUserIfCurrentUserDataExist(string docUserId, string retroBoardId)
         {
-            if (await this.firebaseUserDataRepository.AnyAsync(x => x.FirebaseUserDocId == docUserId && x.CurrentUserInRetroBoard.RetroBoardId == retroBoardId))
-            {
-                var fbUserData = await this.firebaseUserDataRepository.FirstOrDefaultAsync(x => x.FirebaseUserDocId == docUserId && x.CurrentUserInRetroBoard.RetroBoardId == retroBoardId));
-                fbUserData.DateOfExistingCheck = DateTime.Now.ToString();
-                this.firebaseUserDataRepository.Update(fbUserData);
+            var fbUserData = await this.firebaseUserDataRepository.FirstOrDefaultAsync(x => x.FirebaseUserDocId == docUserId && x.CurrentUserInRetroBoard.RetroBoardId == retroBoardId);
+            fbUserData.DateOfExistingCheck = DateTime.Now.ToString();
+            this.firebaseUserDataRepository.Update(fbUserData);
 
-                await this.unitOfWork.CompleteAsync();
-            }
+            await this.unitOfWork.CompleteAsync();
         }
     }
 }
