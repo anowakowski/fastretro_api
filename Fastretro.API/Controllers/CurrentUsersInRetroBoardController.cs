@@ -36,7 +36,7 @@ namespace Fastretro.API.Controllers
         }
 
         [HttpPost("{id}/setCurrentUser")]
-        public async Task<IActionResult> SetUpCurrentUser(string retroBoardId, string id)
+        public async Task<IActionResult> SetUpCurrentUserProcess(string retroBoardId, string id)
         {
             try
             {
