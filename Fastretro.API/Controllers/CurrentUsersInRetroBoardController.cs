@@ -23,12 +23,12 @@ namespace Fastretro.API.Controllers
             this.currentUsersInRetroBoardServices = currentUsersInRetroBoardServices;
         }
 
-        [HttpGet("{id}/users")]
-        public async Task<IActionResult> Get(int retroBoardId, int id)
+        [HttpGet("getCurrentUserInRetroBoard/{retroBoardId}")]
+        public async Task<IActionResult> Get(string retroBoardId)
         {
             try
             {
-                return Ok(await this.currentUsersInRetroBoardServices.GetCurrentUsersInRetroBoard("", ""));
+                return Ok(await this.currentUsersInRetroBoardServices.GetCurrentUsersInRetroBoard(retroBoardId));
             }
             catch (Exception)
             {

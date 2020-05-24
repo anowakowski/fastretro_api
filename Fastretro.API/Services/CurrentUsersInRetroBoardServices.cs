@@ -23,9 +23,9 @@ namespace Fastretro.API.Services
             this.currentUserInRetroBoardRepository = currentUserInRetroBoardRepository;
             this.unitOfWork = unitOfWork;
         }
-        public async Task<IEnumerable<FirebaseUserData>> GetCurrentUsersInRetroBoard(string retroBoardId, string firebaseUserDocId)
+        public async Task<IEnumerable<FirebaseUserData>> GetCurrentUsersInRetroBoard(string retroBoardId)
         {
-           return await this.firebaseUserDataRepository.FindAsync(x => x.FirebaseUserDocId == firebaseUserDocId);
+           return await this.firebaseUserDataRepository.FindAsync(x => x.CurrentUserInRetroBoard.RetroBoardId == retroBoardId);
         }
 
         public async Task SetUpCurrentUserInRetroBoard(string docUserId, string retroBoardId)
