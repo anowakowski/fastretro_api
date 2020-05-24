@@ -1,6 +1,8 @@
 using Fastretro.API.Data;
 using Fastretro.API.Data.Repositories;
 using Fastretro.API.Services;
+using FirebaseAdmin;
+using Google.Apis.Auth.OAuth2;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -55,6 +57,11 @@ namespace Fastretro.API
                     };
                 });
             services.AddOptions();
+
+            FirebaseApp.Create(new AppOptions()
+            {
+                Credential = GoogleCredential.FromFile("./Credentials/fastretro-64ade-firebase-adminsdk-jmaxe-4b745ba94c.json"),
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
