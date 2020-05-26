@@ -1,5 +1,4 @@
-﻿using Fastretro.API.Data;
-using Fastretro.API.Data.Domain;
+﻿using Fastretro.API.Data;using Fastretro.API.Data.Domain;
 using Fastretro.API.Data.Repositories;
 using Fastretro.API.Models;
 using System;
@@ -25,10 +24,17 @@ namespace Fastretro.API.Services
             this.unitOfWork = unitOfWork;
         }
 
-        public async Task SetUpFreshListOfCurrentUsers(GetFreshCurrentUserDataModel model)
+        public async Task<IEnumerable<FirebaseUserData>> SetUpFreshListOfCurrentUsers(GetFreshCurrentUserDataModel model)
         {
             await updateCurrentUserTick(model);
 
+            await removeExpiredUsers(model);
+
+            return await this.firebaseUserDataRepository.FindAsync(x => x.CurrentUserInRetroBoard.RetroBoardId == model.RetroBoardId);
+        }
+
+        private async Task removeExpiredUsers(GetFreshCurrentUserDataModel model)
+        {
             var findedCurrentUserInRetroBoard =
                 await this.currentUserInRetroBoardRepository.FirstOrDefaultWithIncludedEntityAsync(x => x.RetroBoardId == model.RetroBoardId, x => x.firebaseUsersData);
 
