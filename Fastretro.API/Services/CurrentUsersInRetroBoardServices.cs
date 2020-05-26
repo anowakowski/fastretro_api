@@ -1,6 +1,7 @@
 ﻿using Fastretro.API.Data;
 using Fastretro.API.Data.Domain;
 using Fastretro.API.Data.Repositories;
+using Fastretro.API.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,29 +29,31 @@ namespace Fastretro.API.Services
            return await this.firebaseUserDataRepository.FindAsync(x => x.CurrentUserInRetroBoard.RetroBoardId == retroBoardId);
         }
 
-        public async Task SetUpCurrentUserInRetroBoard(string docUserId, string retroBoardId)
+        public async Task SetUpCurrentUserInRetroBoard(CurrentUserDataModel currentUserDataModel)
         {
-            if (await this.firebaseUserDataRepository.AnyAsync(x => x.FirebaseUserDocId == docUserId && x.CurrentUserInRetroBoard.RetroBoardId == retroBoardId))
+            if (await this.firebaseUserDataRepository.AnyAsync(x => x.FirebaseUserDocId == currentUserDataModel.UserId && x.CurrentUserInRetroBoard.RetroBoardId == currentUserDataModel.RetroBoardId))
             {
-                await UpdateUserIfCurrentUserDataExist(docUserId, retroBoardId);
+                await UpdateUserIfCurrentUserDataExist(currentUserDataModel);
             } 
             else
             {
-                await AddNewUserIfNotExistInCurrentRetroBoard(docUserId, retroBoardId);
+                await AddNewUserIfNotExistInCurrentRetroBoard(currentUserDataModel);
             }
         }
 
-        private async Task AddNewUserIfNotExistInCurrentRetroBoard(string docUserId, string retroBoardId)
+        private async Task AddNewUserIfNotExistInCurrentRetroBoard(CurrentUserDataModel currentUserDataModel)
         {
             var firebaseUserData = new FirebaseUserData
             {
-                FirebaseUserDocId = docUserId,
+                FirebaseUserDocId = currentUserDataModel.UserId,
+                ChosenAvatarUrl = currentUserDataModel.ChosenAvatarUrl,
                 DateOfExistingCheck = DateTime.Now.ToString()
             };
 
-            if (await this.currentUserInRetroBoardRepository.AnyAsync(x => x.RetroBoardId == retroBoardId))
+            if (await this.currentUserInRetroBoardRepository.AnyAsync(x => x.RetroBoardId == currentUserDataModel.RetroBoardId))
             {
-                var findedCurrentUserInRetroBoard = await this.currentUserInRetroBoardRepository.FirstOrDefaultWithIncludedEntityAsync(x => x.RetroBoardId == retroBoardId, x => x.firebaseUsersData);
+                var findedCurrentUserInRetroBoard =
+                    await this.currentUserInRetroBoardRepository.FirstOrDefaultWithIncludedEntityAsync(x => x.RetroBoardId == currentUserDataModel.RetroBoardId, x => x.firebaseUsersData);
                 findedCurrentUserInRetroBoard.firebaseUsersData.Add(firebaseUserData);
 
                 this.currentUserInRetroBoardRepository.Update(findedCurrentUserInRetroBoard);
@@ -66,7 +69,7 @@ namespace Fastretro.API.Services
                 var newCurrentUserInRetroBoard = new CurrentUserInRetroBoard
                 {
                     firebaseUsersData = firebaseUsersData,
-                    RetroBoardId = retroBoardId
+                    RetroBoardId = currentUserDataModel.RetroBoardId
                 };
 
                 await this.currentUserInRetroBoardRepository.AddAsync(newCurrentUserInRetroBoard);
@@ -75,9 +78,10 @@ namespace Fastretro.API.Services
             }
         }
 
-        private async Task UpdateUserIfCurrentUserDataExist(string docUserId, string retroBoardId)
+        private async Task UpdateUserIfCurrentUserDataExist(CurrentUserDataModel currentUserDataModel)
         {
-            var fbUserData = await this.firebaseUserDataRepository.FirstOrDefaultAsync(x => x.FirebaseUserDocId == docUserId && x.CurrentUserInRetroBoard.RetroBoardId == retroBoardId);
+            var fbUserData =
+                await this.firebaseUserDataRepository.FirstOrDefaultAsync(x => x.FirebaseUserDocId == currentUserDataModel.UserId && x.CurrentUserInRetroBoard.RetroBoardId == currentUserDataModel.RetroBoardId);
             fbUserData.DateOfExistingCheck = DateTime.Now.ToString();
             this.firebaseUserDataRepository.Update(fbUserData);
 

@@ -41,7 +41,7 @@ namespace Fastretro.API.Controllers
         {
             try
             {
-                await Task.Run(() => this.currentUsersInRetroBoardServices.SetUpCurrentUserInRetroBoard(currentUserDataModel.UserId, currentUserDataModel.RetroBoardId));
+                await Task.Run(() => this.currentUsersInRetroBoardServices.SetUpCurrentUserInRetroBoard(currentUserDataModel));
 
                 return Ok();
             }
