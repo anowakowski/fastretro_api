@@ -11,5 +11,6 @@ namespace Fastretro.API.Data.Domain
         public CurrentUserInRetroBoard CurrentUserInRetroBoard { get; set; }
         public string DateOfExistingCheck { get; set; }
         public string ChosenAvatarUrl { get; set; }
+        public string DisplayName { get; set; }
     }
 }
