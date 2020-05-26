@@ -17,10 +17,12 @@ namespace Fastretro.API.Controllers
     public class CurrentUsersInRetroBoardController : ControllerBase
     {
         private readonly ICurrentUsersInRetroBoardServices currentUsersInRetroBoardServices;
+        private readonly IFreshCurrentUserInRetroBoardServices freshCurrentUserInRetroBoardServices;
 
-        public CurrentUsersInRetroBoardController(ICurrentUsersInRetroBoardServices currentUsersInRetroBoardServices)
+        public CurrentUsersInRetroBoardController(ICurrentUsersInRetroBoardServices currentUsersInRetroBoardServices, IFreshCurrentUserInRetroBoardServices freshCurrentUserInRetroBoardServices)
         {
             this.currentUsersInRetroBoardServices = currentUsersInRetroBoardServices;
+            this.freshCurrentUserInRetroBoardServices = freshCurrentUserInRetroBoardServices;
         }
 
         [HttpGet("getCurrentUserInRetroBoard/{retroBoardId}")]
@@ -42,6 +44,21 @@ namespace Fastretro.API.Controllers
             try
             {
                 await Task.Run(() => this.currentUsersInRetroBoardServices.SetUpCurrentUserInRetroBoard(currentUserDataModel));
+
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return BadRequest("Can't unfollow that user");
+            }
+        }
+
+        [HttpPost("prepareFreshListOfCurrentUsers")]
+        public async Task<IActionResult> PrepareFreshListOfCurrentUsers([FromBody] GetFreshCurrentUserDataModel model)
+        {
+            try
+            {
+                await Task.Run(() => this.freshCurrentUserInRetroBoardServices.SetUpFreshListOfCurrentUsers(model));
 
                 return Ok();
             }

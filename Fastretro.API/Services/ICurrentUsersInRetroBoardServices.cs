@@ -9,5 +9,6 @@ namespace Fastretro.API.Services
     {
         Task<IEnumerable<FirebaseUserData>> GetCurrentUsersInRetroBoard(string retroBoardId);
         Task SetUpCurrentUserInRetroBoard(CurrentUserDataModel currentUserDataModel);
+
     }
 }
