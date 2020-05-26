@@ -67,5 +67,20 @@ namespace Fastretro.API.Controllers
                 return BadRequest("Can't unfollow that user");
             }
         }
+
+        [HttpPost("prepareFreshListOfCurrentUsers")]
+        public async Task<IActionResult> AddCurentUserVote([FromBody] CurrentUserVoteModel model)
+        {
+            try
+            {
+                await Task.Run(() => this.freshCurrentUserInRetroBoardServices.SetUpFreshListOfCurrentUsers(model));
+
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return BadRequest("Can't unfollow that user");
+            }
+        }
     }
 }
