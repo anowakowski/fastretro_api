@@ -18,11 +18,16 @@ namespace Fastretro.API.Controllers
     {
         private readonly ICurrentUsersInRetroBoardServices currentUsersInRetroBoardServices;
         private readonly IFreshCurrentUserInRetroBoardServices freshCurrentUserInRetroBoardServices;
+        private readonly ICurrentUserVoteServices currentUserVoteServices;
 
-        public CurrentUsersInRetroBoardController(ICurrentUsersInRetroBoardServices currentUsersInRetroBoardServices, IFreshCurrentUserInRetroBoardServices freshCurrentUserInRetroBoardServices)
+        public CurrentUsersInRetroBoardController(
+            ICurrentUsersInRetroBoardServices currentUsersInRetroBoardServices,
+            IFreshCurrentUserInRetroBoardServices freshCurrentUserInRetroBoardServices,
+            ICurrentUserVoteServices currentUserVoteServices)
         {
             this.currentUsersInRetroBoardServices = currentUsersInRetroBoardServices;
             this.freshCurrentUserInRetroBoardServices = freshCurrentUserInRetroBoardServices;
+            this.currentUserVoteServices = currentUserVoteServices;
         }
 
         [HttpGet("getCurrentUserInRetroBoard/{retroBoardId}")]
@@ -68,14 +73,27 @@ namespace Fastretro.API.Controllers
             }
         }
 
-        [HttpPost("prepareFreshListOfCurrentUsers")]
+        [HttpPost("addUserVote")]
         public async Task<IActionResult> AddCurentUserVote([FromBody] CurrentUserVoteModel model)
         {
             try
             {
-                await Task.Run(() => this.freshCurrentUserInRetroBoardServices.SetUpFreshListOfCurrentUsers(model));
+                await Task.Run(() => this.currentUserVoteServices.AddUserVote(model));
 
                 return Ok();
+            }
+            catch (Exception)
+            {
+                return BadRequest("Can't unfollow that user");
+            }
+        }
+
+        [HttpGet("GetUsersVote")]
+        public async Task<IActionResult> GetUsersVotes([FromBody] CurrentUserVoteModel model)
+        {
+            try
+            {
+                return Ok(await this.currentUserVoteServices.GetCurrentUserVoteInRetroBoard(model));
             }
             catch (Exception)
             {
