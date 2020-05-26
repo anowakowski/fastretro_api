@@ -1,6 +1,6 @@
 using System;
 
-namespace fastretro_api
+namespace Fastretro.API
 {
     public class WeatherForecast
     {
