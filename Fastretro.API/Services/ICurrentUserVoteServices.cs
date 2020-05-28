@@ -8,6 +8,8 @@ namespace Fastretro.API.Services
     public interface ICurrentUserVoteServices
     {
         Task AddUserVote(CurrentUserVoteModel model);
-        Task<IEnumerable<CurrentUserVote>> GetCurrentUserVoteInRetroBoard(CurrentUserVoteModel model)
+        Task<IEnumerable<CurrentUserVote>> GetCurrentUserVoteInRetroBoard(string retroBoardId);
+        Task<int> GetUserVoteCount(string retroBoardId, string userId);
+        Task RemoveUserVote(CurrentUserVoteModel model);
     }
 }

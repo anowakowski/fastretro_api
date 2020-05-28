@@ -33,15 +33,31 @@ namespace Fastretro.API.Services
             await this.unitOfWork.CompleteAsync();
         }
 
-        public async Task<IEnumerable<CurrentUserVote>> GetCurrentUserVoteInRetroBoard(CurrentUserVoteModel model)
+        public async Task<IEnumerable<CurrentUserVote>> GetCurrentUserVoteInRetroBoard(string retroBoardId)
         {
             var findedCurrentUserVotes =
                 await this.currentUserVoteRepository.FindAsync(
-                    x => x.RetroBoardId == model.RetroBoardId
-                    && x.RetroBoardCardId == model.RetroBoardCardId
-                    && x.UserId == model.UserId);
+                    x => x.RetroBoardId == retroBoardId);
 
             return findedCurrentUserVotes;
+        }
+
+        public async Task<int> GetUserVoteCount(string retroBoardId, string userId)
+        {
+            var findedUserVoteCount =
+                await this.currentUserVoteRepository.FindAsync(x => x.RetroBoardId == retroBoardId && x.UserId == userId);
+
+            return findedUserVoteCount.ToList().Count();
+        }
+
+        public async Task RemoveUserVote(CurrentUserVoteModel model)
+        {
+            var findedCurrentUserVoteToRemove =
+               await this.currentUserVoteRepository.FirstOrDefaultAsync(x => x.RetroBoardId == model.RetroBoardId && x.RetroBoardCardId == model.RetroBoardCardId && x.UserId == model.UserId);
+
+            this.currentUserVoteRepository.Delete(findedCurrentUserVoteToRemove);
+
+            await unitOfWork.CompleteAsync();
         }
     }
 }

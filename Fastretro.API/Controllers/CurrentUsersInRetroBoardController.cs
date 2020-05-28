@@ -73,7 +73,7 @@ namespace Fastretro.API.Controllers
             }
         }
 
-        [HttpPost("addUserVote")]
+        [HttpPost("setUserVote")]
         public async Task<IActionResult> AddCurentUserVote([FromBody] CurrentUserVoteModel model)
         {
             try
@@ -88,17 +88,46 @@ namespace Fastretro.API.Controllers
             }
         }
 
-        [HttpGet("GetUsersVote")]
-        public async Task<IActionResult> GetUsersVotes([FromBody] CurrentUserVoteModel model)
+        [HttpPost("removeUserVote")]
+        public async Task<IActionResult> RemoveCurrentUserVote([FromBody] CurrentUserVoteModel model)
         {
             try
             {
-                return Ok(await this.currentUserVoteServices.GetCurrentUserVoteInRetroBoard(model));
+                await Task.Run(() => this.currentUserVoteServices.RemoveUserVote(model));
+
+                return Ok();
             }
             catch (Exception)
             {
                 return BadRequest("Can't unfollow that user");
             }
         }
+
+        [HttpGet("getUsersVote/{retroBoardId}")]
+        public async Task<IActionResult> GetUsersVotes(string retroBoardId)
+        {
+            try
+            {
+                return Ok(await this.currentUserVoteServices.GetCurrentUserVoteInRetroBoard(retroBoardId));
+            }
+            catch (Exception)
+            {
+                return BadRequest("Can't unfollow that user");
+            }
+        }
+
+        [HttpGet("getUserVoteCount/{retroBoardId}/{userId}")]
+        public async Task<IActionResult> CheckUserVotes(string retroBoardId, string userId)
+        {
+            try
+            {
+                return Ok(await this.currentUserVoteServices.GetUserVoteCount(retroBoardId, userId));
+            }
+            catch (Exception)
+            {
+                return BadRequest("Can't unfollow that user");
+            }
+        }
+
     }
 }
