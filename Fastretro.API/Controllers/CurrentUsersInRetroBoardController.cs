@@ -18,11 +18,16 @@ namespace Fastretro.API.Controllers
     {
         private readonly ICurrentUsersInRetroBoardServices currentUsersInRetroBoardServices;
         private readonly IFreshCurrentUserInRetroBoardServices freshCurrentUserInRetroBoardServices;
+        private readonly ICurrentUserVoteServices currentUserVoteServices;
 
-        public CurrentUsersInRetroBoardController(ICurrentUsersInRetroBoardServices currentUsersInRetroBoardServices, IFreshCurrentUserInRetroBoardServices freshCurrentUserInRetroBoardServices)
+        public CurrentUsersInRetroBoardController(
+            ICurrentUsersInRetroBoardServices currentUsersInRetroBoardServices,
+            IFreshCurrentUserInRetroBoardServices freshCurrentUserInRetroBoardServices,
+            ICurrentUserVoteServices currentUserVoteServices)
         {
             this.currentUsersInRetroBoardServices = currentUsersInRetroBoardServices;
             this.freshCurrentUserInRetroBoardServices = freshCurrentUserInRetroBoardServices;
+            this.currentUserVoteServices = currentUserVoteServices;
         }
 
         [HttpGet("getCurrentUserInRetroBoard/{retroBoardId}")]
@@ -67,5 +72,62 @@ namespace Fastretro.API.Controllers
                 return BadRequest("Can't unfollow that user");
             }
         }
+
+        [HttpPost("setUserVote")]
+        public async Task<IActionResult> AddCurentUserVote([FromBody] CurrentUserVoteModel model)
+        {
+            try
+            {
+                await Task.Run(() => this.currentUserVoteServices.AddUserVote(model));
+
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return BadRequest("Can't unfollow that user");
+            }
+        }
+
+        [HttpPost("removeUserVote")]
+        public async Task<IActionResult> RemoveCurrentUserVote([FromBody] CurrentUserVoteModel model)
+        {
+            try
+            {
+                await Task.Run(() => this.currentUserVoteServices.RemoveUserVote(model));
+
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return BadRequest("Can't unfollow that user");
+            }
+        }
+
+        [HttpGet("getUsersVote/{retroBoardId}")]
+        public async Task<IActionResult> GetUsersVotes(string retroBoardId)
+        {
+            try
+            {
+                return Ok(await this.currentUserVoteServices.GetCurrentUserVoteInRetroBoard(retroBoardId));
+            }
+            catch (Exception)
+            {
+                return BadRequest("Can't unfollow that user");
+            }
+        }
+
+        [HttpGet("getUserVoteCount/{retroBoardId}/{userId}")]
+        public async Task<IActionResult> CheckUserVotes(string retroBoardId, string userId)
+        {
+            try
+            {
+                return Ok(await this.currentUserVoteServices.GetUserVoteCount(retroBoardId, userId));
+            }
+            catch (Exception)
+            {
+                return BadRequest("Can't unfollow that user");
+            }
+        }
+
     }
 }
