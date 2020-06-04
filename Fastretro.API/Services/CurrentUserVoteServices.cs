@@ -59,5 +59,21 @@ namespace Fastretro.API.Services
 
             await unitOfWork.CompleteAsync();
         }
+
+        public async Task RemoveUserVoteForMerge(CurrentUserVoteModelForMerge model)
+        {
+            var voutCountToRemove = 1;
+            while (model.VoutCountToRemove >= voutCountToRemove)
+            {
+                var findedCurrentUserVoteToRemove =
+                   await this.currentUserVoteRepository.FirstOrDefaultAsync(x => x.RetroBoardId == model.RetroBoardId && x.RetroBoardCardId == model.RetroBoardCardId && x.UserId == model.UserId);
+
+                this.currentUserVoteRepository.Delete(findedCurrentUserVoteToRemove);
+
+                await unitOfWork.CompleteAsync();
+                
+                voutCountToRemove++;
+            }
+        }
     }
 }

@@ -67,9 +67,9 @@ namespace Fastretro.API.Controllers
 
                 return Ok();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return BadRequest("Can't unfollow that user");
+                return BadRequest("Can't remove user");
             }
         }
 
@@ -94,6 +94,21 @@ namespace Fastretro.API.Controllers
             try
             {
                 await Task.Run(() => this.currentUserVoteServices.RemoveUserVote(model));
+
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return BadRequest("Can't unfollow that user");
+            }
+        }
+
+        [HttpPost("removeUserVoteWhenMergedCard")]
+        public async Task<IActionResult> RemoveCurrentUserVoteForMerge([FromBody] CurrentUserVoteModelForMerge model)
+        {
+            try
+            {
+                await Task.Run(() => this.currentUserVoteServices.RemoveUserVoteForMerge(model));
 
                 return Ok();
             }
