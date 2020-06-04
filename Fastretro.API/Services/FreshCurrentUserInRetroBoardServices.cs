@@ -38,21 +38,24 @@ namespace Fastretro.API.Services
             var findedCurrentUserInRetroBoard =
                 await this.currentUserInRetroBoardRepository.FirstOrDefaultWithIncludedEntityAsync(x => x.RetroBoardId == model.RetroBoardId, x => x.firebaseUsersData);
 
-            var findedFirebaseUsersData = findedCurrentUserInRetroBoard.firebaseUsersData.ToList();
-
-            foreach (var userData in findedFirebaseUsersData)
+            if (findedCurrentUserInRetroBoard != null)
             {
-                var currentDate = DateTime.Now;
-                var userDateToCheck = DateTime.Parse(userData.DateOfExistingCheck);
+                var findedFirebaseUsersData = findedCurrentUserInRetroBoard.firebaseUsersData.ToList();
 
-                TimeSpan dateDiffSpan = (currentDate - userDateToCheck);
-                var diffInSec = dateDiffSpan.TotalSeconds;
-
-                if (diffInSec >= 15)
+                foreach (var userData in findedFirebaseUsersData)
                 {
-                    //remove
-                    this.firebaseUserDataRepository.Delete(userData);
-                    await this.unitOfWork.CompleteAsync();
+                    var currentDate = DateTime.Now;
+                    var userDateToCheck = DateTime.Parse(userData.DateOfExistingCheck);
+
+                    TimeSpan dateDiffSpan = (currentDate - userDateToCheck);
+                    var diffInSec = dateDiffSpan.TotalSeconds;
+
+                    if (diffInSec >= 15)
+                    {
+                        //remove
+                        this.firebaseUserDataRepository.Delete(userData);
+                        await this.unitOfWork.CompleteAsync();
+                    }
                 }
             }
         }
