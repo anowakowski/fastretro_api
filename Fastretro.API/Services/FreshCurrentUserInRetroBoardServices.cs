@@ -38,7 +38,7 @@ namespace Fastretro.API.Services
             var findedCurrentUserInRetroBoard =
                 await this.currentUserInRetroBoardRepository.FirstOrDefaultWithIncludedEntityAsync(x => x.RetroBoardId == model.RetroBoardId, x => x.firebaseUsersData);
 
-            var findedFirebaseUsersData = findedCurrentUserInRetroBoard.firebaseUsersData;
+            var findedFirebaseUsersData = findedCurrentUserInRetroBoard.firebaseUsersData.ToList();
 
             foreach (var userData in findedFirebaseUsersData)
             {

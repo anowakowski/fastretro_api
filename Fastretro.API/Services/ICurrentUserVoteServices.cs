@@ -11,5 +11,7 @@ namespace Fastretro.API.Services
         Task<IEnumerable<CurrentUserVote>> GetCurrentUserVoteInRetroBoard(string retroBoardId);
         Task<int> GetUserVoteCount(string retroBoardId, string userId);
         Task RemoveUserVote(CurrentUserVoteModel model);
+
+        Task RemoveUserVoteForMerge(CurrentUserVoteModelForMerge model);
     }
 }
