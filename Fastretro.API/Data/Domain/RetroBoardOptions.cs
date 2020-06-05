@@ -7,6 +7,6 @@ namespace Fastretro.API.Data.Domain
 {
     public class RetroBoardOptions : Entity
     {
-        public string RetroBoardFirebaseId { get; set; }
+        public string RetroBoardFirebaseDocId { get; set; }
     }
 }

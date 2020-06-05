@@ -7,5 +7,6 @@ namespace Fastretro.API.Models
 {
     public class RetroBoardOptionsModel
     {
+        public string RetroBoardFirebaseDocId { get; set; }
     }
 }

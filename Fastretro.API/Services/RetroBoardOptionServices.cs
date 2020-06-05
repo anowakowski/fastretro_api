@@ -1,4 +1,5 @@
-﻿using Fastretro.API.Data.Domain;
+﻿using Fastretro.API.Data;
+using Fastretro.API.Data.Domain;
 using Fastretro.API.Data.Repositories;
 using Fastretro.API.Models;
 using System;
@@ -11,15 +12,30 @@ namespace Fastretro.API.Services
     public class RetroBoardOptionServices : IRetroBoardOptionServices
     {
         private readonly IRepository<RetroBoardOptions> retroBoardOptionsRepository;
+        private readonly IUnitOfWork unitOfWork;
 
-        public RetroBoardOptionServices(IRepository<RetroBoardOptions> retroBoardOptionsRepository)
+        public RetroBoardOptionServices(IRepository<RetroBoardOptions> retroBoardOptionsRepository, IUnitOfWork unitOfWork)
         {
             this.retroBoardOptionsRepository = retroBoardOptionsRepository;
+            this.unitOfWork = unitOfWork;
         }
 
-        public Task SetRetroBoardOptions(RetroBoardOptionsModel model)
+        public async Task SetRetroBoardOptions(RetroBoardOptionsModel model)
         {
-            throw new NotImplementedException();
+            var isExistngRetroBoardOptionsForRetroBoardId =
+                await this.retroBoardOptionsRepository.AnyAsync(rb => rb.RetroBoardFirebaseDocId == model.RetroBoardFirebaseDocId);
+
+            if (!isExistngRetroBoardOptionsForRetroBoardId)
+            {
+                RetroBoardOptions retroBoardOptionsToSave = new RetroBoardOptions
+                {
+                    RetroBoardFirebaseDocId = model.RetroBoardFirebaseDocId
+                };
+
+                await this.retroBoardOptionsRepository.AddAsync(retroBoardOptionsToSave);
+
+                await unitOfWork.CompleteAsync();
+            }
         }
     }
 }
