@@ -8,5 +8,7 @@ namespace Fastretro.API.Models
     public class RetroBoardOptionsModel
     {
         public string RetroBoardFirebaseDocId { get; set; }
+        public bool ShouldBlurRetroBoardCardText { get; set; }
+        public int maxVouteCount { get; set; }
     }
 }

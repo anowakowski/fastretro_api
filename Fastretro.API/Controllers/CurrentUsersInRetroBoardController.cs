@@ -148,12 +148,12 @@ namespace Fastretro.API.Controllers
         }
 
 
-        [HttpPost("setCurrentUser")]
-        public async Task<IActionResult> SetRetroBoardOptions([FromBody] RetroBoardOptionsModel currentUserDataModel)
+        [HttpPost("setNewRetroBoardOptions")]
+        public async Task<IActionResult> SetRetroBoardOptions([FromBody] RetroBoardOptionsModel model)
         {
             try
             {
-               // await Task.Run(() => this.currentUsersInRetroBoardServices.SetUpCurrentUserInRetroBoard(currentUserDataModel));
+                await Task.Run(() => this.retroBoardOptionServices.SetRetroBoardOptions(model));
 
                 return Ok();
             }
