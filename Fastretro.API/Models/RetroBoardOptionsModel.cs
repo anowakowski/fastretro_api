@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Fastretro.API.Data.Domain
+namespace Fastretro.API.Models
 {
-    public class RetroBoardOptions : Entity
+    public class RetroBoardOptionsModel
     {
         public string RetroBoardFirebaseDocId { get; set; }
         public bool ShouldBlurRetroBoardCardText { get; set; }

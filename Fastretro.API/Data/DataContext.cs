@@ -16,5 +16,7 @@ namespace Fastretro.API.Data
         public DbSet<FirebaseUserData> FirebaseUsersData { get; set; }
 
         public DbSet<CurrentUserVote> CurrentUserVotes { get; set; }
+        
+        public DbSet<RetroBoardOptions> RetroBoardOptions { get; set; }
     }
 }
