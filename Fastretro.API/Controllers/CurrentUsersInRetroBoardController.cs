@@ -148,7 +148,7 @@ namespace Fastretro.API.Controllers
         }
 
 
-        [HttpPost("setNewRetroBoardOptions")]
+        [HttpPost("setRetroBoardOptions")]
         public async Task<IActionResult> SetRetroBoardOptions([FromBody] RetroBoardOptionsModel model)
         {
             try

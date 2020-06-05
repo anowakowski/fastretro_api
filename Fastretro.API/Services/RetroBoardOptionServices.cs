@@ -42,6 +42,17 @@ namespace Fastretro.API.Services
                 await this.retroBoardOptionsRepository.AddAsync(retroBoardOptionsToSave);
 
                 await unitOfWork.CompleteAsync();
+            } 
+            else
+            {
+                var findedRetroBoardOptions = await this.retroBoardOptionsRepository.FirstOrDefaultAsync(rb => rb.RetroBoardFirebaseDocId == model.RetroBoardFirebaseDocId);
+
+                findedRetroBoardOptions.MaxVouteCount = model.MaxVouteCount;
+                findedRetroBoardOptions.ShouldBlurRetroBoardCardText = model.ShouldBlurRetroBoardCardText;
+
+                this.retroBoardOptionsRepository.Update(findedRetroBoardOptions);
+
+                await this.unitOfWork.CompleteAsync();
             }
         }
     }
