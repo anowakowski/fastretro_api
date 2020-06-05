@@ -10,5 +10,6 @@ namespace Fastretro.API.Models
         public string RetroBoardFirebaseDocId { get; set; }
         public bool ShouldBlurRetroBoardCardText { get; set; }
         public int MaxVouteCount { get; set; }
+        public bool ShouldHideVoutCountInRetroBoardCard { get; set; }
     }
 }

@@ -36,7 +36,8 @@ namespace Fastretro.API.Services
                 {
                     RetroBoardFirebaseDocId = model.RetroBoardFirebaseDocId,
                     MaxVouteCount = model.MaxVouteCount,
-                    ShouldBlurRetroBoardCardText = model.ShouldBlurRetroBoardCardText
+                    ShouldBlurRetroBoardCardText = model.ShouldBlurRetroBoardCardText,
+                    ShouldHideVoutCountInRetroBoardCard = model.ShouldHideVoutCountInRetroBoardCard
                 };
 
                 await this.retroBoardOptionsRepository.AddAsync(retroBoardOptionsToSave);
@@ -49,6 +50,7 @@ namespace Fastretro.API.Services
 
                 findedRetroBoardOptions.MaxVouteCount = model.MaxVouteCount;
                 findedRetroBoardOptions.ShouldBlurRetroBoardCardText = model.ShouldBlurRetroBoardCardText;
+                findedRetroBoardOptions.ShouldHideVoutCountInRetroBoardCard = model.ShouldHideVoutCountInRetroBoardCard;
 
                 this.retroBoardOptionsRepository.Update(findedRetroBoardOptions);
 
