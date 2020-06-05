@@ -20,6 +20,11 @@ namespace Fastretro.API.Services
             this.unitOfWork = unitOfWork;
         }
 
+        public async Task<RetroBoardOptions> GetRetroBoardOptions(string retroBoardId)
+        {
+            return await this.retroBoardOptionsRepository.FirstOrDefaultAsync(rb => rb.RetroBoardFirebaseDocId == retroBoardId);
+        }
+
         public async Task SetRetroBoardOptions(RetroBoardOptionsModel model)
         {
             var isExistngRetroBoardOptionsForRetroBoardId =
@@ -29,7 +34,9 @@ namespace Fastretro.API.Services
             {
                 RetroBoardOptions retroBoardOptionsToSave = new RetroBoardOptions
                 {
-                    RetroBoardFirebaseDocId = model.RetroBoardFirebaseDocId
+                    RetroBoardFirebaseDocId = model.RetroBoardFirebaseDocId,
+                    MaxVouteCount = model.MaxVouteCount,
+                    ShouldBlurRetroBoardCardText = model.ShouldBlurRetroBoardCardText
                 };
 
                 await this.retroBoardOptionsRepository.AddAsync(retroBoardOptionsToSave);

@@ -163,5 +163,18 @@ namespace Fastretro.API.Controllers
             }
         }
 
+        [HttpGet("getRetroBoardOptions/{retroBoardId}")]
+        public async Task<IActionResult> GetRetroBoardOptions(string retroBoardId)
+        {
+            try
+            {
+                return Ok(await this.retroBoardOptionServices.GetRetroBoardOptions(retroBoardId));
+            }
+            catch (Exception)
+            {
+                return BadRequest("Can't get retro board options");
+            }
+        }
+
     }
 }
