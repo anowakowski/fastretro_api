@@ -18,5 +18,6 @@ namespace Fastretro.API.Data
         public DbSet<CurrentUserVote> CurrentUserVotes { get; set; }
         
         public DbSet<RetroBoardOptions> RetroBoardOptions { get; set; }
+        public DbSet<RetroBoardAdditionalInfo> RetroBoardAdditionalInfos { get; set; }
     }
 }

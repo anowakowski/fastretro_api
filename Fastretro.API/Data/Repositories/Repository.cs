@@ -29,6 +29,11 @@ namespace Fastretro.API.Data.Repositories
             return DbSet.AnyAsync(predicate);
         }
 
+        public async Task<int> GetMax(Expression<Func<TEntity, int>> predicate)
+        {
+            return await DbSet.MaxAsync(predicate);
+        }
+
         public async Task<TEntity> GetById(int id)
         {
             return await DbSet.SingleAsync(x => x.Id == id);

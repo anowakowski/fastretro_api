@@ -20,17 +20,20 @@ namespace Fastretro.API.Controllers
         private readonly IFreshCurrentUserInRetroBoardServices freshCurrentUserInRetroBoardServices;
         private readonly ICurrentUserVoteServices currentUserVoteServices;
         private readonly IRetroBoardOptionServices retroBoardOptionServices;
+        private readonly IRetroBoardAdditionalInfoServices retroBoardAdditionalInfoServices;
 
         public CurrentUsersInRetroBoardController(
             ICurrentUsersInRetroBoardServices currentUsersInRetroBoardServices,
             IFreshCurrentUserInRetroBoardServices freshCurrentUserInRetroBoardServices,
             ICurrentUserVoteServices currentUserVoteServices,
-            IRetroBoardOptionServices retroBoardOptionServices)
+            IRetroBoardOptionServices retroBoardOptionServices,
+            IRetroBoardAdditionalInfoServices retroBoardAdditionalInfoServices)
         {
             this.currentUsersInRetroBoardServices = currentUsersInRetroBoardServices;
             this.freshCurrentUserInRetroBoardServices = freshCurrentUserInRetroBoardServices;
             this.currentUserVoteServices = currentUserVoteServices;
             this.retroBoardOptionServices = retroBoardOptionServices;
+            this.retroBoardAdditionalInfoServices = retroBoardAdditionalInfoServices;
         }
 
         [HttpGet("getCurrentUserInRetroBoard/{retroBoardId}")]
@@ -176,5 +179,19 @@ namespace Fastretro.API.Controllers
             }
         }
 
+        [HttpPost("setRetroBoardAdditionalInfo")]
+        public async Task<IActionResult> SetRetroBoardAdditionalInfo([FromBody] RetroBoardAdditionalInfoModel model)
+        {
+            try
+            {
+                await Task.Run(() => this.retroBoardAdditionalInfoServices.SetRetroBoardAdditionalInfo(model));
+
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return BadRequest("Can't unfollow that user");
+            }
+        }
     }
 }
