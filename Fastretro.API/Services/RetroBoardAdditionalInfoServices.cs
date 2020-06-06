@@ -31,9 +31,13 @@ namespace Fastretro.API.Services
             } 
             else
             {
-                var maxRetroBoardAdditionalInfo = await repository.GetMax(rb => rb.RetroBoardIndexCount);
-                var newMaxIndexCount = maxRetroBoardAdditionalInfo++;
-                
+                var newMaxIndexCount = 0;
+                if (await repository.AnyAsync(x => x.Id != null))
+                {
+                    var maxRetroBoardAdditionalInfo = await repository.GetMax(rb => rb.RetroBoardIndexCount);
+                    newMaxIndexCount = maxRetroBoardAdditionalInfo + 1;
+                }
+
                 var newRetroBoardAdditionalInfoToSave = new RetroBoardAdditionalInfo
                 {
                     RetroBoardIndexCount = newMaxIndexCount,
