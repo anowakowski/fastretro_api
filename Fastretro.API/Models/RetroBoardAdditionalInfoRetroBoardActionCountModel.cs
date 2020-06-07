@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Fastretro.API.Models
 {
-    public class RetroBoardAdditionalInfoRetroBoardActionCountModel : RetroBoardAdditionalInfoBaseModel
+    public class RetroBoardAdditionalInfoRetroBoardActionCountModel : RetroBoardAdditionalInfoModel
     {
         public int ActionsCount { get; set; }
     }

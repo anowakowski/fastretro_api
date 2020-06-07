@@ -44,14 +44,12 @@ namespace Fastretro.API.Services
                     RetroBoardFirebaseDocId = model.RetroBoardFirebaseDocId,
                     TeamFirebaseDocId = model.TeamFirebaseDocId,
                     WorkspaceFirebaseDocId = model.WorkspaceFirebaseDocId,
-                    RetroBoardActionCount = 0
+                    RetroBoardActionCount = 0,
                 };
 
                 await this.repository.AddAsync(newRetroBoardAdditionalInfoToSave);
                 await this.unitOfWork.CompleteAsync();
             }
-            
-
         }
 
         public Task<object> GetRetroBoardAdditionalInfo(string retroBoardId)
@@ -97,11 +95,15 @@ namespace Fastretro.API.Services
         public async Task SetRetroBoardAdditionalInfoRetroBoardActionCount(RetroBoardAdditionalInfoRetroBoardActionCountModel model)
         {
             var findedCurrentRetroBoardAdditionalInfo = 
-                await this.repository.FirstOrDefaultAsync(rb => rb.RetroBoardFirebaseDocId == model.RetroBoardFirebaseDocId);
+                await this.repository.FirstOrDefaultAsync(rb =>
+                    rb.RetroBoardFirebaseDocId == model.RetroBoardFirebaseDocId &&
+                    rb.TeamFirebaseDocId == model.TeamFirebaseDocId &&
+                    rb.WorkspaceFirebaseDocId == model.WorkspaceFirebaseDocId);
 
             if (findedCurrentRetroBoardAdditionalInfo != null)
             {
                 findedCurrentRetroBoardAdditionalInfo.RetroBoardActionCount = model.ActionsCount;
+
                 this.repository.Update(findedCurrentRetroBoardAdditionalInfo);
 
                 await this.unitOfWork.CompleteAsync();
