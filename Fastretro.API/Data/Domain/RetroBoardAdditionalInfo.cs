@@ -11,5 +11,6 @@ namespace Fastretro.API.Data.Domain
         public string TeamFirebaseDocId { get; set; }
         public string WorkspaceFirebaseDocId { get; set; }
         public int RetroBoardIndexCount { get; set; }
+        public int RetroBoardActionCount { get; set; }
     }
 }

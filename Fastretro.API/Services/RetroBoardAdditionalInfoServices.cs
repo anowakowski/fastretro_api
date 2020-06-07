@@ -43,7 +43,8 @@ namespace Fastretro.API.Services
                     RetroBoardIndexCount = newMaxIndexCount,
                     RetroBoardFirebaseDocId = model.RetroBoardFirebaseDocId,
                     TeamFirebaseDocId = model.TeamFirebaseDocId,
-                    WorkspaceFirebaseDocId = model.WorkspaceFirebaseDocId
+                    WorkspaceFirebaseDocId = model.WorkspaceFirebaseDocId,
+                    RetroBoardActionCount = 0
                 };
 
                 await this.repository.AddAsync(newRetroBoardAdditionalInfoToSave);
@@ -91,6 +92,20 @@ namespace Fastretro.API.Services
             }
 
             return previousRetroBoardDocId;
+        }
+
+        public async Task SetRetroBoardAdditionalInfoRetroBoardActionCount(RetroBoardAdditionalInfoRetroBoardActionCountModel model)
+        {
+            var findedCurrentRetroBoardAdditionalInfo = 
+                await this.repository.FirstOrDefaultAsync(rb => rb.RetroBoardFirebaseDocId == model.RetroBoardFirebaseDocId);
+
+            if (findedCurrentRetroBoardAdditionalInfo != null)
+            {
+                findedCurrentRetroBoardAdditionalInfo.RetroBoardActionCount = model.ActionsCount;
+                this.repository.Update(findedCurrentRetroBoardAdditionalInfo);
+
+                await this.unitOfWork.CompleteAsync();
+            }
         }
     }
 }

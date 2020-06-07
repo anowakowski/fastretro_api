@@ -219,5 +219,20 @@ namespace Fastretro.API.Controllers
                 return BadRequest("Can't get retro board options");
             }
         }
+
+        [HttpPost("setRetroBoardAdditionalInfoWithActionCount")]
+        public async Task<IActionResult> SetRetroBoardAdditionalInfoRetroBoardActionCount([FromBody] RetroBoardAdditionalInfoRetroBoardActionCountModel model)
+        {
+            try
+            {
+                await Task.Run(() => this.retroBoardAdditionalInfoServices.SetRetroBoardAdditionalInfoRetroBoardActionCount(model));
+
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return BadRequest("Can't unfollow that user");
+            }
+        }
     }
 }
