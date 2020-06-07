@@ -193,5 +193,31 @@ namespace Fastretro.API.Controllers
                 return BadRequest("Can't unfollow that user");
             }
         }
+
+        [HttpGet("getRetroBoardAdditionalInfo/{retroBoardId}")]
+        public async Task<IActionResult> GetRetroBoardAdditionalInfo(string retroBoardId)
+        {
+            try
+            {
+                return Ok(await this.retroBoardAdditionalInfoServices.GetRetroBoardAdditionalInfo(retroBoardId));
+            }
+            catch (Exception)
+            {
+                return BadRequest("Can't get retro board options");
+            }
+        }
+
+        [HttpGet("getPreviousIdOfRetroBoard/{retroBoardId}/{workspaceId}/{teamId}")]
+        public async Task<IActionResult> GetRetroBoardAdditionalInfoPreviousRbId(string retroBoardId, string workspaceId, string teamId)
+        {
+            try
+            {
+                return Ok(await this.retroBoardAdditionalInfoServices.GetRetroBoardAdditionalInfoPreviousRbId(retroBoardId, teamId, workspaceId));
+            }
+            catch (Exception)
+            {
+                return BadRequest("Can't get retro board options");
+            }
+        }
     }
 }

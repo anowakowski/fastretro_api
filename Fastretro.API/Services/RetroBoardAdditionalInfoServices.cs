@@ -52,5 +52,45 @@ namespace Fastretro.API.Services
             
 
         }
+
+        public Task<object> GetRetroBoardAdditionalInfo(string retroBoardId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<string> GetRetroBoardAdditionalInfoPreviousRbId(string retroBoardId, string teamDocId, string workspaceDocId)
+        {
+            var findedCurrentRetroBoardAdditionalInfo = await this.repository.FirstOrDefaultAsync(rb =>
+                rb.RetroBoardFirebaseDocId == retroBoardId &&
+                rb.TeamFirebaseDocId == teamDocId &&
+                rb.WorkspaceFirebaseDocId == workspaceDocId);
+
+            var previousRetroBoardDocId = string.Empty;
+
+            if (findedCurrentRetroBoardAdditionalInfo != null)
+            {
+                var findedAllRetroBoardsAdditionalInfoInCurrentRb = (await this.repository.FindAsync(rb =>
+                    rb.TeamFirebaseDocId == findedCurrentRetroBoardAdditionalInfo.TeamFirebaseDocId &&
+                    rb.WorkspaceFirebaseDocId == findedCurrentRetroBoardAdditionalInfo.WorkspaceFirebaseDocId)).ToList();
+
+                var orderedfindedAllRetroBoardsAdditionalInfoInCurrentRb = 
+                    findedAllRetroBoardsAdditionalInfoInCurrentRb.OrderByDescending(x => x.RetroBoardIndexCount).ToList();
+
+                var firstToRemoveFromList = orderedfindedAllRetroBoardsAdditionalInfoInCurrentRb.First();
+
+                if (firstToRemoveFromList.RetroBoardFirebaseDocId == findedCurrentRetroBoardAdditionalInfo.RetroBoardFirebaseDocId)
+                {
+                    orderedfindedAllRetroBoardsAdditionalInfoInCurrentRb.Remove(firstToRemoveFromList);
+                    var previousRetroBoardAdditonalInfo = orderedfindedAllRetroBoardsAdditionalInfoInCurrentRb.FirstOrDefault();
+
+                    if (previousRetroBoardAdditonalInfo != null)
+                    {
+                        previousRetroBoardDocId = previousRetroBoardAdditonalInfo.RetroBoardFirebaseDocId;
+                    }
+                }
+            }
+
+            return previousRetroBoardDocId;
+        }
     }
 }
