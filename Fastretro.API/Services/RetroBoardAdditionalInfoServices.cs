@@ -57,7 +57,7 @@ namespace Fastretro.API.Services
             throw new NotImplementedException();
         }
 
-        public async Task<string> GetRetroBoardAdditionalInfoPreviousRbId(string retroBoardId, string teamDocId, string workspaceDocId)
+        public async Task<RetroBoardAdditionalInfoPreviousRetroBoardModel> GetRetroBoardAdditionalInfoPreviousRbId(string retroBoardId, string teamDocId, string workspaceDocId)
         {
             var findedCurrentRetroBoardAdditionalInfo = await this.repository.FirstOrDefaultAsync(rb =>
                 rb.RetroBoardFirebaseDocId == retroBoardId &&
@@ -72,7 +72,7 @@ namespace Fastretro.API.Services
                     rb.TeamFirebaseDocId == findedCurrentRetroBoardAdditionalInfo.TeamFirebaseDocId &&
                     rb.WorkspaceFirebaseDocId == findedCurrentRetroBoardAdditionalInfo.WorkspaceFirebaseDocId)).ToList();
 
-                var orderedfindedAllRetroBoardsAdditionalInfoInCurrentRb = 
+                var orderedfindedAllRetroBoardsAdditionalInfoInCurrentRb =
                     findedAllRetroBoardsAdditionalInfoInCurrentRb.OrderByDescending(x => x.RetroBoardIndexCount).ToList();
 
                 var firstToRemoveFromList = orderedfindedAllRetroBoardsAdditionalInfoInCurrentRb.First();
@@ -89,7 +89,12 @@ namespace Fastretro.API.Services
                 }
             }
 
-            return previousRetroBoardDocId;
+            RetroBoardAdditionalInfoPreviousRetroBoardModel modelToReturn = new RetroBoardAdditionalInfoPreviousRetroBoardModel
+            {
+                PreviousRetroBoardDocId = previousRetroBoardDocId
+            };
+
+            return modelToReturn;
         }
 
         public async Task SetRetroBoardAdditionalInfoRetroBoardActionCount(RetroBoardAdditionalInfoRetroBoardActionCountModel model)
