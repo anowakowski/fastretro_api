@@ -7,6 +7,7 @@ namespace Fastretro.API.Models
 {
     public class RetroBoardAdditionalInfoPreviousRetroBoardModel
     {
-        public string PreviousRetroBoardDocId { get; internal set; }
+        public string PreviousRetroBoardDocId { get; set; }
+        public bool ShouldShowPreviousActionsButton { get; set; }
     }
 }

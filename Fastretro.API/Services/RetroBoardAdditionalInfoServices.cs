@@ -65,6 +65,7 @@ namespace Fastretro.API.Services
                 rb.WorkspaceFirebaseDocId == workspaceDocId);
 
             var previousRetroBoardDocId = string.Empty;
+            var shouldShowAction = false;
 
             if (findedCurrentRetroBoardAdditionalInfo != null)
             {
@@ -85,13 +86,17 @@ namespace Fastretro.API.Services
                     if (previousRetroBoardAdditonalInfo != null)
                     {
                         previousRetroBoardDocId = previousRetroBoardAdditonalInfo.RetroBoardFirebaseDocId;
+                        shouldShowAction = previousRetroBoardAdditonalInfo.RetroBoardActionCount > 0;
                     }
                 }
             }
 
+            
+
             RetroBoardAdditionalInfoPreviousRetroBoardModel modelToReturn = new RetroBoardAdditionalInfoPreviousRetroBoardModel
             {
-                PreviousRetroBoardDocId = previousRetroBoardDocId
+                PreviousRetroBoardDocId = previousRetroBoardDocId,
+                ShouldShowPreviousActionsButton = shouldShowAction
             };
 
             return modelToReturn;
