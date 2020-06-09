@@ -71,7 +71,8 @@ namespace Fastretro.API.Services
             {
                 var findedAllRetroBoardsAdditionalInfoInCurrentRb = (await this.repository.FindAsync(rb =>
                     rb.TeamFirebaseDocId == findedCurrentRetroBoardAdditionalInfo.TeamFirebaseDocId &&
-                    rb.WorkspaceFirebaseDocId == findedCurrentRetroBoardAdditionalInfo.WorkspaceFirebaseDocId)).ToList();
+                    rb.WorkspaceFirebaseDocId == findedCurrentRetroBoardAdditionalInfo.WorkspaceFirebaseDocId &&
+                    rb.RetroBoardIndexCount <= findedCurrentRetroBoardAdditionalInfo.RetroBoardIndexCount)).ToList();
 
                 var orderedfindedAllRetroBoardsAdditionalInfoInCurrentRb =
                     findedAllRetroBoardsAdditionalInfoInCurrentRb.OrderByDescending(x => x.RetroBoardIndexCount).ToList();
