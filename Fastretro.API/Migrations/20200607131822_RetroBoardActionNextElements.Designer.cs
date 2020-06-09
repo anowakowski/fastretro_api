@@ -4,14 +4,16 @@ using Fastretro.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Fastretro.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20200607131822_RetroBoardActionNextElements")]
+    partial class RetroBoardActionNextElements
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -91,11 +93,20 @@ namespace Fastretro.API.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<DateTime>("LastActionCountUpdate")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("RetroBoardActionCount")
                         .HasColumnType("int");
 
+                    b.Property<string>("RetroBoardCardFromLastUpdateForActionCountId")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("RetroBoardFirebaseDocId")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("RetroBoardHasAction")
+                        .HasColumnType("bit");
 
                     b.Property<int>("RetroBoardIndexCount")
                         .HasColumnType("int");

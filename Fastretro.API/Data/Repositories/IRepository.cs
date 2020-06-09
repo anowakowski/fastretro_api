@@ -14,6 +14,8 @@ namespace Fastretro.API.Data.Repositories
 
         Task<bool> AnyAsync(Expression<Func<TEntity, bool>> predicate);
 
+        Task<int> GetMax(Expression<Func<TEntity, int>> predicate);
+
         Task<TEntity> GetById(int id);
 
         void Delete(TEntity entity);
