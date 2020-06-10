@@ -39,6 +39,8 @@ namespace Fastretro.API
             services.AddScoped<IRetroBoardOptionServices, RetroBoardOptionServices>();
             services.AddScoped<IRetroBoardAdditionalInfoServices, RetroBoardAdditionalInfoServices>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+            /*
             services
                 .AddAuthentication(x =>
                 {
@@ -60,11 +62,38 @@ namespace Fastretro.API
                         ValidateLifetime = true
                     };
                 });
-            services.AddOptions();
 
             FirebaseApp.Create(new AppOptions()
             {
                 Credential = GoogleCredential.FromFile("./Credentials/fastretro-64ade-firebase-adminsdk-jmaxe-4b745ba94c.json"),
+            });
+            */
+            services
+                .AddAuthentication(x =>
+                {
+                    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
+                .AddJwtBearer(options =>
+                {
+                    options.RequireHttpsMetadata = false;
+                    options.SaveToken = true;
+
+                    options.Authority = "https://securetoken.google.com/retrodrive-7b341";
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidIssuer = "https://securetoken.google.com/retrodrive-7b341",
+                        ValidateAudience = true,
+                        ValidAudience = "retrodrive-7b341",
+                        ValidateLifetime = true
+                    };
+                });
+            services.AddOptions();
+
+            FirebaseApp.Create(new AppOptions()
+            {
+                Credential = GoogleCredential.FromFile("./Credentials/retrodrive-7b341-firebase-adminsdk-xce94-42664dde7d.json"),
             });
         }
 

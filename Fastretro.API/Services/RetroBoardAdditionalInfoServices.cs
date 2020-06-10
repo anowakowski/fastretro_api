@@ -92,8 +92,6 @@ namespace Fastretro.API.Services
                 }
             }
 
-            
-
             RetroBoardAdditionalInfoPreviousRetroBoardModel modelToReturn = new RetroBoardAdditionalInfoPreviousRetroBoardModel
             {
                 PreviousRetroBoardDocId = previousRetroBoardDocId,

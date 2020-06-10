@@ -11,7 +11,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace Fastretro.API.Controllers
 {
     [Authorize]
-    //[Route("api/forCurrentUsersInRetroBoard/{retroBoardId}/RetroBoards")]
     [Route("api/[controller]")]
     [ApiController]
     public class CurrentUsersInRetroBoardController : ControllerBase
