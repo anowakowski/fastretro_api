@@ -38,6 +38,7 @@ namespace Fastretro.API
             services.AddScoped<ICurrentUserVoteServices, CurrentUserVoteServices>();
             services.AddScoped<IRetroBoardOptionServices, RetroBoardOptionServices>();
             services.AddScoped<IRetroBoardAdditionalInfoServices, RetroBoardAdditionalInfoServices>();
+            services.AddScoped<IUsersInTeamServices, UsersInTeamServices>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             /*

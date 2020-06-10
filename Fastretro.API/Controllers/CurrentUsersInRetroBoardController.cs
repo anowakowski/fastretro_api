@@ -20,19 +20,22 @@ namespace Fastretro.API.Controllers
         private readonly ICurrentUserVoteServices currentUserVoteServices;
         private readonly IRetroBoardOptionServices retroBoardOptionServices;
         private readonly IRetroBoardAdditionalInfoServices retroBoardAdditionalInfoServices;
+        private readonly IUsersInTeamServices usersInTeamServices;
 
         public CurrentUsersInRetroBoardController(
             ICurrentUsersInRetroBoardServices currentUsersInRetroBoardServices,
             IFreshCurrentUserInRetroBoardServices freshCurrentUserInRetroBoardServices,
             ICurrentUserVoteServices currentUserVoteServices,
             IRetroBoardOptionServices retroBoardOptionServices,
-            IRetroBoardAdditionalInfoServices retroBoardAdditionalInfoServices)
+            IRetroBoardAdditionalInfoServices retroBoardAdditionalInfoServices,
+            IUsersInTeamServices usersInTeamServices)
         {
             this.currentUsersInRetroBoardServices = currentUsersInRetroBoardServices;
             this.freshCurrentUserInRetroBoardServices = freshCurrentUserInRetroBoardServices;
             this.currentUserVoteServices = currentUserVoteServices;
             this.retroBoardOptionServices = retroBoardOptionServices;
             this.retroBoardAdditionalInfoServices = retroBoardAdditionalInfoServices;
+            this.usersInTeamServices = usersInTeamServices;
         }
 
         [HttpGet("getCurrentUserInRetroBoard/{retroBoardId}")]
@@ -226,6 +229,21 @@ namespace Fastretro.API.Controllers
             try
             {
                 await Task.Run(() => this.retroBoardAdditionalInfoServices.SetRetroBoardAdditionalInfoRetroBoardActionCount(model));
+
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return BadRequest("Can't unfollow that user");
+            }
+        }
+
+        [HttpPost("setUserInTeam")]
+        public async Task<IActionResult> SetUserInTeam([FromBody] UsersInTeamModel model)
+        {
+            try
+            {
+                await Task.Run(() => this.usersInTeamServices.SetUserInTeam(model));
 
                 return Ok();
             }
