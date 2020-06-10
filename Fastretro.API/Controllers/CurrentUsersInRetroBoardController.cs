@@ -252,5 +252,18 @@ namespace Fastretro.API.Controllers
                 return BadRequest("Can't unfollow that user");
             }
         }
+
+        [HttpGet("GetUsersInTeam/{workspaceFirebaseDocId}/{teamFirebaseDocId}")]
+        public async Task<IActionResult> GetUsersInTeam(UsersInTeamToGetModel model)
+        {
+            try
+            {
+                return Ok(await this.usersInTeamServices.GetUsersInTeam(model));
+            }
+            catch (Exception)
+            {
+                return BadRequest("Can't get retro board options");
+            }
+        }
     }
 }
