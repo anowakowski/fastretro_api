@@ -45,7 +45,9 @@ namespace Fastretro.API.Services
                 {
                     UserFirebaseDocId = model.UserFirebaseDocId,
                     TeamFirebaseDocId = model.TeamFirebaseDocId,
-                    WorkspaceFirebaseDocId = model.WorkspaceFirebaseDocId
+                    WorkspaceFirebaseDocId = model.WorkspaceFirebaseDocId,
+                    ChosenAvatarUrl = model.ChosenAvatarUrl,
+                    DisplayName = model.DisplayName
                 };
 
                 await this.repository.AddAsync(usersInTeam);

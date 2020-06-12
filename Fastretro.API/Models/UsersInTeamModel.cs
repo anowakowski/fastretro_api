@@ -10,5 +10,7 @@ namespace Fastretro.API.Models
         public string UserFirebaseDocId { get; set; }
         public string TeamFirebaseDocId { get; set; }
         public string WorkspaceFirebaseDocId { get; set; }
+        public string ChosenAvatarUrl { get; set; }
+        public string DisplayName { get; set; }
     }
 }

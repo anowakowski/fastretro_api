@@ -7,6 +7,7 @@ using Fastretro.API.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace Fastretro.API.Controllers
 {
@@ -254,10 +255,16 @@ namespace Fastretro.API.Controllers
         }
 
         [HttpGet("GetUsersInTeam/{workspaceFirebaseDocId}/{teamFirebaseDocId}")]
-        public async Task<IActionResult> GetUsersInTeam(UsersInTeamToGetModel model)
+        public async Task<IActionResult> GetUsersInTeam(string workspaceFirebaseDocId, string teamFirebaseDocId)
         {
             try
             {
+                UsersInTeamToGetModel model = new UsersInTeamToGetModel
+                {
+                    WorkspaceFirebaseDocId = workspaceFirebaseDocId,
+                    TeamFirebaseDocId = teamFirebaseDocId
+                };
+
                 return Ok(await this.usersInTeamServices.GetUsersInTeam(model));
             }
             catch (Exception)
