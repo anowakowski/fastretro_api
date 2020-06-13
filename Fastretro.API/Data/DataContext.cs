@@ -1,9 +1,5 @@
 ﻿using Fastretro.API.Data.Domain;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Fastretro.API.Data
 {
@@ -20,5 +16,6 @@ namespace Fastretro.API.Data
         public DbSet<RetroBoardOptions> RetroBoardOptions { get; set; }
         public DbSet<RetroBoardAdditionalInfo> RetroBoardAdditionalInfos { get; set; }
         public DbSet<UsersInTeam> UsersInTeams { get; set; }
+        public DbSet<UsersInAction> UsersInActions { get; set; }
     }
 }
