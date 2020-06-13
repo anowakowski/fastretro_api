@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading.Tasks;
 using Fastretro.API.Data;
 using Fastretro.API.Data.Domain;
@@ -18,9 +19,46 @@ namespace Fastretro.API.Services
 
         public async Task SetUserInAction(UsersInActionModel model)
         {
-            foreach(var userFirebaseDocId in model.UserFirebaseDocIds) 
+            if (model.UserFirebaseDocIds.Count() == 0)
             {
-                var isExistingUserInAction = 
+                var isExistingUserInAction =
+                    await this.repository.AnyAsync(uia =>
+                        uia.RetroBoardActionCardFirebaseDocId == model.RetroBoardActionCardFirebaseDocId &&
+                        uia.RetroBoardActionCardFirebaseDocId == model.RetroBoardActionCardFirebaseDocId &&
+                        uia.TeamFirebaseDocId == model.TeamFirebaseDocId &&
+                        uia.WorkspaceFirebaseDocId == model.WorkspaceFirebaseDocId);
+
+                if (isExistingUserInAction)
+                {
+                    var findedExistingUserInAction =
+                        (await this.repository.FindAsync(uia =>
+                            uia.RetroBoardActionCardFirebaseDocId == model.RetroBoardActionCardFirebaseDocId &&
+                            uia.RetroBoardActionCardFirebaseDocId == model.RetroBoardActionCardFirebaseDocId &&
+                            uia.TeamFirebaseDocId == model.TeamFirebaseDocId &&
+                            uia.WorkspaceFirebaseDocId == model.WorkspaceFirebaseDocId)).ToList();
+
+                    if (findedExistingUserInAction.Count() > 0)
+                    {
+                        foreach (var usrInActionToDelete in findedExistingUserInAction)
+                        {
+                            this.repository.Delete(usrInActionToDelete);
+                            await this.unitOfWork.CompleteAsync();
+                        }
+                    }
+                }
+            }
+            else
+            {
+                await setNewUserInAction(model);
+            }
+
+        }
+
+        private async Task setNewUserInAction(UsersInActionModel model)
+        {
+            foreach (var userFirebaseDocId in model.UserFirebaseDocIds)
+            {
+                var isExistingUserInAction =
                     await this.repository.AnyAsync(uia =>
                         uia.UserFirebaseDocId == userFirebaseDocId &&
                         uia.RetroBoardActionCardFirebaseDocId == model.RetroBoardActionCardFirebaseDocId &&
@@ -28,7 +66,7 @@ namespace Fastretro.API.Services
                         uia.TeamFirebaseDocId == model.TeamFirebaseDocId &&
                         uia.WorkspaceFirebaseDocId == model.WorkspaceFirebaseDocId);
 
-                if (!isExistingUserInAction) 
+                if (!isExistingUserInAction)
                 {
                     UsersInAction usersInAction = new UsersInAction
                     {
@@ -44,7 +82,6 @@ namespace Fastretro.API.Services
                 }
 
             }
-        
         }
     }
 }
