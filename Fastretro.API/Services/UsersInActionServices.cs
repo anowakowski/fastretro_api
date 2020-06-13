@@ -21,40 +21,56 @@ namespace Fastretro.API.Services
         {
             if (model.UserFirebaseDocIds.Count() == 0)
             {
-                var isExistingUserInAction =
-                    await this.repository.AnyAsync(uia =>
-                        uia.RetroBoardActionCardFirebaseDocId == model.RetroBoardActionCardFirebaseDocId &&
-                        uia.RetroBoardActionCardFirebaseDocId == model.RetroBoardActionCardFirebaseDocId &&
-                        uia.TeamFirebaseDocId == model.TeamFirebaseDocId &&
-                        uia.WorkspaceFirebaseDocId == model.WorkspaceFirebaseDocId);
-
-                if (isExistingUserInAction)
-                {
-                    var findedExistingUserInAction =
-                        (await this.repository.FindAsync(uia =>
-                            uia.RetroBoardActionCardFirebaseDocId == model.RetroBoardActionCardFirebaseDocId &&
-                            uia.RetroBoardActionCardFirebaseDocId == model.RetroBoardActionCardFirebaseDocId &&
-                            uia.TeamFirebaseDocId == model.TeamFirebaseDocId &&
-                            uia.WorkspaceFirebaseDocId == model.WorkspaceFirebaseDocId)).ToList();
-
-                    if (findedExistingUserInAction.Count() > 0)
-                    {
-                        foreach (var usrInActionToDelete in findedExistingUserInAction)
-                        {
-                            this.repository.Delete(usrInActionToDelete);
-                            await this.unitOfWork.CompleteAsync();
-                        }
-                    }
-                }
+                await DeleteAllUsersInActionsIfAnyNotExists(model);
             }
             else
             {
-                await setNewUserInAction(model);
+                await SetUsersInAction(model);
             }
 
         }
 
-        private async Task setNewUserInAction(UsersInActionModel model)
+        private async Task DeleteAllUsersInActionsIfAnyNotExists(UsersInActionModel model)
+        {
+            var isExistingUserInAction =
+                await this.repository.AnyAsync(uia =>
+                    uia.RetroBoardActionCardFirebaseDocId == model.RetroBoardActionCardFirebaseDocId &&
+                    uia.RetroBoardActionCardFirebaseDocId == model.RetroBoardActionCardFirebaseDocId &&
+                    uia.TeamFirebaseDocId == model.TeamFirebaseDocId &&
+                    uia.WorkspaceFirebaseDocId == model.WorkspaceFirebaseDocId);
+
+            if (isExistingUserInAction)
+            {
+                await DeleteUsersInAction(model);
+            }
+        }
+
+        private async Task DeleteUsersInAction(UsersInActionModel model)
+        {
+            var findedExistingUserInAction =
+                (await this.repository.FindAsync(uia =>
+                    uia.RetroBoardActionCardFirebaseDocId == model.RetroBoardActionCardFirebaseDocId &&
+                    uia.RetroBoardActionCardFirebaseDocId == model.RetroBoardActionCardFirebaseDocId &&
+                    uia.TeamFirebaseDocId == model.TeamFirebaseDocId &&
+                    uia.WorkspaceFirebaseDocId == model.WorkspaceFirebaseDocId)).ToList();
+
+            if (findedExistingUserInAction.Count() > 0)
+            {
+                foreach (var usrInActionToDelete in findedExistingUserInAction)
+                {
+                    this.repository.Delete(usrInActionToDelete);
+                    await this.unitOfWork.CompleteAsync();
+                }
+            }
+        }
+
+        private async Task SetUsersInAction(UsersInActionModel model)
+        {
+            await this.DeleteUsersInAction(model);
+            await SetNewUsersInActionIfExists(model);
+        }
+
+        private async Task SetNewUsersInActionIfExists(UsersInActionModel model)
         {
             foreach (var userFirebaseDocId in model.UserFirebaseDocIds)
             {
@@ -80,7 +96,6 @@ namespace Fastretro.API.Services
                     await this.repository.AddAsync(usersInAction);
                     await this.unitOfWork.CompleteAsync();
                 }
-
             }
         }
     }
