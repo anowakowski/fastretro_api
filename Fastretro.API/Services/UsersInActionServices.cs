@@ -6,11 +6,11 @@ using Fastretro.API.Models;
 
 namespace Fastretro.API.Services
 {
-    public class UserInActionServices : IUserInActionServices
+    public class UsersInActionServices : IUsersInActionServices
     {
         private readonly IRepository<UsersInAction> repository;
         private readonly IUnitOfWork unitOfWork;
-        public UserInActionServices(IRepository<UsersInAction> repository, IUnitOfWork unitOfWork)
+        public UsersInActionServices(IRepository<UsersInAction> repository, IUnitOfWork unitOfWork)
         {
             this.unitOfWork = unitOfWork;
             this.repository = repository;

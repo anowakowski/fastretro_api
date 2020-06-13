@@ -3,7 +3,7 @@ using Fastretro.API.Models;
 
 namespace Fastretro.API.Services
 {
-    public interface IUserInActionServices
+    public interface IUsersInActionServices
     {
         Task SetUserInAction(UsersInActionModel model);
     }
