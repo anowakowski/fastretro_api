@@ -18,28 +18,33 @@ namespace Fastretro.API.Services
 
         public async Task SetUserInAction(UsersInActionModel model)
         {
-            var isExistingUserInAction = 
-                await this.repository.AnyAsync(uia =>
-                    uia.UserFirebaseDocId == model.UserFirebaseDocId &&
-                    uia.RetroBoardActionCardFirebaseDocId == model.RetroBoardActionCardFirebaseDocId &&
-                    uia.RetroBoardActionCardFirebaseDocId == model.RetroBoardActionCardFirebaseDocId &&
-                    uia.TeamFirebaseDocId == model.TeamFirebaseDocId &&
-                    uia.WorkspaceFirebaseDocId == model.WorkspaceFirebaseDocId);
-
-            if (!isExistingUserInAction) 
+            foreach(var userFirebaseDocId in model.UserFirebaseDocIds) 
             {
-                UsersInAction usersInAction = new UsersInAction
-                {
-                    RetroBoardActionCardFirebaseDocId = model.RetroBoardActionCardFirebaseDocId,
-                    TeamFirebaseDocId = model.TeamFirebaseDocId,
-                    RetroBoardCardFirebaseDocId = model.RetroBoardCardFirebaseDocId,
-                    UserFirebaseDocId = model.UserFirebaseDocId,
-                    WorkspaceFirebaseDocId = model.WorkspaceFirebaseDocId
-                };
+                var isExistingUserInAction = 
+                    await this.repository.AnyAsync(uia =>
+                        uia.UserFirebaseDocId == userFirebaseDocId &&
+                        uia.RetroBoardActionCardFirebaseDocId == model.RetroBoardActionCardFirebaseDocId &&
+                        uia.RetroBoardActionCardFirebaseDocId == model.RetroBoardActionCardFirebaseDocId &&
+                        uia.TeamFirebaseDocId == model.TeamFirebaseDocId &&
+                        uia.WorkspaceFirebaseDocId == model.WorkspaceFirebaseDocId);
 
-                await this.repository.AddAsync(usersInAction);
-                await this.unitOfWork.CompleteAsync();
-            }        
+                if (!isExistingUserInAction) 
+                {
+                    UsersInAction usersInAction = new UsersInAction
+                    {
+                        RetroBoardActionCardFirebaseDocId = model.RetroBoardActionCardFirebaseDocId,
+                        TeamFirebaseDocId = model.TeamFirebaseDocId,
+                        RetroBoardCardFirebaseDocId = model.RetroBoardCardFirebaseDocId,
+                        UserFirebaseDocId = userFirebaseDocId,
+                        WorkspaceFirebaseDocId = model.WorkspaceFirebaseDocId
+                    };
+
+                    await this.repository.AddAsync(usersInAction);
+                    await this.unitOfWork.CompleteAsync();
+                }
+
+            }
+        
         }
     }
 }

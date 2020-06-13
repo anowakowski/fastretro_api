@@ -1,8 +1,10 @@
+using System.Collections.Generic;
+
 namespace Fastretro.API.Models
 {
     public class UsersInActionModel
     {
-        public string UserFirebaseDocId { get; set; }
+        public IEnumerable<string> UserFirebaseDocIds { get; set; }
         public string TeamFirebaseDocId { get; set; }
         public string WorkspaceFirebaseDocId { get; set; }
         public string RetroBoardCardFirebaseDocId { get; set; }
