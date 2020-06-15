@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Fastretro.API.Data;
@@ -27,22 +28,25 @@ namespace Fastretro.API.Services
             {
                 await SetUsersInAction(model);
             }
-
         }
 
         private async Task DeleteAllUsersInActionsIfAnyNotExists(UsersInActionModel model)
         {
-            var isExistingUserInAction =
-                await this.repository.AnyAsync(uia =>
-                    uia.RetroBoardActionCardFirebaseDocId == model.RetroBoardActionCardFirebaseDocId &&
-                    uia.RetroBoardActionCardFirebaseDocId == model.RetroBoardActionCardFirebaseDocId &&
-                    uia.TeamFirebaseDocId == model.TeamFirebaseDocId &&
-                    uia.WorkspaceFirebaseDocId == model.WorkspaceFirebaseDocId);
+            bool isExistingUserInAction = await IsExistingUsersInAction(model.TeamFirebaseDocId, model.WorkspaceFirebaseDocId, model.RetroBoardActionCardFirebaseDocId, model.RetroBoardActionCardFirebaseDocId);
 
             if (isExistingUserInAction)
             {
                 await DeleteUsersInAction(model);
             }
+        }
+
+        private async Task<bool> IsExistingUsersInAction(string teamFirebaseDocId, string workspaceFirebaseDocId, string retroBoardCardFirebaseDocId, string retroBoardActionCardFirebaseDocId)
+        {
+            return await this.repository.AnyAsync(uia =>
+                    uia.RetroBoardActionCardFirebaseDocId == retroBoardActionCardFirebaseDocId &&
+                    uia.RetroBoardActionCardFirebaseDocId == retroBoardActionCardFirebaseDocId &&
+                    uia.TeamFirebaseDocId == teamFirebaseDocId &&
+                    uia.WorkspaceFirebaseDocId == workspaceFirebaseDocId);
         }
 
         private async Task DeleteUsersInAction(UsersInActionModel model)
@@ -97,6 +101,21 @@ namespace Fastretro.API.Services
                     await this.unitOfWork.CompleteAsync();
                 }
             }
+        }
+
+        public async Task<IEnumerable<UsersInAction>> GetUserInAction(string teamFirebaseDocId, string workspaceFirebaseDocId, string retroBoardCardFirebaseDocId, string retroBoardActionCardFirebaseDocId)
+        {
+            bool isExistingUserInAction = await IsExistingUsersInAction(teamFirebaseDocId, workspaceFirebaseDocId, retroBoardCardFirebaseDocId, retroBoardActionCardFirebaseDocId);
+
+            var findedExistingUserInAction =
+                (await this.repository.FindAsync(uia =>
+                    uia.RetroBoardActionCardFirebaseDocId == retroBoardActionCardFirebaseDocId &&
+                    uia.RetroBoardActionCardFirebaseDocId == retroBoardActionCardFirebaseDocId &&
+                    uia.TeamFirebaseDocId == teamFirebaseDocId &&
+                    uia.WorkspaceFirebaseDocId == workspaceFirebaseDocId)).ToList();
+
+            return findedExistingUserInAction;        
+
         }
     }
 }

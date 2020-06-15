@@ -290,5 +290,18 @@ namespace Fastretro.API.Controllers
                 return BadRequest("Can't unfollow that user");
             }
         } 
+
+        [HttpGet("getUsersInAction/{teamFirebaseDocId}/{workspaceFirebaseDocId}/{retroBoardCardFirebaseDocId}/{retroBoardActionCardFirebaseDocId}")]
+        public async Task<IActionResult> GetUsersInAction(string teamFirebaseDocId, string workspaceFirebaseDocId, string retroBoardCardFirebaseDocId, string retroBoardActionCardFirebaseDocId)
+        {
+            try
+            {
+                return Ok(await this.usersInActionServices.GetUserInAction(teamFirebaseDocId, workspaceFirebaseDocId, retroBoardCardFirebaseDocId, retroBoardActionCardFirebaseDocId));
+            }
+            catch (Exception)
+            {
+                return BadRequest("Can't get retro board options");
+            }
+        }        
     }
 }
