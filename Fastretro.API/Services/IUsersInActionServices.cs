@@ -8,6 +8,7 @@ namespace Fastretro.API.Services
     public interface IUsersInActionServices
     {
         Task SetUserInAction(UsersInActionModel model);
-        Task<IEnumerable<UsersInAction>>  GetUserInAction(string teamFirebaseDocId, string workspaceFirebaseDocId, string retroBoardCardFirebaseDocId, string retroBoardActionCardFirebaseDocId);
+        Task<IEnumerable<UsersInAction>> GetUserInActionForRetroBoardCard(string teamFirebaseDocId, string workspaceFirebaseDocId, string retroBoardCardFirebaseDocId, string retroBoardActionCardFirebaseDocId);
+        Task<IEnumerable<GetUsersInActionModel>> GetUsersInActionForTeam(string teamFirebaseDocId, string workspaceFirebaseDocId);
     }
 }

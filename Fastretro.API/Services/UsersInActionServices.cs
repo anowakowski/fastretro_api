@@ -103,7 +103,7 @@ namespace Fastretro.API.Services
             }
         }
 
-        public async Task<IEnumerable<UsersInAction>> GetUserInAction(string teamFirebaseDocId, string workspaceFirebaseDocId, string retroBoardCardFirebaseDocId, string retroBoardActionCardFirebaseDocId)
+        public async Task<IEnumerable<UsersInAction>> GetUserInActionForRetroBoardCard(string teamFirebaseDocId, string workspaceFirebaseDocId, string retroBoardCardFirebaseDocId, string retroBoardActionCardFirebaseDocId)
         {
             bool isExistingUserInAction = await IsExistingUsersInAction(teamFirebaseDocId, workspaceFirebaseDocId, retroBoardCardFirebaseDocId, retroBoardActionCardFirebaseDocId);
 
@@ -116,6 +116,18 @@ namespace Fastretro.API.Services
 
             return findedExistingUserInAction;        
 
+        }
+
+        public async Task<IEnumerable<GetUsersInActionModel>> GetUsersInActionForTeam(string teamFirebaseDocId, string workspaceFirebaseDocId)
+        {
+            return await this.repository.SelectAsync(
+                w => w.TeamFirebaseDocId == teamFirebaseDocId,
+                s => new GetUsersInActionModel 
+                    { 
+                        UserFirebaseDocId = s.UserFirebaseDocId,
+                        RetroBoardActionCardFirebaseDocId = s.RetroBoardActionCardFirebaseDocId,
+                        RetroBoardCardFirebaseDocId = s.RetroBoardCardFirebaseDocId
+                    });                                
         }
     }
 }

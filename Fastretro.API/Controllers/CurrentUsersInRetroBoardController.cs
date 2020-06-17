@@ -291,17 +291,30 @@ namespace Fastretro.API.Controllers
             }
         } 
 
-        [HttpGet("getUsersInAction/{teamFirebaseDocId}/{workspaceFirebaseDocId}/{retroBoardCardFirebaseDocId}/{retroBoardActionCardFirebaseDocId}")]
-        public async Task<IActionResult> GetUsersInAction(string teamFirebaseDocId, string workspaceFirebaseDocId, string retroBoardCardFirebaseDocId, string retroBoardActionCardFirebaseDocId)
+        [HttpGet("getUsersInActionForRetroBoardCard/{teamFirebaseDocId}/{workspaceFirebaseDocId}/{retroBoardCardFirebaseDocId}/{retroBoardActionCardFirebaseDocId}")]
+        public async Task<IActionResult> GetUsersInActionForRetroBoardCard(string teamFirebaseDocId, string workspaceFirebaseDocId, string retroBoardCardFirebaseDocId, string retroBoardActionCardFirebaseDocId)
         {
             try
             {
-                return Ok(await this.usersInActionServices.GetUserInAction(teamFirebaseDocId, workspaceFirebaseDocId, retroBoardCardFirebaseDocId, retroBoardActionCardFirebaseDocId));
+                return Ok(await this.usersInActionServices.GetUserInActionForRetroBoardCard(teamFirebaseDocId, workspaceFirebaseDocId, retroBoardCardFirebaseDocId, retroBoardActionCardFirebaseDocId));
             }
             catch (Exception)
             {
                 return BadRequest("Can't get retro board options");
             }
-        }        
+        }
+
+        [HttpGet("getUsersInAction/{workspaceFirebaseDocId}/{teamFirebaseDocId}")]
+        public async Task<IActionResult> GetUsersInActionForTeamInWorksapace(string workspaceFirebaseDocId, string teamFirebaseDocId)
+        {
+            try
+            {
+                return Ok(await this.usersInActionServices.GetUsersInActionForTeam(teamFirebaseDocId, workspaceFirebaseDocId));
+            }
+            catch (Exception)
+            {
+                return BadRequest("Can't get retro board options");
+            }
+        } 
     }
 }

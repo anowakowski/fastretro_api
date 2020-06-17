@@ -10,6 +10,8 @@ namespace Fastretro.API.Data.Repositories
     {
         Task<IEnumerable<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate);
 
+        Task<IEnumerable<TType>> SelectAsync<TType>(Expression<Func<TEntity, bool>> where, Expression<Func<TEntity, TType>> select) where TType : class;
+
         Task AddAsync(TEntity entity);
 
         Task<bool> AnyAsync(Expression<Func<TEntity, bool>> predicate);
