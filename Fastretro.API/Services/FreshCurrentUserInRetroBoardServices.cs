@@ -67,7 +67,7 @@ namespace Fastretro.API.Services
 
             if (fbUserData != null)
             {
-                fbUserData.DateOfExistingCheck = DateTime.Now.ToString();
+                fbUserData.DateOfExistingCheck = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
                 this.firebaseUserDataRepository.Update(fbUserData);
 
                 await this.unitOfWork.CompleteAsync();

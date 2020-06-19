@@ -22,6 +22,7 @@ namespace Fastretro.API.Controllers
         private readonly IRetroBoardOptionServices retroBoardOptionServices;
         private readonly IRetroBoardAdditionalInfoServices retroBoardAdditionalInfoServices;
         private readonly IUsersInTeamServices usersInTeamServices;
+        private readonly IUsersInActionServices usersInActionServices;
 
         public CurrentUsersInRetroBoardController(
             ICurrentUsersInRetroBoardServices currentUsersInRetroBoardServices,
@@ -29,7 +30,8 @@ namespace Fastretro.API.Controllers
             ICurrentUserVoteServices currentUserVoteServices,
             IRetroBoardOptionServices retroBoardOptionServices,
             IRetroBoardAdditionalInfoServices retroBoardAdditionalInfoServices,
-            IUsersInTeamServices usersInTeamServices)
+            IUsersInTeamServices usersInTeamServices,
+            IUsersInActionServices usersInActionServices)
         {
             this.currentUsersInRetroBoardServices = currentUsersInRetroBoardServices;
             this.freshCurrentUserInRetroBoardServices = freshCurrentUserInRetroBoardServices;
@@ -37,6 +39,7 @@ namespace Fastretro.API.Controllers
             this.retroBoardOptionServices = retroBoardOptionServices;
             this.retroBoardAdditionalInfoServices = retroBoardAdditionalInfoServices;
             this.usersInTeamServices = usersInTeamServices;
+            this.usersInActionServices = usersInActionServices;
         }
 
         [HttpGet("getCurrentUserInRetroBoard/{retroBoardId}")]
@@ -272,5 +275,46 @@ namespace Fastretro.API.Controllers
                 return BadRequest("Can't get retro board options");
             }
         }
+
+        [HttpPost("setUserInAction")]
+        public async Task<IActionResult> SetUserInAction([FromBody] UsersInActionModel model)
+        {
+            try
+            {
+                await Task.Run(() => this.usersInActionServices.SetUserInAction(model));
+
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return BadRequest("Can't unfollow that user");
+            }
+        } 
+
+        [HttpGet("getUsersInActionForRetroBoardCard/{teamFirebaseDocId}/{workspaceFirebaseDocId}/{retroBoardCardFirebaseDocId}/{retroBoardActionCardFirebaseDocId}")]
+        public async Task<IActionResult> GetUsersInActionForRetroBoardCard(string teamFirebaseDocId, string workspaceFirebaseDocId, string retroBoardCardFirebaseDocId, string retroBoardActionCardFirebaseDocId)
+        {
+            try
+            {
+                return Ok(await this.usersInActionServices.GetUserInActionForRetroBoardCard(teamFirebaseDocId, workspaceFirebaseDocId, retroBoardCardFirebaseDocId, retroBoardActionCardFirebaseDocId));
+            }
+            catch (Exception)
+            {
+                return BadRequest("Can't get retro board options");
+            }
+        }
+
+        [HttpGet("getUsersInAction/{workspaceFirebaseDocId}/{teamFirebaseDocId}")]
+        public async Task<IActionResult> GetUsersInActionForTeamInWorksapace(string workspaceFirebaseDocId, string teamFirebaseDocId)
+        {
+            try
+            {
+                return Ok(await this.usersInActionServices.GetUsersInActionForTeam(teamFirebaseDocId, workspaceFirebaseDocId));
+            }
+            catch (Exception)
+            {
+                return BadRequest("Can't get retro board options");
+            }
+        } 
     }
 }
