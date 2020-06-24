@@ -19,6 +19,14 @@ namespace Fastretro.API.Services
             this.repository = repository;
             this.unitOfWork = unitOfWork;
         }
+
+        public async Task<IEnumerable<RetroBoardStatus>> GetLastRetroBoardForWorkspace(string workspaceId)
+        {
+            var findedLastRetroBoards = await this.repository.FindAsync(lrb => lrb.WorkspaceFirebaseDocId == workspaceId);
+
+            return findedLastRetroBoards.ToList();
+        }
+
         public async Task SetNewRetroBoardStatus(RetroBoardStatusModel model)
         {
             if (await this.repository.AnyAsync(lrb => lrb.RetroBoardFirebaseDocId != model.RetroBoardFirebaseDocId))

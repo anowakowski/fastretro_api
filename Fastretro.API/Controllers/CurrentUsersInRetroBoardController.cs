@@ -333,6 +333,19 @@ namespace Fastretro.API.Controllers
             {
                 return BadRequest("Can't unfollow that user");
             }
-        }          
+        }
+        
+        [HttpGet("getUsersLastRetroBoardsStatus/{workspaceFirebaseDocId}")]
+        public async Task<IActionResult> GetUsersLastRetroBoardsStatus(string workspaceFirebaseDocId)
+        {
+            try
+            {
+                return Ok(await this.retroBoardStatusServices.GetLastRetroBoardForWorkspace(workspaceFirebaseDocId));
+            }
+            catch (Exception)
+            {
+                return BadRequest("Can't get retro board options");
+            }
+        }                  
     }
 }
