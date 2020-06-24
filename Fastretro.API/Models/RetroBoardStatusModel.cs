@@ -1,6 +1,6 @@
 namespace Fastretro.API.Models
 {
-    public class LastRetroBoardModel
+    public class RetroBoardStatusModel
     {
         public string RetroBoardFirebaseDocId { get; set; }
         public string TeamFirebaseDocId { get; set; }

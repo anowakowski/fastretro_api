@@ -23,7 +23,7 @@ namespace Fastretro.API.Controllers
         private readonly IRetroBoardAdditionalInfoServices retroBoardAdditionalInfoServices;
         private readonly IUsersInTeamServices usersInTeamServices;
         private readonly IUsersInActionServices usersInActionServices;
-        private readonly ILastRetroBoardServices lastRetroBoardServices;
+        private readonly IRetroBoardStatusServices retroBoardStatusServices;
 
         public CurrentUsersInRetroBoardController(
             ICurrentUsersInRetroBoardServices currentUsersInRetroBoardServices,
@@ -33,7 +33,7 @@ namespace Fastretro.API.Controllers
             IRetroBoardAdditionalInfoServices retroBoardAdditionalInfoServices,
             IUsersInTeamServices usersInTeamServices,
             IUsersInActionServices usersInActionServices,
-            ILastRetroBoardServices lastRetroBoardServices)
+            IRetroBoardStatusServices retroBoardStatusServices)
         {
             this.currentUsersInRetroBoardServices = currentUsersInRetroBoardServices;
             this.freshCurrentUserInRetroBoardServices = freshCurrentUserInRetroBoardServices;
@@ -42,7 +42,7 @@ namespace Fastretro.API.Controllers
             this.retroBoardAdditionalInfoServices = retroBoardAdditionalInfoServices;
             this.usersInTeamServices = usersInTeamServices;
             this.usersInActionServices = usersInActionServices;
-            this.lastRetroBoardServices = lastRetroBoardServices;
+            this.retroBoardStatusServices = retroBoardStatusServices;
         }
 
         [HttpGet("getCurrentUserInRetroBoard/{retroBoardId}")]
@@ -321,11 +321,11 @@ namespace Fastretro.API.Controllers
         }
 
         [HttpPost("setLastRetroBoard")]
-        public async Task<IActionResult> SetLastRetroBoard([FromBody] LastRetroBoardModel model)
+        public async Task<IActionResult> SetLastRetroBoard([FromBody] RetroBoardStatusModel model)
         {
             try
             {
-                await Task.Run(() => this.lastRetroBoardServices.SetLastRetroBoardId(model));
+                await Task.Run(() => this.retroBoardStatusServices.SetRetroBoardStatus(model));
 
                 return Ok();
             }

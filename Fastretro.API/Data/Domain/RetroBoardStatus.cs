@@ -1,6 +1,6 @@
 namespace Fastretro.API.Data.Domain
 {
-    public class LastRetroBoard : Entity
+    public class RetroBoardStatus : Entity
     {
         public string RetroBoardFirebaseDocId { get; set; }
         public string TeamFirebaseDocId { get; set; }
