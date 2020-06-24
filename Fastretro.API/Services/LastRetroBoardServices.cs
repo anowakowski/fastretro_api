@@ -20,8 +20,6 @@ namespace Fastretro.API.Services
         }
         public async Task SetLastRetroBoardId(LastRetroBoardModel model)
         {
-
-
             if (await this.repository.AnyAsync(lrb =>lrb.WorkspaceFirebaseDocId == model.WorkspaceFirebaseDocId))
             {
                 var findedLastRetroBoard = (await this.repository.FindAsync(lrb => lrb.WorkspaceFirebaseDocId == model.WorkspaceFirebaseDocId)).ToList();
