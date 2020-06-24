@@ -18,25 +18,9 @@ namespace Fastretro.API.Services
             this.repository = repository;
             this.unitOfWork = unitOfWork;
         }
-        public async Task SetRetroBoardStatus(RetroBoardStatusModel model)
+        public async Task SetNewRetroBoardStatus(RetroBoardStatusModel model)
         {
-                var findedLastRetroBoard = (await this.repository.FindAsync(lrb => lrb.WorkspaceFirebaseDocId == model.WorkspaceFirebaseDocId)).ToList();
-
-                var findedLastOpenedRetroBoard = findedLastRetroBoard.FirstOrDefault(lrb => !lrb.IsFinished);
-                var findedLastFinishedRetroBoard = findedLastRetroBoard.FirstOrDefault(lrb => lrb.IsFinished);
-
-                await AddedNonStartedNewRBIfNotExists(model, findedLastRetroBoard);
-
-                // update if started to opened isStarted: true 
-                // add new if finished isStardet: true isFinished: true
-
-                //await updateIfNonStartedRule(model, findedLastOpenedRetroBoard);
-                //await updateIfFinishedRule(model, findedLastFinishedRetroBoard);
-        }
-
-        private async Task AddedNonStartedNewRBIfNotExists(RetroBoardStatusModel model, List<RetroBoardStatus> findedLastRetroBoard)
-        {
-            if (findedLastRetroBoard.Any(lrb => lrb.WorkspaceFirebaseDocId != model.WorkspaceFirebaseDocId))
+            if (await this.repository.AnyAsync(lrb => lrb.RetroBoardFirebaseDocId != model.RetroBoardFirebaseDocId))
             {
                 RetroBoardStatus retroBoardStatus = new RetroBoardStatus
                 {
@@ -52,35 +36,21 @@ namespace Fastretro.API.Services
             }
         }
 
-        private async Task updateIfNonStartedRule(RetroBoardStatusModel model, RetroBoardStatus findedLastOpenedRetroBoard)
+        private async Task AddedNonStartedNewRBIfNotExists(RetroBoardStatusModel model, List<RetroBoardStatus> findedLastRetroBoard)
         {
-            if (findedLastOpenedRetroBoard != null)
+            if (findedLastRetroBoard.Any(lrb => lrb.RetroBoardFirebaseDocId != model.RetroBoardFirebaseDocId))
             {
-                if (model.RetroBoardFirebaseDocId != findedLastOpenedRetroBoard.RetroBoardFirebaseDocId &&
-                    !findedLastOpenedRetroBoard.IsFinished &&
-                    !findedLastOpenedRetroBoard.IsStarted)
+                RetroBoardStatus retroBoardStatus = new RetroBoardStatus
                 {
-                    findedLastOpenedRetroBoard.RetroBoardFirebaseDocId = model.RetroBoardFirebaseDocId;
+                    RetroBoardFirebaseDocId = model.RetroBoardFirebaseDocId,
+                    WorkspaceFirebaseDocId = model.WorkspaceFirebaseDocId,
+                    TeamFirebaseDocId = model.TeamFirebaseDocId,
+                    IsFinished = model.IsFinished,
+                    IsStarted = model.IsStarted
+                };
 
-                    this.repository.Update(findedLastOpenedRetroBoard);
-
-                    await this.unitOfWork.CompleteAsync();
-                }
-            }
-        }
-
-        private async Task updateIfFinishedRule(RetroBoardStatusModel model, RetroBoardStatus findedLastFinishedRetroBoard)
-        {
-            if (model.IsFinished && findedLastFinishedRetroBoard != null)
-            {
-                if (model.RetroBoardFirebaseDocId != findedLastFinishedRetroBoard.RetroBoardFirebaseDocId)
-                {
-                    findedLastFinishedRetroBoard.RetroBoardFirebaseDocId = model.RetroBoardFirebaseDocId;
-
-                    this.repository.Update(findedLastFinishedRetroBoard);
-
-                    await this.unitOfWork.CompleteAsync();
-                }
+                await this.repository.AddAsync(retroBoardStatus);
+                await this.unitOfWork.CompleteAsync();
             }
         }
     }

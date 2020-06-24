@@ -5,6 +5,6 @@ namespace Fastretro.API.Services
 {
     public interface IRetroBoardStatusServices
     {
-        Task SetRetroBoardStatus(RetroBoardStatusModel model);
+        Task SetNewRetroBoardStatus(RetroBoardStatusModel model);
     }
 }

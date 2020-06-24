@@ -325,7 +325,7 @@ namespace Fastretro.API.Controllers
         {
             try
             {
-                await Task.Run(() => this.retroBoardStatusServices.SetRetroBoardStatus(model));
+                await Task.Run(() => this.retroBoardStatusServices.SetNewRetroBoardStatus(model));
 
                 return Ok();
             }
