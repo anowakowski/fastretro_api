@@ -23,6 +23,7 @@ namespace Fastretro.API.Controllers
         private readonly IRetroBoardAdditionalInfoServices retroBoardAdditionalInfoServices;
         private readonly IUsersInTeamServices usersInTeamServices;
         private readonly IUsersInActionServices usersInActionServices;
+        private readonly ILastRetroBoardServices lastRetroBoardServices;
 
         public CurrentUsersInRetroBoardController(
             ICurrentUsersInRetroBoardServices currentUsersInRetroBoardServices,
@@ -31,7 +32,8 @@ namespace Fastretro.API.Controllers
             IRetroBoardOptionServices retroBoardOptionServices,
             IRetroBoardAdditionalInfoServices retroBoardAdditionalInfoServices,
             IUsersInTeamServices usersInTeamServices,
-            IUsersInActionServices usersInActionServices)
+            IUsersInActionServices usersInActionServices,
+            ILastRetroBoardServices lastRetroBoardServices)
         {
             this.currentUsersInRetroBoardServices = currentUsersInRetroBoardServices;
             this.freshCurrentUserInRetroBoardServices = freshCurrentUserInRetroBoardServices;
@@ -40,6 +42,7 @@ namespace Fastretro.API.Controllers
             this.retroBoardAdditionalInfoServices = retroBoardAdditionalInfoServices;
             this.usersInTeamServices = usersInTeamServices;
             this.usersInActionServices = usersInActionServices;
+            this.lastRetroBoardServices = lastRetroBoardServices;
         }
 
         [HttpGet("getCurrentUserInRetroBoard/{retroBoardId}")]
@@ -315,6 +318,21 @@ namespace Fastretro.API.Controllers
             {
                 return BadRequest("Can't get retro board options");
             }
-        } 
+        }
+
+        [HttpPost("setLastRetroBoard")]
+        public async Task<IActionResult> SetLastRetroBoard([FromBody] LastRetroBoardModel model)
+        {
+            try
+            {
+                await Task.Run(() => this.lastRetroBoardServices.SetLastRetroBoardId(model));
+
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return BadRequest("Can't unfollow that user");
+            }
+        }          
     }
 }
