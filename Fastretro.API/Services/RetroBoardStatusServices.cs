@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -40,13 +41,16 @@ namespace Fastretro.API.Services
         {
             if (findedLastRetroBoard.Any(lrb => lrb.RetroBoardFirebaseDocId != model.RetroBoardFirebaseDocId))
             {
+                var currentDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+
                 RetroBoardStatus retroBoardStatus = new RetroBoardStatus
                 {
                     RetroBoardFirebaseDocId = model.RetroBoardFirebaseDocId,
                     WorkspaceFirebaseDocId = model.WorkspaceFirebaseDocId,
                     TeamFirebaseDocId = model.TeamFirebaseDocId,
                     IsFinished = model.IsFinished,
-                    IsStarted = model.IsStarted
+                    IsStarted = model.IsStarted,
+                    LastModifyDate = currentDate
                 };
 
                 await this.repository.AddAsync(retroBoardStatus);

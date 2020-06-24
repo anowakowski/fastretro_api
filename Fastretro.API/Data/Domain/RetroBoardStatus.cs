@@ -7,5 +7,6 @@ namespace Fastretro.API.Data.Domain
         public string WorkspaceFirebaseDocId { get; set; }        
         public bool IsFinished { get; set; }
         public bool IsStarted { get; set; }
+        public string LastModifyDate { get; set; }
     }
 }
