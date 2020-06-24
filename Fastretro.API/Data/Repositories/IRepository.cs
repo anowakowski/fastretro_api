@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Fastretro.API.Data.Domain;
 
 namespace Fastretro.API.Data.Repositories
 {
@@ -31,5 +32,6 @@ namespace Fastretro.API.Data.Repositories
         Task<TEntity> SingleOrDefaultAsync(Expression<Func<TEntity, bool>> predicate);
         Task<TEntity> FirstOrDefaultWithIncludedEntityAsync(Expression<Func<TEntity, bool>> predicate, Expression<Func<TEntity, object>> includeEntity);
         Task<IEnumerable<TEntity>> FindAsyncWithIncludedEntityAsync(Expression<Func<TEntity, bool>> predicate, Expression<Func<TEntity, object>> includeEntity);
+        Task AnyAsync(LastRetroBoard lastRetroBoard);
     }
 }
