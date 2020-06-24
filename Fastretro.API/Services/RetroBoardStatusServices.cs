@@ -29,26 +29,6 @@ namespace Fastretro.API.Services
 
         public async Task SetNewRetroBoardStatus(RetroBoardStatusModel model)
         {
-            if (await this.repository.AnyAsync(lrb => lrb.RetroBoardFirebaseDocId != model.RetroBoardFirebaseDocId))
-            {
-                RetroBoardStatus retroBoardStatus = new RetroBoardStatus
-                {
-                    RetroBoardFirebaseDocId = model.RetroBoardFirebaseDocId,
-                    WorkspaceFirebaseDocId = model.WorkspaceFirebaseDocId,
-                    TeamFirebaseDocId = model.TeamFirebaseDocId,
-                    IsFinished = model.IsFinished,
-                    IsStarted = model.IsStarted
-                };
-
-                await this.repository.AddAsync(retroBoardStatus);
-                await this.unitOfWork.CompleteAsync();
-            }
-        }
-
-        private async Task AddedNonStartedNewRBIfNotExists(RetroBoardStatusModel model, List<RetroBoardStatus> findedLastRetroBoard)
-        {
-            if (findedLastRetroBoard.Any(lrb => lrb.RetroBoardFirebaseDocId != model.RetroBoardFirebaseDocId))
-            {
                 var currentDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
 
                 RetroBoardStatus retroBoardStatus = new RetroBoardStatus
@@ -63,7 +43,6 @@ namespace Fastretro.API.Services
 
                 await this.repository.AddAsync(retroBoardStatus);
                 await this.unitOfWork.CompleteAsync();
-            }
         }
     }
 }
