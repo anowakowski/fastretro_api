@@ -59,9 +59,37 @@ namespace Fastretro.API.Services
             }
         }
 
+        public async Task SetRetroBoardAsFinished(RetroBoardStatusForSetRBAsFinishedModel model) 
+        {
+            var findedRetroBoardStatus = await this.repository.FirstOrDefaultAsync(rb => rb.WorkspaceFirebaseDocId == model.WorkspaceFirebaseDocId && rb.RetroBoardFirebaseDocId == model.RetroBoardFirebaseDocId);
+            
+            if (findedRetroBoardStatus != null && findedRetroBoardStatus.IsStarted)
+            {
+                findedRetroBoardStatus.IsFinished = true;
+                findedRetroBoardStatus.LastModifyDate = GetCurrentDate();
+
+                this.repository.Update(findedRetroBoardStatus);
+                await this.unitOfWork.CompleteAsync();
+            }
+        }        
+
         private static string GetCurrentDate()
         {
             return DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+        }
+
+        public async Task SetRetroBoardAsOpened(RetroBoardStatusForSetRBAsOpenedModel model)
+        {
+            var findedRetroBoardStatus = await this.repository.FirstOrDefaultAsync(rb => rb.WorkspaceFirebaseDocId == model.WorkspaceFirebaseDocId && rb.RetroBoardFirebaseDocId == model.RetroBoardFirebaseDocId);
+            
+            if (findedRetroBoardStatus != null && findedRetroBoardStatus.IsStarted)
+            {
+                findedRetroBoardStatus.IsFinished = false;
+                findedRetroBoardStatus.LastModifyDate = GetCurrentDate();
+
+                this.repository.Update(findedRetroBoardStatus);
+                await this.unitOfWork.CompleteAsync();
+            }
         }
     }
 }
