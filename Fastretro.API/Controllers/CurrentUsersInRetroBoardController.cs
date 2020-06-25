@@ -334,6 +334,21 @@ namespace Fastretro.API.Controllers
                 return BadRequest("Can't unfollow that user");
             }
         }
+
+        [HttpPost("setRetroBoardAsStarted")]
+        public async Task<IActionResult> SetRetroBoardAsStarted([FromBody] RetroBoardStatusForSetRBAsStartedModel model)
+        {
+            try
+            {
+                await Task.Run(() => this.retroBoardStatusServices.SetRetroBoardAsStarted(model));
+
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return BadRequest("Can't unfollow that user");
+            }
+        }
         
         [HttpGet("getUsersLastRetroBoardsStatus/{workspaceFirebaseDocId}")]
         public async Task<IActionResult> GetUsersLastRetroBoardsStatus(string workspaceFirebaseDocId)

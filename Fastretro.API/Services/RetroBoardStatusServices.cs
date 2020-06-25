@@ -29,20 +29,39 @@ namespace Fastretro.API.Services
 
         public async Task SetNewRetroBoardStatus(RetroBoardStatusModel model)
         {
-                var currentDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+            string currentDate = GetCurrentDate();
 
-                RetroBoardStatus retroBoardStatus = new RetroBoardStatus
-                {
-                    RetroBoardFirebaseDocId = model.RetroBoardFirebaseDocId,
-                    WorkspaceFirebaseDocId = model.WorkspaceFirebaseDocId,
-                    TeamFirebaseDocId = model.TeamFirebaseDocId,
-                    IsFinished = model.IsFinished,
-                    IsStarted = model.IsStarted,
-                    LastModifyDate = currentDate
-                };
+            RetroBoardStatus retroBoardStatus = new RetroBoardStatus
+            {
+                RetroBoardFirebaseDocId = model.RetroBoardFirebaseDocId,
+                WorkspaceFirebaseDocId = model.WorkspaceFirebaseDocId,
+                TeamFirebaseDocId = model.TeamFirebaseDocId,
+                IsFinished = model.IsFinished,
+                IsStarted = model.IsStarted,
+                LastModifyDate = currentDate
+            };
 
-                await this.repository.AddAsync(retroBoardStatus);
+            await this.repository.AddAsync(retroBoardStatus);
+            await this.unitOfWork.CompleteAsync();
+        }
+
+        public async Task SetRetroBoardAsStarted(RetroBoardStatusForSetRBAsStartedModel model) 
+        {
+            var findedRetroBoardStatus = await this.repository.FirstOrDefaultAsync(rb => rb.WorkspaceFirebaseDocId == model.WorkspaceFirebaseDocId && rb.RetroBoardFirebaseDocId == model.RetroBoardFirebaseDocId);
+            
+            if (findedRetroBoardStatus != null)
+            {
+                findedRetroBoardStatus.IsStarted = true;
+                findedRetroBoardStatus.LastModifyDate = GetCurrentDate();
+
+                this.repository.Update(findedRetroBoardStatus);
                 await this.unitOfWork.CompleteAsync();
+            }
+        }
+
+        private static string GetCurrentDate()
+        {
+            return DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
         }
     }
 }

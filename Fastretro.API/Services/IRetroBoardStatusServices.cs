@@ -10,5 +10,6 @@ namespace Fastretro.API.Services
         Task SetNewRetroBoardStatus(RetroBoardStatusModel model);
 
         Task<IEnumerable<RetroBoardStatus>> GetLastRetroBoardForWorkspace(string workspaceId);
+        Task SetRetroBoardAsStarted(RetroBoardStatusForSetRBAsStartedModel model); 
     }
 }
