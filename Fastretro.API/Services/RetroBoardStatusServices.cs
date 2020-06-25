@@ -20,11 +20,22 @@ namespace Fastretro.API.Services
             this.unitOfWork = unitOfWork;
         }
 
-        public async Task<IEnumerable<RetroBoardStatus>> GetLastRetroBoardForWorkspace(string workspaceId)
+        public async Task<RetroBoardStatusForDashboard> GetLastRetroBoardForWorkspace(string workspaceId)
         {
-            var findedLastRetroBoards = await this.repository.FindAsync(lrb => lrb.WorkspaceFirebaseDocId == workspaceId);
+            var findedLastRetroBoards = (await this.repository.FindAsync(lrb => lrb.WorkspaceFirebaseDocId == workspaceId)).ToList();
 
-            return findedLastRetroBoards.ToList();
+            var findendNonStarted = findedLastRetroBoards.FirstOrDefault(rbs => !rbs.IsStarted && !rbs.IsFinished);
+            var findenOpened = findedLastRetroBoards.FirstOrDefault(rbs => rbs.IsStarted && !rbs.IsFinished);
+            var findendFinished = findedLastRetroBoards.FirstOrDefault(rbs => rbs.IsStarted && rbs.IsFinished);
+
+            var lastRetroBoardStatusForDashboard = new RetroBoardStatusForDashboard 
+            {
+                LastRetroBoardNonStarted = findendNonStarted == null ? string.Empty : findendNonStarted.RetroBoardFirebaseDocId,
+                LastRetroBoardOpened = findenOpened == null ? string.Empty : findenOpened.RetroBoardFirebaseDocId,
+                LastRetroBoardFinished = findendFinished == null ? string.Empty : findendFinished.RetroBoardFirebaseDocId
+            };
+
+            return lastRetroBoardStatusForDashboard;
         }
 
         public async Task SetNewRetroBoardStatus(RetroBoardStatusModel model)
