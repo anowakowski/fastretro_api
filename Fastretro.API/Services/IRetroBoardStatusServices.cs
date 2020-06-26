@@ -8,7 +8,7 @@ namespace Fastretro.API.Services
     public interface IRetroBoardStatusServices
     {
         Task SetNewRetroBoardStatus(RetroBoardStatusModel model);
-        Task<RetroBoardStatusForDashboard> GetLastRetroBoardForWorkspace(string workspaceId)
+        Task<RetroBoardStatusForDashboard> GetLastRetroBoardForWorkspace(string workspaceId);
         Task SetRetroBoardAsStarted(RetroBoardStatusForSetRBAsStartedModel model); 
         Task SetRetroBoardAsFinished(RetroBoardStatusForSetRBAsFinishedModel model);
         Task SetRetroBoardAsOpened(RetroBoardStatusForSetRBAsOpenedModel model);

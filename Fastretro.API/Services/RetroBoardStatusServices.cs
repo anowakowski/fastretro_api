@@ -24,9 +24,9 @@ namespace Fastretro.API.Services
         {
             var findedLastRetroBoards = (await this.repository.FindAsync(lrb => lrb.WorkspaceFirebaseDocId == workspaceId)).ToList();
 
-            var findendNonStarted = findedLastRetroBoards.FirstOrDefault(rbs => !rbs.IsStarted && !rbs.IsFinished);
-            var findenOpened = findedLastRetroBoards.FirstOrDefault(rbs => rbs.IsStarted && !rbs.IsFinished);
-            var findendFinished = findedLastRetroBoards.FirstOrDefault(rbs => rbs.IsStarted && rbs.IsFinished);
+            var findendNonStarted = findedLastRetroBoards.OrderByDescending(rbs => rbs.LastModifyDate).FirstOrDefault(rbs => !rbs.IsStarted && !rbs.IsFinished);
+            var findenOpened = findedLastRetroBoards.OrderByDescending(rbs => rbs.LastModifyDate).FirstOrDefault(rbs => rbs.IsStarted && !rbs.IsFinished);
+            var findendFinished = findedLastRetroBoards.OrderByDescending(rbs => rbs.LastModifyDate).FirstOrDefault(rbs => rbs.IsStarted && rbs.IsFinished);
 
             var lastRetroBoardStatusForDashboard = new RetroBoardStatusForDashboard 
             {
