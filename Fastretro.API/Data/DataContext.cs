@@ -18,5 +18,6 @@ namespace Fastretro.API.Data
         public DbSet<UsersInTeam> UsersInTeams { get; set; }
         public DbSet<UsersInAction> UsersInActions { get; set; }
         public DbSet<RetroBoardStatus> RetroBoardStatuses { get; set; }
+        public DbSet<UserNotification> userNotifications { get; set; }
     }
 }
