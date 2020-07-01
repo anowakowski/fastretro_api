@@ -409,6 +409,19 @@ namespace Fastretro.API.Controllers
             {
                 return BadRequest("Can't unfollow that user");
             }
-        }                          
+        }
+
+        [HttpGet("getUserNotifications/{userId}")]
+        public async Task<IActionResult> GetUserNotifications(string userId)
+        {
+            try
+            {
+                return Ok(await this.userNotificationServices.GetUserNotification(userId));
+            }
+            catch (Exception)
+            {
+                return BadRequest("Can't get retro board options");
+            }
+        }                                  
     }
 }

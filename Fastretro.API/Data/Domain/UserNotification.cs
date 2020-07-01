@@ -6,5 +6,7 @@ namespace Fastretro.API.Data.Domain
         public string WorkspceWithRequiredAccessFirebaseId { get; set; }
         public string CreatorUserFirebaseId { get; set; }
         public string UserWantToJoinFirebaseId { get; set; }
+        public string CreatonDate { get; set; }
+        public bool IsRead { get; set; }
     }
 }

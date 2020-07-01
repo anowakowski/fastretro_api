@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Fastretro.API.Data;
 using Fastretro.API.Data.Domain;
@@ -16,14 +18,24 @@ namespace Fastretro.API.Services
             this.repository = repository;
             this.unitOfWork = unitOfWork;
         }
+
+        public async Task<IEnumerable<UserNotification>> GetUserNotification(string creatorUserFirebaseId)
+        {
+            var userNotifications = await this.repository.FindAsync(un => un.CreatorUserFirebaseId == creatorUserFirebaseId);
+            return userNotifications;
+        }
+
         public async Task SetUserNotification(UserNotificationModel model)
         {
+            var currentDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             var userNotification = new UserNotification 
             {
                 UserWantToJoinFirebaseId = model.UserWantToJoinFirebaseId,
                 CreatorUserFirebaseId = model.CreatorUserFirebaseId,
                 WorkspceWithRequiredAccessFirebaseId = model.WorkspceWithRequiredAccessFirebaseId,
-                NotyficationType = "WorkspaceWithRequiredAccess"
+                NotyficationType = "WorkspaceWithRequiredAccess",
+                CreatonDate = currentDate,
+                IsRead = false
             };
 
             await this.repository.AddAsync(userNotification);
