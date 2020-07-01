@@ -10,35 +10,50 @@ namespace Fastretro.API.Services
 {
     public class UserNotificationServices : IUserNotificationServices
     {
-        private readonly IRepository<UserNotification> repository;
+        private readonly IRepository<UserNotification> userNotificatonRepository;
         private readonly IUnitOfWork unitOfWork;
+        private readonly IRepository<UserNotificationWorkspaceWithRequiredAccess> UserNotificationWorkspaceWithRequiredAccessRepository;
 
-        public UserNotificationServices(IRepository<UserNotification> repository, IUnitOfWork unitOfWork)
+        public UserNotificationServices(
+            IRepository<UserNotification> userNotificatonRepository,
+            IRepository<UserNotificationWorkspaceWithRequiredAccess> UserNotificationWorkspaceWithRequiredAccessRepository,
+            IUnitOfWork unitOfWork)
         {
-            this.repository = repository;
+            this.UserNotificationWorkspaceWithRequiredAccessRepository = UserNotificationWorkspaceWithRequiredAccessRepository;
+            this.userNotificatonRepository = userNotificatonRepository;
             this.unitOfWork = unitOfWork;
         }
 
-        public async Task<IEnumerable<UserNotification>> GetUserNotification(string creatorUserFirebaseId)
+        public async Task<IEnumerable<UserNotificationWorkspaceWithRequiredAccess>> GetUserNotification(string creatorUserFirebaseId)
         {
-            var userNotifications = await this.repository.FindAsync(un => un.CreatorUserFirebaseId == creatorUserFirebaseId);
-            return userNotifications;
+            var userNotificationWorkspaceWithRequiredAccess = await this.UserNotificationWorkspaceWithRequiredAccessRepository.FindAsync(un => un.CreatorUserFirebaseId == creatorUserFirebaseId);
+            return userNotificationWorkspaceWithRequiredAccess;
         }
 
         public async Task SetUserNotification(UserNotificationModel model)
         {
             var currentDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-            var userNotification = new UserNotification 
+            var userNotification = new UserNotification
             {
-                UserWantToJoinFirebaseId = model.UserWantToJoinFirebaseId,
-                CreatorUserFirebaseId = model.CreatorUserFirebaseId,
-                WorkspceWithRequiredAccessFirebaseId = model.WorkspceWithRequiredAccessFirebaseId,
                 NotyficationType = "WorkspaceWithRequiredAccess",
                 CreatonDate = currentDate,
                 IsRead = false
             };
 
-            await this.repository.AddAsync(userNotification);
+            await this.userNotificatonRepository.AddAsync(userNotification);
+
+            var userNotificationWorkspaceWithRequiredAccess = new UserNotificationWorkspaceWithRequiredAccess
+            {
+                UserWantToJoinFirebaseId = model.UserWantToJoinFirebaseId,
+                CreatorUserFirebaseId = model.CreatorUserFirebaseId,
+                WorkspceWithRequiredAccessFirebaseId = model.WorkspceWithRequiredAccessFirebaseId,
+                DisplayName = model.DisplayName,
+                Email = model.Email,
+                UserNotification = userNotification
+            };
+
+            await this.UserNotificationWorkspaceWithRequiredAccessRepository.AddAsync(userNotificationWorkspaceWithRequiredAccess);
+
             await this.unitOfWork.CompleteAsync();
         }
     }
