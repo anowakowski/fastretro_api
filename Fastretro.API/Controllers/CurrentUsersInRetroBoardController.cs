@@ -25,6 +25,7 @@ namespace Fastretro.API.Controllers
         private readonly IUsersInActionServices usersInActionServices;
         private readonly IRetroBoardStatusServices retroBoardStatusServices;
         private readonly IUserNotificationServices userNotificationServices;
+        private readonly IUserWaitingToApproveWorkspaceJoinServices userWaitingToApproveWorkspaceJoinServices;
 
         public CurrentUsersInRetroBoardController(
             ICurrentUsersInRetroBoardServices currentUsersInRetroBoardServices,
@@ -35,7 +36,8 @@ namespace Fastretro.API.Controllers
             IUsersInTeamServices usersInTeamServices,
             IUsersInActionServices usersInActionServices,
             IRetroBoardStatusServices retroBoardStatusServices,
-            IUserNotificationServices userNotificationServices)
+            IUserNotificationServices userNotificationServices,
+            IUserWaitingToApproveWorkspaceJoinServices userWaitingToApproveWorkspaceJoinServices)
         {
             this.currentUsersInRetroBoardServices = currentUsersInRetroBoardServices;
             this.freshCurrentUserInRetroBoardServices = freshCurrentUserInRetroBoardServices;
@@ -46,6 +48,7 @@ namespace Fastretro.API.Controllers
             this.usersInActionServices = usersInActionServices;
             this.retroBoardStatusServices = retroBoardStatusServices;
             this.userNotificationServices = userNotificationServices;
+            this.userWaitingToApproveWorkspaceJoinServices = userWaitingToApproveWorkspaceJoinServices;
         }
 
         [HttpGet("getCurrentUserInRetroBoard/{retroBoardId}")]
@@ -403,6 +406,14 @@ namespace Fastretro.API.Controllers
             {
                 await Task.Run(() => this.userNotificationServices.SetUserNotification(model));
 
+                var userApproveModel = new UserWaitingToApproveWorkspaceJoinModel {
+                    CreatorUserFirebaseId = model.CreatorUserFirebaseId,
+                    UserWantToJoinFirebaseId = model.UserWantToJoinFirebaseId,
+                    WorkspceWithRequiredAccessFirebaseId = model.WorkspceWithRequiredAccessFirebaseId,
+                    RequestIsApprove = false
+                };
+
+                await Task.Run(() => this.userWaitingToApproveWorkspaceJoinServices.SetWaitUserToWantToJoinToWorkspace(userApproveModel));
                 return Ok();
             }
             catch (Exception)
