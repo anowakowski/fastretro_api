@@ -8,6 +8,7 @@ namespace Fastretro.API.Services
     public interface IUserNotificationServices
     {
         Task SetUserNotification(UserNotificationModel model);
+        Task SetUserNotificationAsRead(UserNotificationAsReadModel model);
         Task<IEnumerable<UserNotificationWorkspaceWithRequiredAccess>> GetUserNotification(string CreatorUserFirebaseId);
     }
 }

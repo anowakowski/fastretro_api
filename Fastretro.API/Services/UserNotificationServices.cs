@@ -35,9 +35,23 @@ namespace Fastretro.API.Services
             return userNotificationWorkspaceWithRequiredAccess;
         }
 
-        public Task SetApproveUserWantToJoinToWorkspace(UserWaitingToApproveWorkspaceJoinModel model)
+        public async Task SetApproveUserWantToJoinToWorkspace(UserWaitingToApproveWorkspaceJoinModel model)
         {
-            throw new NotImplementedException();
+            var userNotificationWorkspaceWithRequiredAccess =
+                await this.UserNotificationWorkspaceWithRequiredAccessRepository.FirstOrDefaultAsync(
+                    uwa => uwa.CreatorUserFirebaseId == model.CreatorUserFirebaseId &&
+                    uwa.UserWantToJoinFirebaseId == model.UserWantToJoinFirebaseId &&
+                    uwa.WorkspceWithRequiredAccessFirebaseId == model.WorkspceWithRequiredAccessFirebaseId);
+
+            if (userNotificationWorkspaceWithRequiredAccess != null)
+            {
+                var findedUserNotification = userNotificationWorkspaceWithRequiredAccess.UserNotification;
+                findedUserNotification.IsRead = true;
+
+                this.UserNotificationWorkspaceWithRequiredAccessRepository.Update(userNotificationWorkspaceWithRequiredAccess);
+
+                await this.unitOfWork.CompleteAsync();
+            }
         }
 
         public async Task SetUserNotification(UserNotificationModel model)
@@ -66,6 +80,11 @@ namespace Fastretro.API.Services
             await this.UserNotificationWorkspaceWithRequiredAccessRepository.AddAsync(userNotificationWorkspaceWithRequiredAccess);
 
             await this.unitOfWork.CompleteAsync();
+        }
+
+        public Task SetUserNotificationAsRead(UserNotificationAsReadModel model)
+        {
+            throw new NotImplementedException();
         }
     }
 }
