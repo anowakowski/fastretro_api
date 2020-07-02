@@ -32,7 +32,10 @@ namespace Fastretro.API.Services
             {
                 var currentDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
                 findedUserWaitingToApproveWorkspaceJoin.RequestIsApprove = model.RequestIsApprove;
+                findedUserWaitingToApproveWorkspaceJoin.IsApprovalByCreator = true;
+
                 findedUserWaitingToApproveWorkspaceJoin.LastModifyDate = currentDate;
+                
                 this.userWaitingToApproveWorkspaceJoinRepository.Update(findedUserWaitingToApproveWorkspaceJoin);
                 await this.unitOfWork.CompleteAsync();
             }
