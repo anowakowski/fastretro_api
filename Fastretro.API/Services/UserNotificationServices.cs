@@ -51,6 +51,7 @@ namespace Fastretro.API.Services
                 UserWantToJoinFirebaseId = model.UserWantToJoinFirebaseId,
                 CreatorUserFirebaseId = model.CreatorUserFirebaseId,
                 WorkspceWithRequiredAccessFirebaseId = model.WorkspceWithRequiredAccessFirebaseId,
+                WorkspaceName = model.WorkspaceName,
                 DisplayName = model.DisplayName,
                 Email = model.Email,
                 UserNotification = userNotification
