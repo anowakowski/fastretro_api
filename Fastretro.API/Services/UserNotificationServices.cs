@@ -35,7 +35,7 @@ namespace Fastretro.API.Services
             return userNotificationWorkspaceWithRequiredAccess;
         }
 
-        public Task SetApproveUserWantToJoinToWorkspace(ApproveUserToWorkspaceModel model)
+        public Task SetApproveUserWantToJoinToWorkspace(UserWaitingToApproveWorkspaceJoinModel model)
         {
             throw new NotImplementedException();
         }
