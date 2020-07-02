@@ -35,6 +35,11 @@ namespace Fastretro.API.Services
             return userNotificationWorkspaceWithRequiredAccess;
         }
 
+        public Task SetApproveUserWantToJoinToWorkspace(ApproveUserToWorkspaceModel model)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task SetUserNotification(UserNotificationModel model)
         {
             var currentDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
