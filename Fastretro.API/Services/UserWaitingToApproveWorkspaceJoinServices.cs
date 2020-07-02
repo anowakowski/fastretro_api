@@ -19,9 +19,20 @@ namespace Fastretro.API.Services
             this.userWaitingToApproveWorkspaceJoinRepository = userWaitingToApproveWorkspaceJoinRepository;
 
         }
-        public Task SetApproveUserWantToJoinToWorkspace(UserWaitingToApproveWorkspaceJoinModel model)
+        public async Task SetApproveUserWantToJoinToWorkspace(UserWaitingToApproveWorkspaceJoinModel model)
         {
-            throw new System.NotImplementedException();
+            var findedUserWaitingToApproveWorkspaceJoin = 
+                await this.userWaitingToApproveWorkspaceJoinRepository.FirstOrDefaultAsync(
+                    uwa => uwa.CreatorUserFirebaseId == model.CreatorUserFirebaseId &&
+                    uwa.UserWantToJoinFirebaseId == model.UserWantToJoinFirebaseId &&
+                    uwa.WorkspceWithRequiredAccessFirebaseId == model.WorkspceWithRequiredAccessFirebaseId
+                );
+            if (findedUserWaitingToApproveWorkspaceJoin != null) 
+            {
+                findedUserWaitingToApproveWorkspaceJoin.RequestIsApprove = model.RequestIsApprove;
+                this.userWaitingToApproveWorkspaceJoinRepository.Update(findedUserWaitingToApproveWorkspaceJoin);
+                await this.unitOfWork.CompleteAsync();
+            }
         }
 
         public async Task SetWaitUserToWantToJoinToWorkspace(UserWaitingToApproveWorkspaceJoinModel model)
