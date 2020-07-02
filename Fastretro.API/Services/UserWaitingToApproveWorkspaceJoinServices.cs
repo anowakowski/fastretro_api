@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Fastretro.API.Data;
 using Fastretro.API.Data.Domain;
@@ -29,7 +30,9 @@ namespace Fastretro.API.Services
                 );
             if (findedUserWaitingToApproveWorkspaceJoin != null) 
             {
+                var currentDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
                 findedUserWaitingToApproveWorkspaceJoin.RequestIsApprove = model.RequestIsApprove;
+                findedUserWaitingToApproveWorkspaceJoin.LastModifyDate = currentDate;
                 this.userWaitingToApproveWorkspaceJoinRepository.Update(findedUserWaitingToApproveWorkspaceJoin);
                 await this.unitOfWork.CompleteAsync();
             }
@@ -37,11 +40,13 @@ namespace Fastretro.API.Services
 
         public async Task SetWaitUserToWantToJoinToWorkspace(UserWaitingToApproveWorkspaceJoinModel model)
         {
+            var currentDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             var entity = new userWaitingToApproveWorkspaceJoin
             {
                 CreatorUserFirebaseId = model.CreatorUserFirebaseId,
                 UserWantToJoinFirebaseId = model.UserWantToJoinFirebaseId,
                 WorkspceWithRequiredAccessFirebaseId = model.WorkspceWithRequiredAccessFirebaseId,
+                LastModifyDate = currentDate,
                 RequestIsApprove = false
             };
 
