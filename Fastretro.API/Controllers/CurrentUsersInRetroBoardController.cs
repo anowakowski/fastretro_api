@@ -422,6 +422,20 @@ namespace Fastretro.API.Controllers
             }
         }
 
+        [HttpPost("setApproveUserWantToJoinToWorkspace")]
+        public async Task<IActionResult> SetApproveUserWantToJoinToWorkspace([FromBody] UserWaitingToApproveWorkspaceJoinModel model)
+        {
+            try
+            {
+                await Task.Run(() => this.userWaitingToApproveWorkspaceJoinServices.SetApproveUserWantToJoinToWorkspace(model));
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return BadRequest("Can't unfollow that user");
+            }
+        }        
+
         [HttpGet("getUserNotifications/{userId}")]
         public async Task<IActionResult> GetUserNotifications(string userId)
         {
