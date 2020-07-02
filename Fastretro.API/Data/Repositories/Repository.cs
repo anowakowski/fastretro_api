@@ -85,7 +85,7 @@ namespace Fastretro.API.Data.Repositories
         {
             var query = DbSet.Include(includeEntity);
 
-            return await DbSet.Where(predicate).ToListAsync();
-        }
+            return await query.Where(predicate).ToListAsync();
+        }       
     }
 }
