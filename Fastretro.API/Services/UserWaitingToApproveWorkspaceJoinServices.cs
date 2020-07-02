@@ -9,17 +9,28 @@ namespace Fastretro.API.Services
 {
     public class UserWaitingToApproveWorkspaceJoinServices : IUserWaitingToApproveWorkspaceJoinServices
     {
-        private readonly IRepository<userWaitingToApproveWorkspaceJoin> userWaitingToApproveWorkspaceJoinRepository;
+        private readonly IRepository<UserWaitingToApproveWorkspaceJoin> userWaitingToApproveWorkspaceJoinRepository;
         private readonly IUnitOfWork unitOfWork;
 
         public UserWaitingToApproveWorkspaceJoinServices(
-            IRepository<userWaitingToApproveWorkspaceJoin> userWaitingToApproveWorkspaceJoinRepository,
+            IRepository<UserWaitingToApproveWorkspaceJoin> userWaitingToApproveWorkspaceJoinRepository,
             IUnitOfWork unitOfWork)
         {
             this.unitOfWork = unitOfWork;
             this.userWaitingToApproveWorkspaceJoinRepository = userWaitingToApproveWorkspaceJoinRepository;
 
         }
+
+        public async Task<UserWaitingToApproveWorkspaceJoin> GetUserWaitingToApproveWorkspaceJoin(string userWantToJoinFirebaseId, string creatorUserFirebaseId, string workspceWithRequiredAccessFirebaseId)
+        {
+            var findendUserWaitingToApproveWorkspaceJoin = await this.userWaitingToApproveWorkspaceJoinRepository.FirstOrDefaultAsync(
+                    uwa => uwa.CreatorUserFirebaseId == creatorUserFirebaseId &&
+                    uwa.UserWantToJoinFirebaseId == userWantToJoinFirebaseId &&
+                    uwa.WorkspceWithRequiredAccessFirebaseId == workspceWithRequiredAccessFirebaseId);
+
+            return findendUserWaitingToApproveWorkspaceJoin;
+        }
+
         public async Task SetApproveUserWantToJoinToWorkspace(UserWaitingToApproveWorkspaceJoinModel model)
         {
             var findedUserWaitingToApproveWorkspaceJoin = 
@@ -44,7 +55,7 @@ namespace Fastretro.API.Services
         public async Task SetWaitUserToWantToJoinToWorkspace(UserWaitingToApproveWorkspaceJoinModel model)
         {
             var currentDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-            var entity = new userWaitingToApproveWorkspaceJoin
+            var entity = new UserWaitingToApproveWorkspaceJoin
             {
                 CreatorUserFirebaseId = model.CreatorUserFirebaseId,
                 UserWantToJoinFirebaseId = model.UserWantToJoinFirebaseId,

@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Fastretro.API.Data.Domain;
 using Fastretro.API.Models;
 
 namespace Fastretro.API.Services
@@ -7,5 +8,7 @@ namespace Fastretro.API.Services
     {
         Task SetWaitUserToWantToJoinToWorkspace(UserWaitingToApproveWorkspaceJoinModel model);
         Task SetApproveUserWantToJoinToWorkspace(UserWaitingToApproveWorkspaceJoinModel model);
+        Task<UserWaitingToApproveWorkspaceJoin> GetUserWaitingToApproveWorkspaceJoin(string userWantToJoinFirebaseId, string creatorUserFirebaseId, string workspceWithRequiredAccessFirebaseId);
+
     }
 }

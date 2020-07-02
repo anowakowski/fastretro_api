@@ -437,11 +437,11 @@ namespace Fastretro.API.Controllers
         }
 
         [HttpPost("setUserNotificationAsRead")]
-        public async Task<IActionResult> SetUserNotificationAsRead([FromBody] UserWaitingToApproveWorkspaceJoinModel model)
+        public async Task<IActionResult> SetUserNotificationAsRead([FromBody] UserNotificationAsReadModel model)
         {
             try
             {
-                await Task.Run(() => this.userNotificationServices.SetApproveUserWantToJoinToWorkspace(model));
+                await Task.Run(() => this.userNotificationServices.SetUserNotificationAsRead(model));
                 return Ok();
             }
             catch (Exception)
@@ -461,6 +461,19 @@ namespace Fastretro.API.Controllers
             {
                 return BadRequest("Can't get retro board options");
             }
-        }                                  
+        }
+
+        [HttpGet("getUserWaitingToApproveWorkspaceJoin/{userWantToJoinFirebaseId}/{creatorUserFirebaseId}/{workspceWithRequiredAccessFirebaseId}")]
+        public async Task<IActionResult> GetUserWaitingToApproveWorkspaceJoin(string userWantToJoinFirebaseId, string creatorUserFirebaseId, string workspceWithRequiredAccessFirebaseId)
+        {
+            try
+            {
+                return Ok(await this.userWaitingToApproveWorkspaceJoinServices.GetUserWaitingToApproveWorkspaceJoin(userWantToJoinFirebaseId, creatorUserFirebaseId, workspceWithRequiredAccessFirebaseId));
+            }
+            catch (Exception)
+            {
+                return BadRequest("Can't get retro board options");
+            }
+        }
     }
 }

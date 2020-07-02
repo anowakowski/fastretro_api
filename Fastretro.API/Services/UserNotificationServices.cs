@@ -35,25 +35,6 @@ namespace Fastretro.API.Services
             return userNotificationWorkspaceWithRequiredAccess;
         }
 
-        public async Task SetApproveUserWantToJoinToWorkspace(UserWaitingToApproveWorkspaceJoinModel model)
-        {
-            var userNotificationWorkspaceWithRequiredAccess =
-                await this.UserNotificationWorkspaceWithRequiredAccessRepository.FirstOrDefaultAsync(
-                    uwa => uwa.CreatorUserFirebaseId == model.CreatorUserFirebaseId &&
-                    uwa.UserWantToJoinFirebaseId == model.UserWantToJoinFirebaseId &&
-                    uwa.WorkspceWithRequiredAccessFirebaseId == model.WorkspceWithRequiredAccessFirebaseId);
-
-            if (userNotificationWorkspaceWithRequiredAccess != null)
-            {
-                var findedUserNotification = userNotificationWorkspaceWithRequiredAccess.UserNotification;
-                findedUserNotification.IsRead = true;
-
-                this.UserNotificationWorkspaceWithRequiredAccessRepository.Update(userNotificationWorkspaceWithRequiredAccess);
-
-                await this.unitOfWork.CompleteAsync();
-            }
-        }
-
         public async Task SetUserNotification(UserNotificationModel model)
         {
             var currentDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
@@ -82,9 +63,24 @@ namespace Fastretro.API.Services
             await this.unitOfWork.CompleteAsync();
         }
 
-        public Task SetUserNotificationAsRead(UserNotificationAsReadModel model)
+        public async Task SetUserNotificationAsRead(UserNotificationAsReadModel model)
         {
-            throw new NotImplementedException();
+            var userNotificationWorkspaceWithRequiredAccess =
+                await this.UserNotificationWorkspaceWithRequiredAccessRepository.FirstOrDefaultWithIncludedEntityAsync(
+                    uwa => uwa.CreatorUserFirebaseId == model.CreatorUserFirebaseId &&
+                    uwa.UserWantToJoinFirebaseId == model.UserWantToJoinFirebaseId &&
+                    uwa.WorkspceWithRequiredAccessFirebaseId == model.WorkspceWithRequiredAccessFirebaseId,
+                    include => include.UserNotification);
+
+            if (userNotificationWorkspaceWithRequiredAccess != null)
+            {
+                var findedUserNotification = userNotificationWorkspaceWithRequiredAccess.UserNotification;
+                findedUserNotification.IsRead = true;
+
+                this.UserNotificationWorkspaceWithRequiredAccessRepository.Update(userNotificationWorkspaceWithRequiredAccess);
+
+                await this.unitOfWork.CompleteAsync();
+            }
         }
     }
 }

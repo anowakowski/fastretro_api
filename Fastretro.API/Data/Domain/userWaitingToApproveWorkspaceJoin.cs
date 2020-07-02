@@ -1,6 +1,6 @@
 namespace Fastretro.API.Data.Domain
 {
-    public class userWaitingToApproveWorkspaceJoin : Entity
+    public class UserWaitingToApproveWorkspaceJoin : Entity
     {
         public string WorkspceWithRequiredAccessFirebaseId { get; set; }
         public string CreatorUserFirebaseId { get; set; }
