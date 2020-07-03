@@ -50,7 +50,6 @@ namespace Fastretro.API.Services
 
             await this.userNotificatonRepository.AddAsync(userNotification);
 
-
             var userWaitingToApproveWorkspaceJoin = new UserWaitingToApproveWorkspaceJoin
             {
                 LastModifyDate = currentDate,
