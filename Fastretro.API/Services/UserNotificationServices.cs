@@ -85,7 +85,8 @@ namespace Fastretro.API.Services
                 await this.UserNotificationWorkspaceWithRequiredAccessRepository.FirstOrDefaulAsyncWithIncludedEntities(
                     uwa => uwa.CreatorUserFirebaseId == model.CreatorUserFirebaseId &&
                     uwa.UserWantToJoinFirebaseId == model.UserWantToJoinFirebaseId &&
-                    uwa.WorkspceWithRequiredAccessFirebaseId == model.WorkspceWithRequiredAccessFirebaseId,
+                    uwa.WorkspceWithRequiredAccessFirebaseId == model.WorkspceWithRequiredAccessFirebaseId &&
+                    uwa.UserWaitingToApproveWorkspaceJoinId == model.UserWaitingToApproveWorkspaceJoinId,
                     include => include.UserNotification, include => include.UserWaitingToApproveWorkspaceJoin);
 
             if (userNotificationWorkspaceWithRequiredAccess != null)
