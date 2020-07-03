@@ -405,20 +405,11 @@ namespace Fastretro.API.Controllers
             try
             {
                 await Task.Run(() => this.userNotificationServices.SetUserNotification(model));
-
-                var userApproveModel = new UserWaitingToApproveWorkspaceJoinModel {
-                    CreatorUserFirebaseId = model.CreatorUserFirebaseId,
-                    UserWantToJoinFirebaseId = model.UserWantToJoinFirebaseId,
-                    WorkspceWithRequiredAccessFirebaseId = model.WorkspceWithRequiredAccessFirebaseId,
-                    RequestIsApprove = false
-                };
-
-                await Task.Run(() => this.userWaitingToApproveWorkspaceJoinServices.SetWaitUserToWantToJoinToWorkspace(userApproveModel));
                 return Ok();
             }
             catch (Exception)
             {
-                return BadRequest("Can't unfollow that user");
+                return BadRequest("Can't set new notification");
             }
         }
 

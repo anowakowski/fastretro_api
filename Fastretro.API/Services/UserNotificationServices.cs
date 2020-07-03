@@ -11,16 +11,19 @@ namespace Fastretro.API.Services
 {
     public class UserNotificationServices : IUserNotificationServices
     {
+        private readonly IUserWaitingToApproveWorkspaceJoinServices userWaitingToApproveWorkspaceJoinServices;
         private readonly IRepository<UserNotification> userNotificatonRepository;
         private readonly IUnitOfWork unitOfWork;
         private readonly IRepository<UserNotificationWorkspaceWithRequiredAccess> UserNotificationWorkspaceWithRequiredAccessRepository;
 
         public UserNotificationServices(
+            IUserWaitingToApproveWorkspaceJoinServices userWaitingToApproveWorkspaceJoinServices,
             IRepository<UserNotification> userNotificatonRepository,
             IRepository<UserNotificationWorkspaceWithRequiredAccess> UserNotificationWorkspaceWithRequiredAccessRepository,
             IUnitOfWork unitOfWork)
         {
             this.UserNotificationWorkspaceWithRequiredAccessRepository = UserNotificationWorkspaceWithRequiredAccessRepository;
+            this.userWaitingToApproveWorkspaceJoinServices = userWaitingToApproveWorkspaceJoinServices;
             this.userNotificatonRepository = userNotificatonRepository;
             this.unitOfWork = unitOfWork;
         }
@@ -47,6 +50,18 @@ namespace Fastretro.API.Services
 
             await this.userNotificatonRepository.AddAsync(userNotification);
 
+
+            var userWaitingToApproveWorkspaceJoin = new UserWaitingToApproveWorkspaceJoin
+            {
+                LastModifyDate = currentDate,
+                CreatorUserFirebaseId = model.CreatorUserFirebaseId,
+                UserWantToJoinFirebaseId = model.UserWantToJoinFirebaseId,
+                WorkspceWithRequiredAccessFirebaseId = model.WorkspceWithRequiredAccessFirebaseId,
+                RequestIsApprove = false
+            };
+
+            await this.userWaitingToApproveWorkspaceJoinServices.SetWaitUserToWantToJoinToWorkspaceByEntity(userWaitingToApproveWorkspaceJoin);
+
             var userNotificationWorkspaceWithRequiredAccess = new UserNotificationWorkspaceWithRequiredAccess
             {
                 UserWantToJoinFirebaseId = model.UserWantToJoinFirebaseId,
@@ -55,7 +70,8 @@ namespace Fastretro.API.Services
                 WorkspaceName = model.WorkspaceName,
                 DisplayName = model.DisplayName,
                 Email = model.Email,
-                UserNotification = userNotification
+                UserNotification = userNotification,
+                UserWaitingToApproveWorkspaceJoin = userWaitingToApproveWorkspaceJoin
             };
 
             await this.UserNotificationWorkspaceWithRequiredAccessRepository.AddAsync(userNotificationWorkspaceWithRequiredAccess);

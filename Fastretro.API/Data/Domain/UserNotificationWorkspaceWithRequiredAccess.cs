@@ -8,6 +8,7 @@ namespace Fastretro.API.Data.Domain
         public string WorkspaceName { get; set; }
         public string Email { get; set; }     
         public string DisplayName { get; set; }
-        public UserNotification UserNotification { get; set; }                
+        public UserNotification UserNotification { get; set; }     
+        public UserWaitingToApproveWorkspaceJoin UserWaitingToApproveWorkspaceJoin { get; set; }
     }
 }

@@ -67,5 +67,10 @@ namespace Fastretro.API.Services
             await this.userWaitingToApproveWorkspaceJoinRepository.AddAsync(entity);
             await this.unitOfWork.CompleteAsync();
         }
+
+        public async Task SetWaitUserToWantToJoinToWorkspaceByEntity(UserWaitingToApproveWorkspaceJoin entity)
+        {
+            await this.userWaitingToApproveWorkspaceJoinRepository.AddAsync(entity);
+        }
     }
 }
