@@ -21,12 +21,13 @@ namespace Fastretro.API.Services
 
         }
 
-        public async Task<UserWaitingToApproveWorkspaceJoin> GetUserWaitingToApproveWorkspaceJoin(string userWantToJoinFirebaseId, string creatorUserFirebaseId, string workspceWithRequiredAccessFirebaseId)
+        public async Task<UserWaitingToApproveWorkspaceJoin> GetUserWaitingToApproveWorkspaceJoin(string userWantToJoinFirebaseId, string creatorUserFirebaseId, string workspceWithRequiredAccessFirebaseId, int userWaitingToApproveWorkspaceJoinId)
         {
             var findendUserWaitingToApproveWorkspaceJoin = await this.userWaitingToApproveWorkspaceJoinRepository.FirstOrDefaultAsync(
                     uwa => uwa.CreatorUserFirebaseId == creatorUserFirebaseId &&
                     uwa.UserWantToJoinFirebaseId == userWantToJoinFirebaseId &&
-                    uwa.WorkspceWithRequiredAccessFirebaseId == workspceWithRequiredAccessFirebaseId);
+                    uwa.WorkspceWithRequiredAccessFirebaseId == workspceWithRequiredAccessFirebaseId &&
+                    uwa.Id == userWaitingToApproveWorkspaceJoinId);
 
             return findendUserWaitingToApproveWorkspaceJoin;
         }

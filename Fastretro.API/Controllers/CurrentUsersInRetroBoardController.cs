@@ -454,12 +454,16 @@ namespace Fastretro.API.Controllers
             }
         }
 
-        [HttpGet("getUserWaitingToApproveWorkspaceJoin/{userWantToJoinFirebaseId}/{creatorUserFirebaseId}/{workspceWithRequiredAccessFirebaseId}")]
-        public async Task<IActionResult> GetUserWaitingToApproveWorkspaceJoin(string userWantToJoinFirebaseId, string creatorUserFirebaseId, string workspceWithRequiredAccessFirebaseId)
+        [HttpGet("getUserWaitingToApproveWorkspaceJoin/{userWantToJoinFirebaseId}/{creatorUserFirebaseId}/{workspceWithRequiredAccessFirebaseId}/{userWaitingToApproveWorkspaceJoinId}")]
+        public async Task<IActionResult> GetUserWaitingToApproveWorkspaceJoin(
+            string userWantToJoinFirebaseId,
+            string creatorUserFirebaseId,
+            string workspceWithRequiredAccessFirebaseId,
+            int userWaitingToApproveWorkspaceJoinId)
         {
             try
             {
-                return Ok(await this.userWaitingToApproveWorkspaceJoinServices.GetUserWaitingToApproveWorkspaceJoin(userWantToJoinFirebaseId, creatorUserFirebaseId, workspceWithRequiredAccessFirebaseId));
+                return Ok(await this.userWaitingToApproveWorkspaceJoinServices.GetUserWaitingToApproveWorkspaceJoin(userWantToJoinFirebaseId, creatorUserFirebaseId, workspceWithRequiredAccessFirebaseId, userWaitingToApproveWorkspaceJoinId));
             }
             catch (Exception)
             {

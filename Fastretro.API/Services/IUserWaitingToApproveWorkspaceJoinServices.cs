@@ -8,7 +8,7 @@ namespace Fastretro.API.Services
     {
         Task SetWaitUserToWantToJoinToWorkspace(UserWaitingToApproveWorkspaceJoinModel model);
         Task SetApproveUserWantToJoinToWorkspace(UserWaitingToApproveWorkspaceJoinModel model);
-        Task<UserWaitingToApproveWorkspaceJoin> GetUserWaitingToApproveWorkspaceJoin(string userWantToJoinFirebaseId, string creatorUserFirebaseId, string workspceWithRequiredAccessFirebaseId);
+        Task<UserWaitingToApproveWorkspaceJoin> GetUserWaitingToApproveWorkspaceJoin(string userWantToJoinFirebaseId, string creatorUserFirebaseId, string workspceWithRequiredAccessFirebaseId, int userWaitingToApproveWorkspaceJoinId);
         Task SetWaitUserToWantToJoinToWorkspaceByEntity(UserWaitingToApproveWorkspaceJoin entity);
     }
 }
