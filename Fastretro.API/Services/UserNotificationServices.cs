@@ -86,7 +86,7 @@ namespace Fastretro.API.Services
                     uwa => uwa.CreatorUserFirebaseId == model.CreatorUserFirebaseId &&
                     uwa.UserWantToJoinFirebaseId == model.UserWantToJoinFirebaseId &&
                     uwa.WorkspceWithRequiredAccessFirebaseId == model.WorkspceWithRequiredAccessFirebaseId,
-                    include => include.UserNotification);
+                    include => include.UserNotification, include => include.UserWaitingToApproveWorkspaceJoin);
 
             if (userNotificationWorkspaceWithRequiredAccess != null)
             {
