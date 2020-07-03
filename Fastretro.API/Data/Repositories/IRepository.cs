@@ -33,5 +33,6 @@ namespace Fastretro.API.Data.Repositories
         Task<TEntity> FirstOrDefaultWithIncludedEntityAsync(Expression<Func<TEntity, bool>> predicate, Expression<Func<TEntity, object>> includeEntity);
         Task<IEnumerable<TEntity>> FindAsyncWithIncludedEntityAsync(Expression<Func<TEntity, bool>> predicate, Expression<Func<TEntity, object>> includeEntity);
         Task<TEntity> FirstOrDefaulAsyncWithIncludedEntities(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] includeEntities);
+        Task<IEnumerable<TEntity>> FindAsyncWithIncludedEntities(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] includeEntities);
     }
 }

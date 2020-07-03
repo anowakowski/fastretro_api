@@ -94,5 +94,12 @@ namespace Fastretro.API.Data.Repositories
 
             return await query.FirstOrDefaultAsync(predicate);
         }
+        public async Task<IEnumerable<TEntity>> FindAsyncWithIncludedEntities(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] includeEntities)
+        {
+            var query = DbSet.IncludeMultiple(includeEntities);
+
+            return await query.Where(predicate).ToListAsync();
+        }
+
     }
 }

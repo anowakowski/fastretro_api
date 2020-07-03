@@ -82,7 +82,7 @@ namespace Fastretro.API.Services
         public async Task SetUserNotificationAsRead(UserNotificationAsReadModel model)
         {
             var userNotificationWorkspaceWithRequiredAccess =
-                await this.UserNotificationWorkspaceWithRequiredAccessRepository.FirstOrDefaultWithIncludedEntityAsync(
+                await this.UserNotificationWorkspaceWithRequiredAccessRepository.FirstOrDefaulAsyncWithIncludedEntities(
                     uwa => uwa.CreatorUserFirebaseId == model.CreatorUserFirebaseId &&
                     uwa.UserWantToJoinFirebaseId == model.UserWantToJoinFirebaseId &&
                     uwa.WorkspceWithRequiredAccessFirebaseId == model.WorkspceWithRequiredAccessFirebaseId,
