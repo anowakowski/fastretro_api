@@ -441,6 +441,20 @@ namespace Fastretro.API.Controllers
             }
         }
 
+        [HttpPost("setUserNotificationForuserWaitingToApproveWorkspaceJoin")]
+        public async Task<IActionResult> SetUserNotificationForuserWaitingToApproveWorkspaceJoin([FromBody] UserNotificationForUserWaitingToApproveWorkspaceJoinModel model)
+        {
+            try
+            {
+                await Task.Run(() => this.userNotificationServices.SetUserNotificationForuserWaitingToApproveWorkspaceJoin(model));
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return BadRequest("Can't unfollow that user");
+            }
+        }
+
         [HttpGet("getUserNotifications/{userId}")]
         public async Task<IActionResult> GetUserNotifications(string userId)
         {

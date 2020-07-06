@@ -11,19 +11,19 @@ namespace Fastretro.API.Services
 {
     public class UserNotificationServices : IUserNotificationServices
     {
-        private readonly IUserWaitingToApproveWorkspaceJoinServices userWaitingToApproveWorkspaceJoinServices;
         private readonly IRepository<UserNotification> userNotificatonRepository;
         private readonly IUnitOfWork unitOfWork;
         private readonly IRepository<UserNotificationWorkspaceWithRequiredAccess> UserNotificationWorkspaceWithRequiredAccessRepository;
+        private readonly IRepository<UserWaitingToApproveWorkspaceJoin> userWaitingToApproveWorkspaceJoinRepository;
 
         public UserNotificationServices(
-            IUserWaitingToApproveWorkspaceJoinServices userWaitingToApproveWorkspaceJoinServices,
             IRepository<UserNotification> userNotificatonRepository,
             IRepository<UserNotificationWorkspaceWithRequiredAccess> UserNotificationWorkspaceWithRequiredAccessRepository,
+            IRepository<UserWaitingToApproveWorkspaceJoin> userWaitingToApproveWorkspaceJoinRepository,
             IUnitOfWork unitOfWork)
         {
             this.UserNotificationWorkspaceWithRequiredAccessRepository = UserNotificationWorkspaceWithRequiredAccessRepository;
-            this.userWaitingToApproveWorkspaceJoinServices = userWaitingToApproveWorkspaceJoinServices;
+            this.userWaitingToApproveWorkspaceJoinRepository = userWaitingToApproveWorkspaceJoinRepository;
             this.userNotificatonRepository = userNotificatonRepository;
             this.unitOfWork = unitOfWork;
         }
@@ -47,7 +47,7 @@ namespace Fastretro.API.Services
 
             UserWaitingToApproveWorkspaceJoin userWaitingToApproveWorkspaceJoin = PrepareUserWaitingToApproveWorkspaceJoin(model, currentDate);
 
-            await this.userWaitingToApproveWorkspaceJoinServices.SetWaitUserToWantToJoinToWorkspaceByEntity(userWaitingToApproveWorkspaceJoin);
+            await this.userWaitingToApproveWorkspaceJoinRepository.AddAsync(userWaitingToApproveWorkspaceJoin);
 
             UserNotificationWorkspaceWithRequiredAccess userNotificationWorkspaceWithRequiredAccess = PrepareUserNotificationWorkspaceWithRequiredAccess(model, userNotification, userWaitingToApproveWorkspaceJoin);
 
@@ -127,6 +127,33 @@ namespace Fastretro.API.Services
                     findedUserNotificationWorkspaceWithRequiredAccess.Where(funr => !funr.UserWaitingToApproveWorkspaceJoin.IsApprovalByCreator);
 
             return filteredFindedUserNotificationWorkspaceWithRequiredAccess;
+        }
+
+        public async Task SetUserNotificationForuserWaitingToApproveWorkspaceJoin(UserNotificationForUserWaitingToApproveWorkspaceJoinModel model)
+        {
+            var findedUserNotificationWorkspaceWithRequiredAccess =
+                await this.UserNotificationWorkspaceWithRequiredAccessRepository.FirstOrDefaulAsyncWithIncludedEntities(
+                    uwa => uwa.UserWaitingToApproveWorkspaceJoinId == model.UserWaitingToApproveWorkspaceJoinId,
+                    include => include.UserNotification, include => include.UserWaitingToApproveWorkspaceJoin);
+
+            var currentDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+
+            var userNotification = new UserNotification
+            {
+                CreatonDate = currentDate,
+                IsRead = false,
+                NotyficationType = "WorkspaceWithRequiredAccessResponse"
+            };
+
+            await this.userNotificatonRepository.AddAsync(userNotification);
+
+            var userNotificationWorkspaceWithRequiredAccessResponse = new UserNotificationWorkspaceWithRequiredAccessResponse
+            {
+                UserJoinedToWorkspaceFirebaseId = findedUserNotificationWorkspaceWithRequiredAccess.UserWantToJoinFirebaseId,
+                WorkspaceName = findedUserNotificationWorkspaceWithRequiredAccess.WorkspaceName,
+                WorkspceWithRequiredAccessFirebaseId = findedUserNotificationWorkspaceWithRequiredAccess.WorkspceWithRequiredAccessFirebaseId,
+                UserNotification = userNotification
+            };
         }
     }
 }
