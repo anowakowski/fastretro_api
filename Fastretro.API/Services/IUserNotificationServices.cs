@@ -10,5 +10,6 @@ namespace Fastretro.API.Services
         Task SetUserNotification(UserNotificationModel model);
         Task SetUserNotificationAsRead(UserNotificationAsReadModel model);
         Task<IEnumerable<UserNotificationWorkspaceWithRequiredAccess>> GetUserNotification(string CreatorUserFirebaseId);
+        Task<IEnumerable<UserNotificationWorkspaceWithRequiredAccess>> GetAllWaitingWorkspaceRequests(string userWantToJoinFirebaseId);
     }
 }

@@ -41,27 +41,24 @@ namespace Fastretro.API.Services
         public async Task SetUserNotification(UserNotificationModel model)
         {
             var currentDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-            var userNotification = new UserNotification
-            {
-                NotyficationType = "WorkspaceWithRequiredAccess",
-                CreatonDate = currentDate,
-                IsRead = false
-            };
+            UserNotification userNotification = PrepareUserNotification(currentDate);
 
             await this.userNotificatonRepository.AddAsync(userNotification);
 
-            var userWaitingToApproveWorkspaceJoin = new UserWaitingToApproveWorkspaceJoin
-            {
-                LastModifyDate = currentDate,
-                CreatorUserFirebaseId = model.CreatorUserFirebaseId,
-                UserWantToJoinFirebaseId = model.UserWantToJoinFirebaseId,
-                WorkspceWithRequiredAccessFirebaseId = model.WorkspceWithRequiredAccessFirebaseId,
-                RequestIsApprove = false
-            };
+            UserWaitingToApproveWorkspaceJoin userWaitingToApproveWorkspaceJoin = PrepareUserWaitingToApproveWorkspaceJoin(model, currentDate);
 
             await this.userWaitingToApproveWorkspaceJoinServices.SetWaitUserToWantToJoinToWorkspaceByEntity(userWaitingToApproveWorkspaceJoin);
 
-            var userNotificationWorkspaceWithRequiredAccess = new UserNotificationWorkspaceWithRequiredAccess
+            UserNotificationWorkspaceWithRequiredAccess userNotificationWorkspaceWithRequiredAccess = PrepareUserNotificationWorkspaceWithRequiredAccess(model, userNotification, userWaitingToApproveWorkspaceJoin);
+
+            await this.UserNotificationWorkspaceWithRequiredAccessRepository.AddAsync(userNotificationWorkspaceWithRequiredAccess);
+
+            await this.unitOfWork.CompleteAsync();
+        }
+
+        private static UserNotificationWorkspaceWithRequiredAccess PrepareUserNotificationWorkspaceWithRequiredAccess(UserNotificationModel model, UserNotification userNotification, UserWaitingToApproveWorkspaceJoin userWaitingToApproveWorkspaceJoin)
+        {
+            return new UserNotificationWorkspaceWithRequiredAccess
             {
                 UserWantToJoinFirebaseId = model.UserWantToJoinFirebaseId,
                 CreatorUserFirebaseId = model.CreatorUserFirebaseId,
@@ -72,10 +69,28 @@ namespace Fastretro.API.Services
                 UserNotification = userNotification,
                 UserWaitingToApproveWorkspaceJoin = userWaitingToApproveWorkspaceJoin
             };
+        }
 
-            await this.UserNotificationWorkspaceWithRequiredAccessRepository.AddAsync(userNotificationWorkspaceWithRequiredAccess);
+        private static UserWaitingToApproveWorkspaceJoin PrepareUserWaitingToApproveWorkspaceJoin(UserNotificationModel model, string currentDate)
+        {
+            return new UserWaitingToApproveWorkspaceJoin
+            {
+                LastModifyDate = currentDate,
+                CreatorUserFirebaseId = model.CreatorUserFirebaseId,
+                UserWantToJoinFirebaseId = model.UserWantToJoinFirebaseId,
+                WorkspceWithRequiredAccessFirebaseId = model.WorkspceWithRequiredAccessFirebaseId,
+                RequestIsApprove = false
+            };
+        }
 
-            await this.unitOfWork.CompleteAsync();
+        private static UserNotification PrepareUserNotification(string currentDate)
+        {
+            return new UserNotification
+            {
+                NotyficationType = "WorkspaceWithRequiredAccess",
+                CreatonDate = currentDate,
+                IsRead = false
+            };
         }
 
         public async Task SetUserNotificationAsRead(UserNotificationAsReadModel model)
@@ -97,6 +112,21 @@ namespace Fastretro.API.Services
 
                 await this.unitOfWork.CompleteAsync();
             }
+        }
+
+        public async Task<IEnumerable<UserNotificationWorkspaceWithRequiredAccess>> GetAllWaitingWorkspaceRequests(string userWantToJoinFirebaseId)
+        {
+            var findedUserNotificationWorkspaceWithRequiredAccess =
+                (await this.UserNotificationWorkspaceWithRequiredAccessRepository
+                        .FindAsyncWithIncludedEntities(unw => 
+                            unw.UserWantToJoinFirebaseId == userWantToJoinFirebaseId,
+                            include => include.UserNotification, include => include.UserWaitingToApproveWorkspaceJoin))
+                        .ToList();
+
+            var filteredFindedUserNotificationWorkspaceWithRequiredAccess =
+                    findedUserNotificationWorkspaceWithRequiredAccess.Where(funr => !funr.UserWaitingToApproveWorkspaceJoin.IsApprovalByCreator);
+
+            return filteredFindedUserNotificationWorkspaceWithRequiredAccess;
         }
     }
 }
