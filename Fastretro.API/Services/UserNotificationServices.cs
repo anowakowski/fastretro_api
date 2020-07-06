@@ -14,15 +14,18 @@ namespace Fastretro.API.Services
         private readonly IRepository<UserNotification> userNotificatonRepository;
         private readonly IUnitOfWork unitOfWork;
         private readonly IRepository<UserNotificationWorkspaceWithRequiredAccess> UserNotificationWorkspaceWithRequiredAccessRepository;
+        private readonly IRepository<UserNotificationWorkspaceWithRequiredAccessResponse> userNotificationWorkspaceWithRequiredAccessResponseRepository;
         private readonly IRepository<UserWaitingToApproveWorkspaceJoin> userWaitingToApproveWorkspaceJoinRepository;
 
         public UserNotificationServices(
             IRepository<UserNotification> userNotificatonRepository,
             IRepository<UserNotificationWorkspaceWithRequiredAccess> UserNotificationWorkspaceWithRequiredAccessRepository,
+            IRepository<UserNotificationWorkspaceWithRequiredAccessResponse> UserNotificationWorkspaceWithRequiredAccessResponseRepository,
             IRepository<UserWaitingToApproveWorkspaceJoin> userWaitingToApproveWorkspaceJoinRepository,
             IUnitOfWork unitOfWork)
         {
             this.UserNotificationWorkspaceWithRequiredAccessRepository = UserNotificationWorkspaceWithRequiredAccessRepository;
+            userNotificationWorkspaceWithRequiredAccessResponseRepository = UserNotificationWorkspaceWithRequiredAccessResponseRepository;
             this.userWaitingToApproveWorkspaceJoinRepository = userWaitingToApproveWorkspaceJoinRepository;
             this.userNotificatonRepository = userNotificatonRepository;
             this.unitOfWork = unitOfWork;
@@ -154,6 +157,10 @@ namespace Fastretro.API.Services
                 WorkspceWithRequiredAccessFirebaseId = findedUserNotificationWorkspaceWithRequiredAccess.WorkspceWithRequiredAccessFirebaseId,
                 UserNotification = userNotification
             };
+
+            await this.userNotificationWorkspaceWithRequiredAccessResponseRepository.AddAsync(userNotificationWorkspaceWithRequiredAccessResponse);
+
+            await this.unitOfWork.CompleteAsync();
         }
     }
 }
