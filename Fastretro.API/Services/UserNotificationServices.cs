@@ -31,14 +31,22 @@ namespace Fastretro.API.Services
             this.unitOfWork = unitOfWork;
         }
 
-        public async Task<IEnumerable<UserNotificationWorkspaceWithRequiredAccess>> GetUserNotification(string creatorUserFirebaseId)
+        public async Task<GetAllNotificationTypeModel> GetUserNotification(string creatorUserFirebaseId)
         {
             var userNotificationWorkspaceWithRequiredAccess =
                 await this.UserNotificationWorkspaceWithRequiredAccessRepository.FindAsyncWithIncludedEntityAsync(un => un.CreatorUserFirebaseId == creatorUserFirebaseId, include => include.UserNotification);
 
-            var orderedUserNotification = userNotificationWorkspaceWithRequiredAccess.ToList().OrderBy(un => un.UserNotification.IsRead).ToList();
+            var userNotificationWorkspaceWithRequiredAccessResponse = 
+                await this.userNotificationWorkspaceWithRequiredAccessResponseRepository.FindAsyncWithIncludedEntityAsync(
+                        un => un.UserJoinedToWorkspaceFirebaseId == creatorUserFirebaseId, include => include.UserNotification);
 
-            return userNotificationWorkspaceWithRequiredAccess;
+            var allUserNotificationModel = new GetAllNotificationTypeModel
+            {
+                UserNotificationWorkspaceWithRequiredAccesses = userNotificationWorkspaceWithRequiredAccess,
+                UserNotificationWorkspaceWithRequiredAccessResponses = userNotificationWorkspaceWithRequiredAccessResponse
+            };
+
+            return allUserNotificationModel;
         }
 
         public async Task SetUserNotification(UserNotificationModel model)

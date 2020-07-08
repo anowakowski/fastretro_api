@@ -9,7 +9,7 @@ namespace Fastretro.API.Services
     {
         Task SetUserNotification(UserNotificationModel model);
         Task SetUserNotificationAsRead(UserNotificationAsReadModel model);
-        Task<IEnumerable<UserNotificationWorkspaceWithRequiredAccess>> GetUserNotification(string CreatorUserFirebaseId);
+        Task<GetAllNotificationTypeModel> GetUserNotification(string creatorUserFirebaseId);
         Task<IEnumerable<UserNotificationWorkspaceWithRequiredAccess>> GetAllWaitingWorkspaceRequests(string userWantToJoinFirebaseId);
         Task SetUserNotificationForuserWaitingToApproveWorkspaceJoin(UserNotificationForUserWaitingToApproveWorkspaceJoinModel model);
     }
