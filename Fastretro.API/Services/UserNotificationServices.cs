@@ -167,7 +167,8 @@ namespace Fastretro.API.Services
             {
                 CreatonDate = currentDate,
                 IsRead = false,
-                NotyficationType = "WorkspaceWithRequiredAccessResponse"
+                NotyficationType = "WorkspaceWithRequiredAccessResponse",
+                UserNotificationFirebaseDocId = model.UserNotificationDocId
             };
 
             await this.userNotificatonRepository.AddAsync(userNotification);
