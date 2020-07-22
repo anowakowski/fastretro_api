@@ -5,5 +5,6 @@ namespace Fastretro.API.Data.Domain
         public string NotyficationType { get; set; }
         public string CreatonDate { get; set; }
         public bool IsRead { get; set; }
+        public string UserNotificationFirebaseDocId { get; set; }
     }
 }
