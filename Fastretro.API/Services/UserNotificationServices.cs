@@ -52,7 +52,7 @@ namespace Fastretro.API.Services
         public async Task SetUserNotification(UserNotificationModel model)
         {
             var currentDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-            UserNotification userNotification = PrepareUserNotification(currentDate);
+            UserNotification userNotification = PrepareUserNotification(currentDate, model.UserNotificationFirebaseDocId);
 
             await this.userNotificatonRepository.AddAsync(userNotification);
 
@@ -94,13 +94,14 @@ namespace Fastretro.API.Services
             };
         }
 
-        private static UserNotification PrepareUserNotification(string currentDate)
+        private static UserNotification PrepareUserNotification(string currentDate, string userNotificationFirebaseDocId)
         {
             return new UserNotification
             {
                 NotyficationType = "WorkspaceWithRequiredAccess",
                 CreatonDate = currentDate,
-                IsRead = false
+                IsRead = false,
+                UserNotificationFirebaseDocId = userNotificationFirebaseDocId
             };
         }
 
