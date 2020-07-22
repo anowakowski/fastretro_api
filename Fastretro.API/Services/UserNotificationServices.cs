@@ -125,6 +125,19 @@ namespace Fastretro.API.Services
             }
         }
 
+        public async Task SetUserNotificationAsReadForWorkspaceWithRequiredAccessResponse(UserNotificationAsReadForWorkspaceResonseAccessModel model)
+        {
+            var findedUsrNotification = await this.userNotificatonRepository.FirstOrDefaultAsync(un => un.Id == model.UserNotificationId);
+
+            if (findedUsrNotification != null)
+            {
+                findedUsrNotification.IsRead = true;
+                this.userNotificatonRepository.Update(findedUsrNotification);
+
+                await this.unitOfWork.CompleteAsync();
+            }
+        }
+
         public async Task<IEnumerable<UserNotificationWorkspaceWithRequiredAccess>> GetAllWaitingWorkspaceRequests(string userWantToJoinFirebaseId)
         {
             var findedUserNotificationWorkspaceWithRequiredAccess =
