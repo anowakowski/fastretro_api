@@ -499,6 +499,21 @@ namespace Fastretro.API.Controllers
             }
         }
 
+        [HttpGet("getIsExistingUserWaitingToApproveWorkspace/{userWantToJoinFirebaseId}/{workspceWithRequiredAccessFirebaseId}")]
+        public async Task<IActionResult> IsExistingUserWaitingToApproveWorkspace(
+            string userWantToJoinFirebaseId,
+            string workspceWithRequiredAccessFirebaseId)
+        {
+            try
+            {
+                return Ok(await this.userWaitingToApproveWorkspaceJoinServices.IsExistingUserWaitingToApproveWorkspace(userWantToJoinFirebaseId, workspceWithRequiredAccessFirebaseId));
+            }
+            catch (Exception)
+            {
+                return BadRequest("Can't get retro board options");
+            }
+        }
+
         [HttpGet("getAllWaitingWorkspaceRequests/{userWantToJoinFirebaseId}")]
         public async Task<IActionResult> GetAllWaitingWorkspaceRequests(
             string userWantToJoinFirebaseId,

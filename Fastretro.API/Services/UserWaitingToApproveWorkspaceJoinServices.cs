@@ -38,7 +38,8 @@ namespace Fastretro.API.Services
                 await this.userWaitingToApproveWorkspaceJoinRepository.FirstOrDefaultAsync(
                     uwa => uwa.CreatorUserFirebaseId == model.CreatorUserFirebaseId &&
                     uwa.UserWantToJoinFirebaseId == model.UserWantToJoinFirebaseId &&
-                    uwa.WorkspceWithRequiredAccessFirebaseId == model.WorkspceWithRequiredAccessFirebaseId
+                    uwa.WorkspceWithRequiredAccessFirebaseId == model.WorkspceWithRequiredAccessFirebaseId &&
+                    !uwa.IsApprovalByCreator
                 );
             if (findedUserWaitingToApproveWorkspaceJoin != null) 
             {
@@ -72,6 +73,18 @@ namespace Fastretro.API.Services
         public async Task SetWaitUserToWantToJoinToWorkspaceByEntity(UserWaitingToApproveWorkspaceJoin entity)
         {
             await this.userWaitingToApproveWorkspaceJoinRepository.AddAsync(entity);
+        }
+
+        public async Task<bool> IsExistingUserWaitingToApproveWorkspace(string userWantToJoinFirebaseId, string workspceWithRequiredAccessFirebaseId)
+        {
+            var findedUserWaitingToApproveWorkspaceJoin =
+                await this.userWaitingToApproveWorkspaceJoinRepository.FirstOrDefaultAsync(
+                    uwa => uwa.UserWantToJoinFirebaseId == userWantToJoinFirebaseId &&
+                    uwa.WorkspceWithRequiredAccessFirebaseId == workspceWithRequiredAccessFirebaseId &&
+                    !uwa.IsApprovalByCreator
+                );
+
+            return findedUserWaitingToApproveWorkspaceJoin != null;
         }
     }
 }
