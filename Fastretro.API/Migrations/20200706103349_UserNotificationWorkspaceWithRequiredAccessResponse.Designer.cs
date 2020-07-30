@@ -4,14 +4,16 @@ using Fastretro.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Fastretro.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20200706103349_UserNotificationWorkspaceWithRequiredAccessResponse")]
+    partial class UserNotificationWorkspaceWithRequiredAccessResponse
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -181,9 +183,6 @@ namespace Fastretro.API.Migrations
                     b.Property<string>("NotyficationType")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserNotificationFirebaseDocId")
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
 
                     b.ToTable("userNotifications");
@@ -242,9 +241,6 @@ namespace Fastretro.API.Migrations
                     b.Property<int?>("UserNotificationId")
                         .HasColumnType("int");
 
-                    b.Property<int>("UserWaitingToApproveWorkspaceJoinId")
-                        .HasColumnType("int");
-
                     b.Property<string>("WorkspaceName")
                         .HasColumnType("nvarchar(max)");
 
@@ -254,8 +250,6 @@ namespace Fastretro.API.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("UserNotificationId");
-
-                    b.HasIndex("UserWaitingToApproveWorkspaceJoinId");
 
                     b.ToTable("UserNotificationWorkspaceWithRequiredAccessResponses");
                 });
@@ -369,12 +363,6 @@ namespace Fastretro.API.Migrations
                     b.HasOne("Fastretro.API.Data.Domain.UserNotification", "UserNotification")
                         .WithMany()
                         .HasForeignKey("UserNotificationId");
-
-                    b.HasOne("Fastretro.API.Data.Domain.UserWaitingToApproveWorkspaceJoin", "UserWaitingToApproveWorkspaceJoin")
-                        .WithMany()
-                        .HasForeignKey("UserWaitingToApproveWorkspaceJoinId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

@@ -4,14 +4,16 @@ using Fastretro.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Fastretro.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20200702071230_userNotificationsNextPart2")]
+    partial class userNotificationsNextPart2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -181,9 +183,6 @@ namespace Fastretro.API.Migrations
                     b.Property<string>("NotyficationType")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserNotificationFirebaseDocId")
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
 
                     b.ToTable("userNotifications");
@@ -208,9 +207,6 @@ namespace Fastretro.API.Migrations
                     b.Property<int?>("UserNotificationId")
                         .HasColumnType("int");
 
-                    b.Property<int>("UserWaitingToApproveWorkspaceJoinId")
-                        .HasColumnType("int");
-
                     b.Property<string>("UserWantToJoinFirebaseId")
                         .HasColumnType("nvarchar(max)");
 
@@ -223,71 +219,8 @@ namespace Fastretro.API.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("UserNotificationId");
-
-                    b.HasIndex("UserWaitingToApproveWorkspaceJoinId");
 
                     b.ToTable("UserNotificationWorkspaceWithRequiredAccesses");
-                });
-
-            modelBuilder.Entity("Fastretro.API.Data.Domain.UserNotificationWorkspaceWithRequiredAccessResponse", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("UserJoinedToWorkspaceFirebaseId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("UserNotificationId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserWaitingToApproveWorkspaceJoinId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("WorkspaceName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("WorkspceWithRequiredAccessFirebaseId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserNotificationId");
-
-                    b.HasIndex("UserWaitingToApproveWorkspaceJoinId");
-
-                    b.ToTable("UserNotificationWorkspaceWithRequiredAccessResponses");
-                });
-
-            modelBuilder.Entity("Fastretro.API.Data.Domain.UserWaitingToApproveWorkspaceJoin", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("CreatorUserFirebaseId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsApprovalByCreator")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("LastModifyDate")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("RequestIsApprove")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("UserWantToJoinFirebaseId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("WorkspceWithRequiredAccessFirebaseId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("userWaitingToApproveWorkspaceJoins");
                 });
 
             modelBuilder.Entity("Fastretro.API.Data.Domain.UsersInAction", b =>
@@ -356,25 +289,6 @@ namespace Fastretro.API.Migrations
                     b.HasOne("Fastretro.API.Data.Domain.UserNotification", "UserNotification")
                         .WithMany()
                         .HasForeignKey("UserNotificationId");
-
-                    b.HasOne("Fastretro.API.Data.Domain.UserWaitingToApproveWorkspaceJoin", "UserWaitingToApproveWorkspaceJoin")
-                        .WithMany()
-                        .HasForeignKey("UserWaitingToApproveWorkspaceJoinId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Fastretro.API.Data.Domain.UserNotificationWorkspaceWithRequiredAccessResponse", b =>
-                {
-                    b.HasOne("Fastretro.API.Data.Domain.UserNotification", "UserNotification")
-                        .WithMany()
-                        .HasForeignKey("UserNotificationId");
-
-                    b.HasOne("Fastretro.API.Data.Domain.UserWaitingToApproveWorkspaceJoin", "UserWaitingToApproveWorkspaceJoin")
-                        .WithMany()
-                        .HasForeignKey("UserWaitingToApproveWorkspaceJoinId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

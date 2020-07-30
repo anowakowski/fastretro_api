@@ -24,6 +24,8 @@ namespace Fastretro.API.Controllers
         private readonly IUsersInTeamServices usersInTeamServices;
         private readonly IUsersInActionServices usersInActionServices;
         private readonly IRetroBoardStatusServices retroBoardStatusServices;
+        private readonly IUserNotificationServices userNotificationServices;
+        private readonly IUserWaitingToApproveWorkspaceJoinServices userWaitingToApproveWorkspaceJoinServices;
 
         public CurrentUsersInRetroBoardController(
             ICurrentUsersInRetroBoardServices currentUsersInRetroBoardServices,
@@ -33,7 +35,9 @@ namespace Fastretro.API.Controllers
             IRetroBoardAdditionalInfoServices retroBoardAdditionalInfoServices,
             IUsersInTeamServices usersInTeamServices,
             IUsersInActionServices usersInActionServices,
-            IRetroBoardStatusServices retroBoardStatusServices)
+            IRetroBoardStatusServices retroBoardStatusServices,
+            IUserNotificationServices userNotificationServices,
+            IUserWaitingToApproveWorkspaceJoinServices userWaitingToApproveWorkspaceJoinServices)
         {
             this.currentUsersInRetroBoardServices = currentUsersInRetroBoardServices;
             this.freshCurrentUserInRetroBoardServices = freshCurrentUserInRetroBoardServices;
@@ -43,6 +47,8 @@ namespace Fastretro.API.Controllers
             this.usersInTeamServices = usersInTeamServices;
             this.usersInActionServices = usersInActionServices;
             this.retroBoardStatusServices = retroBoardStatusServices;
+            this.userNotificationServices = userNotificationServices;
+            this.userWaitingToApproveWorkspaceJoinServices = userWaitingToApproveWorkspaceJoinServices;
         }
 
         [HttpGet("getCurrentUserInRetroBoard/{retroBoardId}")]
@@ -391,6 +397,136 @@ namespace Fastretro.API.Controllers
             {
                 return BadRequest("Can't get retro board options");
             }
-        }                  
+        }
+
+        [HttpPost("setUserNotification")]
+        public async Task<IActionResult> SetUserNotification([FromBody] UserNotificationModel model)
+        {
+            try
+            {
+                await Task.Run(() => this.userNotificationServices.SetUserNotification(model));
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return BadRequest("Can't set new notification");
+            }
+        }
+
+        [HttpPost("setApproveUserWantToJoinToWorkspace")]
+        public async Task<IActionResult> SetApproveUserWantToJoinToWorkspace([FromBody] UserWaitingToApproveWorkspaceJoinModel model)
+        {
+            try
+            {
+                await Task.Run(() => this.userWaitingToApproveWorkspaceJoinServices.SetApproveUserWantToJoinToWorkspace(model));
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return BadRequest("Can't unfollow that user");
+            }
+        }
+
+        [HttpPost("setUserNotificationAsRead")]
+        public async Task<IActionResult> SetUserNotificationAsRead([FromBody] UserNotificationAsReadModel model)
+        {
+            try
+            {
+                await Task.Run(() => this.userNotificationServices.SetUserNotificationAsRead(model));
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return BadRequest("Can't unfollow that user");
+            }
+        }
+
+        [HttpPost("setUserNotificationAsReadForWorkspaceWithRequiredAccessResponse")]
+        public async Task<IActionResult> SetUserNotificationAsReadForWorkspaceWithRequiredAccessResponse([FromBody] UserNotificationAsReadForWorkspaceResonseAccessModel model)
+        {
+            try
+            {
+                await Task.Run(() => this.userNotificationServices.SetUserNotificationAsReadForWorkspaceWithRequiredAccessResponse(model));
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return BadRequest("Can't unfollow that user");
+            }
+        }
+
+        [HttpPost("setUserNotificationForuserWaitingToApproveWorkspaceJoin")]
+        public async Task<IActionResult> SetUserNotificationForuserWaitingToApproveWorkspaceJoin([FromBody] UserNotificationForUserWaitingToApproveWorkspaceJoinModel model)
+        {
+            try
+            {
+                await Task.Run(() => this.userNotificationServices.SetUserNotificationForuserWaitingToApproveWorkspaceJoin(model));
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return BadRequest("Can't unfollow that user");
+            }
+        }
+
+        [HttpGet("getUserNotifications/{userId}")]
+        public async Task<IActionResult> GetUserNotifications(string userId)
+        {
+            try
+            {
+                return Ok(await this.userNotificationServices.GetUserNotification(userId));
+            }
+            catch (Exception)
+            {
+                return BadRequest("Can't get retro board options");
+            }
+        }
+
+        [HttpGet("getUserWaitingToApproveWorkspaceJoin/{userWantToJoinFirebaseId}/{creatorUserFirebaseId}/{workspceWithRequiredAccessFirebaseId}/{userWaitingToApproveWorkspaceJoinId}")]
+        public async Task<IActionResult> GetUserWaitingToApproveWorkspaceJoin(
+            string userWantToJoinFirebaseId,
+            string creatorUserFirebaseId,
+            string workspceWithRequiredAccessFirebaseId,
+            int userWaitingToApproveWorkspaceJoinId)
+        {
+            try
+            {
+                return Ok(await this.userWaitingToApproveWorkspaceJoinServices.GetUserWaitingToApproveWorkspaceJoin(userWantToJoinFirebaseId, creatorUserFirebaseId, workspceWithRequiredAccessFirebaseId, userWaitingToApproveWorkspaceJoinId));
+            }
+            catch (Exception)
+            {
+                return BadRequest("Can't get retro board options");
+            }
+        }
+
+        [HttpGet("getIsExistingUserWaitingToApproveWorkspace/{userWantToJoinFirebaseId}/{workspceWithRequiredAccessFirebaseId}")]
+        public async Task<IActionResult> IsExistingUserWaitingToApproveWorkspace(
+            string userWantToJoinFirebaseId,
+            string workspceWithRequiredAccessFirebaseId)
+        {
+            try
+            {
+                return Ok(await this.userWaitingToApproveWorkspaceJoinServices.IsExistingUserWaitingToApproveWorkspace(userWantToJoinFirebaseId, workspceWithRequiredAccessFirebaseId));
+            }
+            catch (Exception)
+            {
+                return BadRequest("Can't get retro board options");
+            }
+        }
+
+        [HttpGet("getAllWaitingWorkspaceRequests/{userWantToJoinFirebaseId}")]
+        public async Task<IActionResult> GetAllWaitingWorkspaceRequests(
+            string userWantToJoinFirebaseId,
+            string workspceWithRequiredAccessFirebaseId)
+        {
+            try
+            {
+                return Ok(await this.userNotificationServices.GetAllWaitingWorkspaceRequests(userWantToJoinFirebaseId));
+            }
+            catch (Exception)
+            {
+                return BadRequest("Can't get retro board options");
+            }
+        }
     }
 }

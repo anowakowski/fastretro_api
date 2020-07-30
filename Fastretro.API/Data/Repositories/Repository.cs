@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Fastretro.API.Data.Domain;
+using Fastretro.API.Data.Helpers;
 using Microsoft.EntityFrameworkCore;
 
 namespace Fastretro.API.Data.Repositories
@@ -85,7 +86,20 @@ namespace Fastretro.API.Data.Repositories
         {
             var query = DbSet.Include(includeEntity);
 
-            return await DbSet.Where(predicate).ToListAsync();
+            return await query.Where(predicate).ToListAsync();
         }
+        public async Task<TEntity> FirstOrDefaulAsyncWithIncludedEntities(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] includeEntities)
+        {
+            var query = DbSet.IncludeMultiple(includeEntities);
+
+            return await query.FirstOrDefaultAsync(predicate);
+        }
+        public async Task<IEnumerable<TEntity>> FindAsyncWithIncludedEntities(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] includeEntities)
+        {
+            var query = DbSet.IncludeMultiple(includeEntities);
+
+            return await query.Where(predicate).ToListAsync();
+        }
+
     }
 }
