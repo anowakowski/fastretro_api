@@ -34,7 +34,10 @@ namespace Fastretro.API.Services
         public async Task<GetAllNotificationTypeModel> GetUserNotification(string userFirebaseId)
         {
             var userNotificationWorkspaceWithRequiredAccess =
-                await this.UserNotificationWorkspaceWithRequiredAccessRepository.FindAsyncWithIncludedEntityAsync(un => un.CreatorUserFirebaseId == userFirebaseId, include => include.UserNotification);
+                await this.UserNotificationWorkspaceWithRequiredAccessRepository.FindAsyncWithIncludedEntities(un =>
+                    un.CreatorUserFirebaseId == userFirebaseId,
+                    include => include.UserNotification,
+                    include => include.UserWaitingToApproveWorkspaceJoin);
 
             var userNotificationWorkspaceWithRequiredAccessResponse = 
                 await this.userNotificationWorkspaceWithRequiredAccessResponseRepository.FindAsyncWithIncludedEntities(
