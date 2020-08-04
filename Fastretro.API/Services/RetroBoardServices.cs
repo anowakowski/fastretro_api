@@ -20,6 +20,25 @@ namespace Fastretro.API.Services
             this.unitOfWork = unitOfWork;
         }
 
+        public async Task<RetroBoardGetModel> GetRetroBoard(string retroBoardFirebaseDocId)
+        {
+            var findedRetroBoard = await this.repository.FirstOrDefaultAsync(rb => rb.RetroBoardFirebaseDocId == retroBoardFirebaseDocId);
+
+            if (findedRetroBoard != null)
+            {
+                var retroBoardModel = new RetroBoardGetModel
+                {
+                    RetroBoardFirebaseDocId = findedRetroBoard.RetroBoardFirebaseDocId,
+                    RetroBoardName = findedRetroBoard.RetroBoardName,
+                    SprintNumber = findedRetroBoard.SprintNumber
+                };
+
+                return retroBoardModel;
+            }
+
+            return null;
+        }
+
         public async Task SetRetroBoard(RetroBoardModel model)
         {
             var retroBoard = new RetroBoard
