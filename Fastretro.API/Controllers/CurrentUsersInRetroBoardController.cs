@@ -26,6 +26,7 @@ namespace Fastretro.API.Controllers
         private readonly IRetroBoardStatusServices retroBoardStatusServices;
         private readonly IUserNotificationServices userNotificationServices;
         private readonly IUserWaitingToApproveWorkspaceJoinServices userWaitingToApproveWorkspaceJoinServices;
+        private readonly IRetroBoardServices retroBoardServices;
 
         public CurrentUsersInRetroBoardController(
             ICurrentUsersInRetroBoardServices currentUsersInRetroBoardServices,
@@ -37,7 +38,8 @@ namespace Fastretro.API.Controllers
             IUsersInActionServices usersInActionServices,
             IRetroBoardStatusServices retroBoardStatusServices,
             IUserNotificationServices userNotificationServices,
-            IUserWaitingToApproveWorkspaceJoinServices userWaitingToApproveWorkspaceJoinServices)
+            IUserWaitingToApproveWorkspaceJoinServices userWaitingToApproveWorkspaceJoinServices,
+            IRetroBoardServices retroBoardServices)
         {
             this.currentUsersInRetroBoardServices = currentUsersInRetroBoardServices;
             this.freshCurrentUserInRetroBoardServices = freshCurrentUserInRetroBoardServices;
@@ -49,6 +51,7 @@ namespace Fastretro.API.Controllers
             this.retroBoardStatusServices = retroBoardStatusServices;
             this.userNotificationServices = userNotificationServices;
             this.userWaitingToApproveWorkspaceJoinServices = userWaitingToApproveWorkspaceJoinServices;
+            this.retroBoardServices = retroBoardServices;
         }
 
         [HttpGet("getCurrentUserInRetroBoard/{retroBoardId}")]
@@ -526,6 +529,33 @@ namespace Fastretro.API.Controllers
             catch (Exception)
             {
                 return BadRequest("Can't get retro board options");
+            }
+        }
+
+        [HttpPost("setRetroBoard")]
+        public async Task<IActionResult> SetRetroBoard([FromBody] RetroBoardModel model)
+        {
+            try
+            {
+                await Task.Run(() => this.retroBoardServices.SetRetroBoard(model));
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return BadRequest("Can't set retro board");
+            }
+        }
+
+        [HttpGet("getAllWaitingWorkspaceRequests/{retroBoardFirebaseDocId}")]
+        public async Task<IActionResult> GetRetroBoard(string retroBoardFirebaseDocId)
+        {
+            try
+            {
+                return Ok(await this.retroBoardServices.GetRetroBoard(retroBoardFirebaseDocId));
+            }
+            catch (Exception)
+            {
+                return BadRequest("Can't get retro board");
             }
         }
     }
