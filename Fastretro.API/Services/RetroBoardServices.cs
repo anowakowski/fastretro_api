@@ -14,7 +14,7 @@ namespace Fastretro.API.Services
         private readonly IRepository<RetroBoard> repository;
         private readonly IUnitOfWork unitOfWork;
 
-        RetroBoardServices(IRepository<RetroBoard> repository, IUnitOfWork unitOfWork)
+        public RetroBoardServices(IRepository<RetroBoard> repository, IUnitOfWork unitOfWork)
         {
             this.repository = repository;
             this.unitOfWork = unitOfWork;
