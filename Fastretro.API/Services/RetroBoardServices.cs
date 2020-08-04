@@ -44,6 +44,29 @@ namespace Fastretro.API.Services
             return null;
         }
 
+        public async Task<IEnumerable<RetroBoardCardGetModel>> GetRetroBoardCards(string retroBoardFirebaseDocId)
+        {
+            var findedRetroBoardCards = await this.retroBoardCardRepository.FindAsync(rbc => rbc.RetroBoardCardFirebaseDocId == retroBoardFirebaseDocId);
+
+            var retroBoardCards = new List<RetroBoardCardGetModel>();
+
+            findedRetroBoardCards
+                .ToList()
+                .ForEach(rbc =>
+                {
+                    var rbcToAdd = new RetroBoardCardGetModel
+                    {
+                        RetroBoardCardFirebaseDocId = rbc.RetroBoardCardFirebaseDocId,
+                        RetroBoardFirebaseDocId = rbc.RetroBoardFirebaseDocId,
+                        Text = rbc.Text
+                    };
+
+                    retroBoardCards.Add(rbcToAdd);
+                });
+
+            return retroBoardCards;
+        }
+
         public async Task SetRetroBoard(RetroBoardModel model)
         {
             var retroBoard = new RetroBoard
