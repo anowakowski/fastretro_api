@@ -11,18 +11,23 @@ namespace Fastretro.API.Services
 {
     public class RetroBoardServices : IRetroBoardServices
     {
-        private readonly IRepository<RetroBoard> repository;
+        private readonly IRepository<RetroBoard> retroBoardRepository;
+        private readonly IRepository<RetroBoardCard> retroBoardCardRepository;
         private readonly IUnitOfWork unitOfWork;
 
-        public RetroBoardServices(IRepository<RetroBoard> repository, IUnitOfWork unitOfWork)
+        public RetroBoardServices(
+            IRepository<RetroBoard> retroBoardRepository,
+            IRepository<RetroBoardCard> retroBoardCardRepository,
+            IUnitOfWork unitOfWork)
         {
-            this.repository = repository;
+            this.retroBoardRepository = retroBoardRepository;
+            this.retroBoardCardRepository = retroBoardCardRepository;
             this.unitOfWork = unitOfWork;
         }
 
         public async Task<RetroBoardGetModel> GetRetroBoard(string retroBoardFirebaseDocId)
         {
-            var findedRetroBoard = await this.repository.FirstOrDefaultAsync(rb => rb.RetroBoardFirebaseDocId == retroBoardFirebaseDocId);
+            var findedRetroBoard = await this.retroBoardRepository.FirstOrDefaultAsync(rb => rb.RetroBoardFirebaseDocId == retroBoardFirebaseDocId);
 
             if (findedRetroBoard != null)
             {
@@ -48,13 +53,21 @@ namespace Fastretro.API.Services
                 SprintNumber = model.SprintNumber
             };
 
-            await this.repository.AddAsync(retroBoard);
+            await this.retroBoardRepository.AddAsync(retroBoard);
             await this.unitOfWork.CompleteAsync();
         }
 
-        public Task SetRetroBoardCard(RetroBoardCardModel model)
+        public async Task SetRetroBoardCard(RetroBoardCardModel model)
         {
-            throw new NotImplementedException();
+            var retroBoardCard = new RetroBoardCard
+            {
+                RetroBoardCardFirebaseDocId = model.RetroBoardCardFirebaseDocId,
+                RetroBoardFirebaseDocId = model.RetroBoardFirebaseDocId,
+                Text = model.Text
+            };
+
+            await this.retroBoardCardRepository.AddAsync(retroBoardCard);
+            await this.unitOfWork.CompleteAsync();
         }
     }
 }
