@@ -546,7 +546,7 @@ namespace Fastretro.API.Controllers
             }
         }
 
-        [HttpGet("getAllWaitingWorkspaceRequests/{retroBoardFirebaseDocId}")]
+        [HttpGet("GetRetroBoard/{retroBoardFirebaseDocId}")]
         public async Task<IActionResult> GetRetroBoard(string retroBoardFirebaseDocId)
         {
             try
