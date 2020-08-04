@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Fastretro.API.Data.Domain
 {
-    public class RetroBoard
+    public class RetroBoard : Entity
     {
         public string RetroBoardFirebaseDocId { get; set; }
         public string RetroBoardName { get; set; }
