@@ -19,5 +19,6 @@ namespace Fastretro.API.Data
         public DbSet<UserWaitingToApproveWorkspaceJoin> userWaitingToApproveWorkspaceJoins { get; set; }
         public DbSet<UserNotificationWorkspaceWithRequiredAccessResponse> UserNotificationWorkspaceWithRequiredAccessResponses { get; set; }
         public DbSet<RetroBoard> RetroBoards { get; set; }
+        public DbSet<RetroBoardCard> RetroBoardCards { get; set; }
     }
 }

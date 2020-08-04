@@ -51,5 +51,10 @@ namespace Fastretro.API.Services
             await this.repository.AddAsync(retroBoard);
             await this.unitOfWork.CompleteAsync();
         }
+
+        public Task SetRetroBoardCard(RetroBoardCardModel model)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
