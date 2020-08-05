@@ -558,5 +558,46 @@ namespace Fastretro.API.Controllers
                 return BadRequest("Can't get retro board");
             }
         }
+
+        [HttpPost("SetRetroBoardCard")]
+        public async Task<IActionResult> SetRetroBoardCard([FromBody] RetroBoardCardModel model)
+        {
+            try
+            {
+                await Task.Run(() => this.retroBoardServices.SetRetroBoardCard(model));
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return BadRequest("Can't set retro board");
+            }
+        }
+
+        [HttpGet("GetRetroBoardCard/{retroBoardFirebaseDocId}")]
+        public async Task<IActionResult> GetRetroBoardCard(string retroBoardFirebaseDocId)
+        {
+            try
+            {
+                return Ok(await this.retroBoardServices.GetRetroBoardCards(retroBoardFirebaseDocId));
+            }
+            catch (Exception)
+            {
+                return BadRequest("Can't get retro board");
+            }
+        }
+
+        [HttpPost("updateRetroBoardCard")]
+        public async Task<IActionResult> UpdateRetroBoardCard([FromBody] RetroBoardCardModel model)
+        {
+            try
+            {
+                await Task.Run(() => this.retroBoardServices.UpdateRetroBoardCard(model));
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return BadRequest("Can't set retro board");
+            }
+        }
     }
 }

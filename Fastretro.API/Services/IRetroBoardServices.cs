@@ -11,5 +11,6 @@ namespace Fastretro.API.Services
         Task SetRetroBoardCard(RetroBoardCardModel model);
         Task<RetroBoardGetModel> GetRetroBoard(string retroBoardFirebaseDocId);
         Task<IEnumerable<RetroBoardCardGetModel>> GetRetroBoardCards(string retroBoardFirebaseDocId);
+        Task UpdateRetroBoardCard(RetroBoardCardModel model);
     }
 }

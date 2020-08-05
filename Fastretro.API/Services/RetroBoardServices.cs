@@ -92,5 +92,20 @@ namespace Fastretro.API.Services
             await this.retroBoardCardRepository.AddAsync(retroBoardCard);
             await this.unitOfWork.CompleteAsync();
         }
+
+        public async Task UpdateRetroBoardCard(RetroBoardCardModel model)
+        {
+            var findedRetroBoardCardToUpdate =
+                await this.retroBoardCardRepository.FirstOrDefaultAsync(rbc =>
+                    rbc.RetroBoardCardFirebaseDocId == model.RetroBoardCardFirebaseDocId &&
+                    rbc.RetroBoardFirebaseDocId == model.RetroBoardFirebaseDocId);
+
+            if (findedRetroBoardCardToUpdate != null)
+            {
+                findedRetroBoardCardToUpdate.Text = model.Text;
+                this.retroBoardCardRepository.Update(findedRetroBoardCardToUpdate);
+                await this.unitOfWork.CompleteAsync();
+            }
+        }
     }
 }
