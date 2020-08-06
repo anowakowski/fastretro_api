@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Fastretro.API.Models
 {
-    public class RetroBoardCardGetModel
+    public class RetroBoardCardModelAfterSaveForAddFirebaseDocId
     {
         public int RetroBoardCardApiId { get; set; }
         public string RetroBoardFirebaseDocId { get; set; }

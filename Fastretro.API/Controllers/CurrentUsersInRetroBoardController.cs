@@ -559,13 +559,12 @@ namespace Fastretro.API.Controllers
             }
         }
 
-        [HttpPost("SetRetroBoardCard")]
+        [HttpPost("setRetroBoardCard")]
         public async Task<IActionResult> SetRetroBoardCard([FromBody] RetroBoardCardModel model)
         {
             try
             {
-                await Task.Run(() => this.retroBoardServices.SetRetroBoardCard(model));
-                return Ok();
+                return Ok(await this.retroBoardServices.SetRetroBoardCard(model));
             }
             catch (Exception)
             {
@@ -573,7 +572,7 @@ namespace Fastretro.API.Controllers
             }
         }
 
-        [HttpGet("GetRetroBoardCard/{retroBoardFirebaseDocId}")]
+        [HttpGet("getRetroBoardCard/{retroBoardFirebaseDocId}")]
         public async Task<IActionResult> GetRetroBoardCard(string retroBoardFirebaseDocId)
         {
             try
@@ -591,7 +590,21 @@ namespace Fastretro.API.Controllers
         {
             try
             {
-                await Task.Run(() => this.retroBoardServices.UpdateRetroBoardCard(model));
+                await Task.Run(() => this.retroBoardServices.UpdateRetroBoardCardtext(model));
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return BadRequest("Can't set retro board");
+            }
+        }
+
+        [HttpPost("updateRetroBoardCardFirebaseDocId")]
+        public async Task<IActionResult> UpdateRetroBoardCardFirebaseDocId([FromBody] RetroBoardCardModelAfterSaveForAddFirebaseDocId model)
+        {
+            try
+            {
+                await Task.Run(() => this.retroBoardServices.UpdateRetroBoardCardFirebaseDocId(model));
                 return Ok();
             }
             catch (Exception)

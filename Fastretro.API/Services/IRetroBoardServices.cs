@@ -8,9 +8,10 @@ namespace Fastretro.API.Services
     public interface IRetroBoardServices
     {
         Task SetRetroBoard(RetroBoardModel model);
-        Task SetRetroBoardCard(RetroBoardCardModel model);
+        Task<RetroBoardCard> SetRetroBoardCard(RetroBoardCardModel model);
         Task<RetroBoardGetModel> GetRetroBoard(string retroBoardFirebaseDocId);
         Task<IEnumerable<RetroBoardCardGetModel>> GetRetroBoardCards(string retroBoardFirebaseDocId);
-        Task UpdateRetroBoardCard(RetroBoardCardModel model);
+        Task UpdateRetroBoardCardtext(RetroBoardCardModel model);
+        Task UpdateRetroBoardCardFirebaseDocId(RetroBoardCardModelAfterSaveForAddFirebaseDocId model);
     }
 }

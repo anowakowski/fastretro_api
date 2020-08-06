@@ -46,7 +46,7 @@ namespace Fastretro.API.Services
 
         public async Task<IEnumerable<RetroBoardCardGetModel>> GetRetroBoardCards(string retroBoardFirebaseDocId)
         {
-            var findedRetroBoardCards = await this.retroBoardCardRepository.FindAsync(rbc => rbc.RetroBoardCardFirebaseDocId == retroBoardFirebaseDocId);
+            var findedRetroBoardCards = await this.retroBoardCardRepository.FindAsync(rbc => rbc.RetroBoardFirebaseDocId == retroBoardFirebaseDocId);
 
             var retroBoardCards = new List<RetroBoardCardGetModel>();
 
@@ -56,9 +56,11 @@ namespace Fastretro.API.Services
                 {
                     var rbcToAdd = new RetroBoardCardGetModel
                     {
+                        RetroBoardCardApiId = rbc.Id,
                         RetroBoardCardFirebaseDocId = rbc.RetroBoardCardFirebaseDocId,
                         RetroBoardFirebaseDocId = rbc.RetroBoardFirebaseDocId,
                         Text = rbc.Text
+
                     };
 
                     retroBoardCards.Add(rbcToAdd);
@@ -80,7 +82,7 @@ namespace Fastretro.API.Services
             await this.unitOfWork.CompleteAsync();
         }
 
-        public async Task SetRetroBoardCard(RetroBoardCardModel model)
+        public async Task<RetroBoardCard> SetRetroBoardCard(RetroBoardCardModel model)
         {
             var retroBoardCard = new RetroBoardCard
             {
@@ -91,9 +93,11 @@ namespace Fastretro.API.Services
 
             await this.retroBoardCardRepository.AddAsync(retroBoardCard);
             await this.unitOfWork.CompleteAsync();
+
+            return retroBoardCard;
         }
 
-        public async Task UpdateRetroBoardCard(RetroBoardCardModel model)
+        public async Task UpdateRetroBoardCardtext(RetroBoardCardModel model)
         {
             var findedRetroBoardCardToUpdate =
                 await this.retroBoardCardRepository.FirstOrDefaultAsync(rbc =>
@@ -103,6 +107,21 @@ namespace Fastretro.API.Services
             if (findedRetroBoardCardToUpdate != null)
             {
                 findedRetroBoardCardToUpdate.Text = model.Text;
+                this.retroBoardCardRepository.Update(findedRetroBoardCardToUpdate);
+                await this.unitOfWork.CompleteAsync();
+            }
+        }
+
+        public async Task UpdateRetroBoardCardFirebaseDocId(RetroBoardCardModelAfterSaveForAddFirebaseDocId model)
+        {
+            var findedRetroBoardCardToUpdate =
+                await this.retroBoardCardRepository.FirstOrDefaultAsync(rbc =>
+                    rbc.Id == model.RetroBoardCardApiId &&
+                    rbc.RetroBoardFirebaseDocId == model.RetroBoardFirebaseDocId);
+
+            if (findedRetroBoardCardToUpdate != null)
+            {
+                findedRetroBoardCardToUpdate.RetroBoardCardFirebaseDocId= model.RetroBoardCardFirebaseDocId;
                 this.retroBoardCardRepository.Update(findedRetroBoardCardToUpdate);
                 await this.unitOfWork.CompleteAsync();
             }
