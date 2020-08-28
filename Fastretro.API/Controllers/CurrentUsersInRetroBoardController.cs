@@ -612,5 +612,19 @@ namespace Fastretro.API.Controllers
                 return BadRequest("Can't set retro board");
             }
         }
+
+        [HttpPost("setRetroBoardCardMergetContent")]
+        public async Task<IActionResult> SetRetroBoardCardMergetContent([FromBody] RetroBoardCardMergedContentModel model)
+        {
+            try
+            {
+                await Task.Run(() => this.retroBoardServices.SetRetroBoardCardMergetContent(model));
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return BadRequest("Can't set retro board");
+            }
+        }
     }
 }

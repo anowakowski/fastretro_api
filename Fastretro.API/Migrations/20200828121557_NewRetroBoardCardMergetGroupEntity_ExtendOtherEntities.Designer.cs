@@ -4,14 +4,16 @@ using Fastretro.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Fastretro.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20200828121557_NewRetroBoardCardMergetGroupEntity_ExtendOtherEntities")]
+    partial class NewRetroBoardCardMergetGroupEntity_ExtendOtherEntities
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -84,7 +86,7 @@ namespace Fastretro.API.Migrations
                     b.ToTable("FirebaseUsersData");
                 });
 
-            modelBuilder.Entity("Fastretro.API.Data.Domain.MergedRetroBoardCard", b =>
+            modelBuilder.Entity("Fastretro.API.Data.Domain.MergetRetroBoardCard", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -103,7 +105,7 @@ namespace Fastretro.API.Migrations
 
                     b.HasIndex("RetroBoardCardMergedGroupId");
 
-                    b.ToTable("MergedRetroBoardCards");
+                    b.ToTable("MergetRetroBoardCards");
                 });
 
             modelBuilder.Entity("Fastretro.API.Data.Domain.RetroBoard", b =>
@@ -433,7 +435,7 @@ namespace Fastretro.API.Migrations
                         .HasForeignKey("CurrentUserInRetroBoardId");
                 });
 
-            modelBuilder.Entity("Fastretro.API.Data.Domain.MergedRetroBoardCard", b =>
+            modelBuilder.Entity("Fastretro.API.Data.Domain.MergetRetroBoardCard", b =>
                 {
                     b.HasOne("Fastretro.API.Data.Domain.RetroBoardCard", "RetroBoardCard")
                         .WithMany("MergetRetroBoardCards")

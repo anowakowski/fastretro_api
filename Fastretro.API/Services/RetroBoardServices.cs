@@ -13,15 +13,21 @@ namespace Fastretro.API.Services
     {
         private readonly IRepository<RetroBoard> retroBoardRepository;
         private readonly IRepository<RetroBoardCard> retroBoardCardRepository;
+        private readonly IRepository<MergedRetroBoardCard> mergedRetroBoardCardRepository;
+        private readonly IRepository<RetroBoardCardMergedGroup> retroBoardCardMergetGroupRepository;
         private readonly IUnitOfWork unitOfWork;
 
         public RetroBoardServices(
             IRepository<RetroBoard> retroBoardRepository,
             IRepository<RetroBoardCard> retroBoardCardRepository,
+            IRepository<MergedRetroBoardCard> mergedRetroBoardCardRepository,
+            IRepository<RetroBoardCardMergedGroup> retroBoardCardMergetGroupRepository,
             IUnitOfWork unitOfWork)
         {
             this.retroBoardRepository = retroBoardRepository;
             this.retroBoardCardRepository = retroBoardCardRepository;
+            this.mergedRetroBoardCardRepository = mergedRetroBoardCardRepository;
+            this.retroBoardCardMergetGroupRepository = retroBoardCardMergetGroupRepository;
             this.unitOfWork = unitOfWork;
         }
 
@@ -124,6 +130,48 @@ namespace Fastretro.API.Services
                 findedRetroBoardCardToUpdate.RetroBoardCardFirebaseDocId= model.RetroBoardCardFirebaseDocId;
                 this.retroBoardCardRepository.Update(findedRetroBoardCardToUpdate);
                 await this.unitOfWork.CompleteAsync();
+            }
+        }
+
+        public async Task SetRetroBoardCardMergetContent(RetroBoardCardMergedContentModel model)
+        {
+            var findedRetroBoardCardToMergeFrom = await this.retroBoardCardRepository.FirstOrDefaultAsync(x => x.RetroBoardCardFirebaseDocId == model.RetroBoardCardToMergeFromFirebaseDocId);
+            var findedRetroBoardCardToMergeToCurrent = await this.retroBoardCardRepository.FirstOrDefaultAsync(x => x.RetroBoardCardFirebaseDocId == model.RetroBoardCardToMergeToCurrentFirebaseDocId);
+
+
+            if (!findedRetroBoardCardToMergeFrom.isMerged && !findedRetroBoardCardToMergeToCurrent.isMerged)
+            {
+                var mergedGroup = new RetroBoardCardMergedGroup
+                {
+                    CreateDate = DateTime.Now
+                };
+
+                await this.retroBoardCardMergetGroupRepository.AddAsync(mergedGroup);
+                await this.unitOfWork.CompleteAsync();
+
+                var mergedRetroBoardCardFrom = new MergedRetroBoardCard
+                {
+                    RetroBoardCardMergedGroup = mergedGroup,
+                    RetroBoardCard = findedRetroBoardCardToMergeFrom,
+                    RetroBoardCardId = findedRetroBoardCardToMergeFrom.Id
+                };
+
+                var mergedRetroBoardCardTo = new MergedRetroBoardCard
+                {
+                    RetroBoardCardMergedGroup = mergedGroup,
+                    RetroBoardCard = findedRetroBoardCardToMergeToCurrent,
+                    RetroBoardCardId = findedRetroBoardCardToMergeToCurrent.Id
+                };
+
+                await this.mergedRetroBoardCardRepository.AddAsync(mergedRetroBoardCardFrom);
+                await this.mergedRetroBoardCardRepository.AddAsync(mergedRetroBoardCardTo);
+
+                await this.unitOfWork.CompleteAsync();
+            }
+            else if (findedRetroBoardCardToMergeFrom.isMerged)
+            {
+                var findedMergedRetroBoardCard = await this.mergedRetroBoardCardRepository.FirstOrDefaultAsync(mrbc => mrbc.Id == findedRetroBoardCardToMergeFrom.Id);
+                var mergetGroupId = findedMergedRetroBoardCard.RetroBoardCardMergedGroup.Id;
             }
         }
     }
