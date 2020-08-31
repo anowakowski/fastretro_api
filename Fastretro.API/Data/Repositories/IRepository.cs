@@ -22,8 +22,12 @@ namespace Fastretro.API.Data.Repositories
         Task<TEntity> GetById(int id);
 
         void Delete(TEntity entity);
+        
+        void DeleteRange(IEnumerable<TEntity> entities);
 
         void Update(TEntity entity);
+
+        void UpdateRange(IEnumerable<TEntity> entities);
 
         Task<TEntity> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate);
 

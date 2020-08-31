@@ -160,13 +160,16 @@ namespace Fastretro.API.Services
         public async Task<RetroBoardCardMergedContentGetModel> SetRetroBoardCardMergetContent(RetroBoardCardMergedContentModel model)
         {
             var findedRetroBoardCardToMergeFrom = 
-                await this.retroBoardCardRepository.FirstOrDefaultWithIncludedEntityAsync(
+                await this.retroBoardCardRepository.FirstOrDefaulAsyncWithIncludedEntities(
                     rbc => rbc.RetroBoardCardFirebaseDocId == model.RetroBoardCardToMergeFromFirebaseDocId,
-                    include => include.RetroBoardCardMergedGroup);
+                    include => include.RetroBoardCardMergedGroup,
+                    include => include.MergetRetroBoardCards);
+
             var findedRetroBoardCardToMergeToCurrent = 
-                await this.retroBoardCardRepository.FirstOrDefaultWithIncludedEntityAsync(
+                await this.retroBoardCardRepository.FirstOrDefaulAsyncWithIncludedEntities(
                     rbc => rbc.RetroBoardCardFirebaseDocId == model.RetroBoardCardToMergeToCurrentFirebaseDocId,
-                    include => include.RetroBoardCardMergedGroup);
+                    include => include.RetroBoardCardMergedGroup,
+                    include => include.MergetRetroBoardCards);
 
             var retrunModel = new RetroBoardCardMergedContentGetModel();
 
@@ -195,13 +198,48 @@ namespace Fastretro.API.Services
                 retrunModel.MergedGroupId = mergedGroup.Id;
                 retrunModel.RetroBoardCardApiId = findedRetroBoardCardToMergeToCurrent.Id;
             }
-            else if (findedRetroBoardCardToMergeFrom.IsMerged && !findedRetroBoardCardToMergeToCurrent.IsMerged)
+            else if (findedRetroBoardCardToMergeFrom.IsMerged && findedRetroBoardCardToMergeFrom.IsShowMergedParent && !findedRetroBoardCardToMergeToCurrent.IsMerged)
             {
+                var mergedGroup = findedRetroBoardCardToMergeFrom.RetroBoardCardMergedGroup;
 
+                this.PrepareToUpdateWithMergedInfo(findedRetroBoardCardToMergeToCurrent, mergedGroup);
+
+                this.retroBoardCardRepository.Update(findedRetroBoardCardToMergeToCurrent);
+                await this.unitOfWork.CompleteAsync();
+
+                retrunModel.MergedGroupId = mergedGroup.Id;
+                retrunModel.RetroBoardCardApiId = findedRetroBoardCardToMergeFrom.Id;
             }
-            else if(findedRetroBoardCardToMergeFrom.IsMerged && findedRetroBoardCardToMergeToCurrent.IsMerged)
+            else if(
+                findedRetroBoardCardToMergeFrom.IsMerged &&
+                findedRetroBoardCardToMergeFrom.IsShowMergedParent &&
+                findedRetroBoardCardToMergeToCurrent.IsMerged &&
+                findedRetroBoardCardToMergeToCurrent.IsShowMergedParent)
             {
+                var mergedGroupFrom = findedRetroBoardCardToMergeFrom.RetroBoardCardMergedGroup;
 
+                var currentMergedCards = (await this.mergedRetroBoardCardRepository.FindAsyncWithIncludedEntityAsync(
+                    mrbc => mrbc.RetroBoardCardMergedGroup.Id == findedRetroBoardCardToMergeToCurrent.RetroBoardCardMergedGroup.Id,
+                    include => include.RetroBoardCardMergedGroup)).ToList();
+
+                foreach(var cmc in currentMergedCards)
+                {
+                    cmc.RetroBoardCardMergedGroup = mergedGroupFrom;
+                }
+
+                this.mergedRetroBoardCardRepository.UpdateRange(currentMergedCards);
+                await this.unitOfWork.CompleteAsync();
+
+                /*
+                this.mergedRetroBoardCardRepository.DeleteRange(currentMergedCards);
+                this.retroBoardCardRepository.Delete(findedRetroBoardCardToMergeToCurrent);
+                this.retroBoardCardMergetGroupRepository.Delete(findedRetroBoardCardToMergeToCurrent.RetroBoardCardMergedGroup);
+                */
+
+
+
+                retrunModel.MergedGroupId = mergedGroupFrom.Id;
+                retrunModel.RetroBoardCardApiId = findedRetroBoardCardToMergeFrom.Id;
             }
             else
             {
