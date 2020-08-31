@@ -625,5 +625,19 @@ namespace Fastretro.API.Controllers
                 return BadRequest("Can't set merged retro board card");
             }
         }
+
+        [HttpPost("setRetroBoardMergedFirebaseDocId")]
+        public async Task<IActionResult> SetRetroBoardMergedFirebaseDocId([FromBody] RetroBoardCardMergedSetCardFirebaseIdModel model)
+        {
+            try
+            {
+                await Task.Run(() => this.retroBoardServices.SetRetroBoardMergedFirebaseDocId(model));
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return BadRequest("Can't set merged retro board card");
+            }
+        }
     }
 }
