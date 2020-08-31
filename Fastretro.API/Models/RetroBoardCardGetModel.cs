@@ -11,5 +11,7 @@ namespace Fastretro.API.Models
         public string RetroBoardFirebaseDocId { get; set; }
         public string RetroBoardCardFirebaseDocId { get; set; }
         public string Text { get; set; }
+        public bool IsMerged { get; set; }
+        public IList<string> MergedContent { get; set; }
     }
 }

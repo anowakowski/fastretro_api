@@ -10,6 +10,7 @@ namespace Fastretro.API.Data.Domain
         public bool IsMerged { get; set; }
         public bool IsHidenMergedChild { get; set; }
         public bool IsShowMergedParent { get; set; }
+        public RetroBoardCardMergedGroup RetroBoardCardMergedGroup { get; set; }
         public ICollection<MergedRetroBoardCard> MergetRetroBoardCards { get; set; }
     }
 }
