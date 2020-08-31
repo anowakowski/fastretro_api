@@ -8,5 +8,6 @@ namespace Fastretro.API.Models
     public class RetroBoardCardMergedContentGetModel
     {
         public int MergedGroupId { get; set; }
+        public int RetroBoardCardApiId { get; set; }
     }
 }

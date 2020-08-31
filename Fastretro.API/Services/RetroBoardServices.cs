@@ -141,9 +141,8 @@ namespace Fastretro.API.Services
                 await this.retroBoardCardRepository.FirstOrDefaultAsync(x => x.RetroBoardCardFirebaseDocId == model.RetroBoardCardToMergeToCurrentFirebaseDocId);
 
             var retrunModel = new RetroBoardCardMergedContentGetModel();
-            var mergedGroupId = 0;
 
-            if (!findedRetroBoardCardToMergeFrom.isMerged && !findedRetroBoardCardToMergeToCurrent.isMerged)
+            if (!findedRetroBoardCardToMergeFrom.IsMerged && !findedRetroBoardCardToMergeToCurrent.IsMerged)
             {
                 var mergedGroup = new RetroBoardCardMergedGroup
                 {
@@ -160,8 +159,6 @@ namespace Fastretro.API.Services
                     RetroBoardCardId = findedRetroBoardCardToMergeFrom.Id
                 };
 
-                mergedGroupId = mergedGroup.Id;
-
                 var mergedRetroBoardCardTo = new MergedRetroBoardCard
                 {
                     RetroBoardCardMergedGroup = mergedGroup,
@@ -173,8 +170,35 @@ namespace Fastretro.API.Services
                 await this.mergedRetroBoardCardRepository.AddAsync(mergedRetroBoardCardTo);
 
                 await this.unitOfWork.CompleteAsync();
+
+                findedRetroBoardCardToMergeFrom.IsHidenMergedChild = true;
+                findedRetroBoardCardToMergeFrom.IsMerged = true;
+
+                findedRetroBoardCardToMergeToCurrent.IsHidenMergedChild = true;
+                findedRetroBoardCardToMergeToCurrent.IsMerged = true;
+
+                this.retroBoardCardRepository.Update(findedRetroBoardCardToMergeFrom);
+                this.retroBoardCardRepository.Update(findedRetroBoardCardToMergeToCurrent);
+
+                await this.unitOfWork.CompleteAsync();
+
+                var newParentMergedCard = new RetroBoardCard
+                {
+                    IsHidenMergedChild = false,
+                    IsShowMergedParent = true,
+                    IsMerged = true,
+                    RetroBoardCardFirebaseDocId = string.Empty,
+                    Text = string.Empty,
+                    RetroBoardFirebaseDocId = findedRetroBoardCardToMergeFrom.RetroBoardFirebaseDocId
+                };
+
+                await this.retroBoardCardRepository.AddAsync(newParentMergedCard);
+                await this.unitOfWork.CompleteAsync();
+
+                retrunModel.MergedGroupId = mergedGroup.Id;
+                retrunModel.RetroBoardCardApiId = newParentMergedCard.Id;
             }
-            else if (findedRetroBoardCardToMergeFrom.isMerged)
+            else if (findedRetroBoardCardToMergeFrom.IsMerged)
             {
                 var findedMergedRetroBoardCard = await this.mergedRetroBoardCardRepository.FirstOrDefaultAsync(mrbc => mrbc.Id == findedRetroBoardCardToMergeFrom.Id);
                 var mergetGroupId = findedMergedRetroBoardCard.RetroBoardCardMergedGroup.Id;
