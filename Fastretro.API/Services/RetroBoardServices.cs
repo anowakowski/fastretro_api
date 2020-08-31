@@ -133,11 +133,15 @@ namespace Fastretro.API.Services
             }
         }
 
-        public async Task SetRetroBoardCardMergetContent(RetroBoardCardMergedContentModel model)
+        public async Task<RetroBoardCardMergedContentGetModel> SetRetroBoardCardMergetContent(RetroBoardCardMergedContentModel model)
         {
-            var findedRetroBoardCardToMergeFrom = await this.retroBoardCardRepository.FirstOrDefaultAsync(x => x.RetroBoardCardFirebaseDocId == model.RetroBoardCardToMergeFromFirebaseDocId);
-            var findedRetroBoardCardToMergeToCurrent = await this.retroBoardCardRepository.FirstOrDefaultAsync(x => x.RetroBoardCardFirebaseDocId == model.RetroBoardCardToMergeToCurrentFirebaseDocId);
+            var findedRetroBoardCardToMergeFrom = 
+                await this.retroBoardCardRepository.FirstOrDefaultAsync(x => x.RetroBoardCardFirebaseDocId == model.RetroBoardCardToMergeFromFirebaseDocId);
+            var findedRetroBoardCardToMergeToCurrent = 
+                await this.retroBoardCardRepository.FirstOrDefaultAsync(x => x.RetroBoardCardFirebaseDocId == model.RetroBoardCardToMergeToCurrentFirebaseDocId);
 
+            var retrunModel = new RetroBoardCardMergedContentGetModel();
+            var mergedGroupId = 0;
 
             if (!findedRetroBoardCardToMergeFrom.isMerged && !findedRetroBoardCardToMergeToCurrent.isMerged)
             {
@@ -156,6 +160,8 @@ namespace Fastretro.API.Services
                     RetroBoardCardId = findedRetroBoardCardToMergeFrom.Id
                 };
 
+                mergedGroupId = mergedGroup.Id;
+
                 var mergedRetroBoardCardTo = new MergedRetroBoardCard
                 {
                     RetroBoardCardMergedGroup = mergedGroup,
@@ -173,6 +179,8 @@ namespace Fastretro.API.Services
                 var findedMergedRetroBoardCard = await this.mergedRetroBoardCardRepository.FirstOrDefaultAsync(mrbc => mrbc.Id == findedRetroBoardCardToMergeFrom.Id);
                 var mergetGroupId = findedMergedRetroBoardCard.RetroBoardCardMergedGroup.Id;
             }
+
+            return retrunModel;
         }
     }
 }
