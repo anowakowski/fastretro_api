@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 
 namespace Fastretro.API.Models
 {
-    public class RetroBoardCardModel
+    public class RetroBoardCardAfterUnmergeGetModel
     {
+        public int RetroBoardCardApiId { get; set; }
         public string RetroBoardFirebaseDocId { get; set; }
-        public string RetroBoardCardFirebaseDocId { get; set; }
-        public string Text { get; set; }
         public string UserFirebaseDocId { get; set; }
+        public bool IsMerged { get; set; }
     }
 }
