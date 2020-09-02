@@ -4,14 +4,16 @@ using Fastretro.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Fastretro.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20200831094324_ExtendRetroBoardCardEntity")]
+    partial class ExtendRetroBoardCardEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -173,21 +175,13 @@ namespace Fastretro.API.Migrations
                     b.Property<string>("RetroBoardCardFirebaseDocId")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("RetroBoardCardMergedGroupId")
-                        .HasColumnType("int");
-
                     b.Property<string>("RetroBoardFirebaseDocId")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Text")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserFirebaseDocId")
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("RetroBoardCardMergedGroupId");
 
                     b.ToTable("RetroBoardCards");
                 });
@@ -455,13 +449,6 @@ namespace Fastretro.API.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Fastretro.API.Data.Domain.RetroBoardCardMergedGroup", "RetroBoardCardMergedGroup")
-                        .WithMany()
-                        .HasForeignKey("RetroBoardCardMergedGroupId");
-                });
-
-            modelBuilder.Entity("Fastretro.API.Data.Domain.RetroBoardCard", b =>
-                {
                     b.HasOne("Fastretro.API.Data.Domain.RetroBoardCardMergedGroup", "RetroBoardCardMergedGroup")
                         .WithMany()
                         .HasForeignKey("RetroBoardCardMergedGroupId");

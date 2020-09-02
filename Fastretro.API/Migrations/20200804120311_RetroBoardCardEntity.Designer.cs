@@ -4,14 +4,16 @@ using Fastretro.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Fastretro.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20200804120311_RetroBoardCardEntity")]
+    partial class RetroBoardCardEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -84,28 +86,6 @@ namespace Fastretro.API.Migrations
                     b.ToTable("FirebaseUsersData");
                 });
 
-            modelBuilder.Entity("Fastretro.API.Data.Domain.MergedRetroBoardCard", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("RetroBoardCardId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("RetroBoardCardMergedGroupId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RetroBoardCardId");
-
-                    b.HasIndex("RetroBoardCardMergedGroupId");
-
-                    b.ToTable("MergedRetroBoardCards");
-                });
-
             modelBuilder.Entity("Fastretro.API.Data.Domain.RetroBoard", b =>
                 {
                     b.Property<int>("Id")
@@ -161,20 +141,8 @@ namespace Fastretro.API.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<bool>("IsHidenMergedChild")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsMerged")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsShowMergedParent")
-                        .HasColumnType("bit");
-
                     b.Property<string>("RetroBoardCardFirebaseDocId")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("RetroBoardCardMergedGroupId")
-                        .HasColumnType("int");
 
                     b.Property<string>("RetroBoardFirebaseDocId")
                         .HasColumnType("nvarchar(max)");
@@ -182,29 +150,9 @@ namespace Fastretro.API.Migrations
                     b.Property<string>("Text")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserFirebaseDocId")
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("RetroBoardCardMergedGroupId");
 
                     b.ToTable("RetroBoardCards");
-                });
-
-            modelBuilder.Entity("Fastretro.API.Data.Domain.RetroBoardCardMergedGroup", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("CreateDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("RetroBoardCardMergedGroups");
                 });
 
             modelBuilder.Entity("Fastretro.API.Data.Domain.RetroBoardOptions", b =>
@@ -445,26 +393,6 @@ namespace Fastretro.API.Migrations
                     b.HasOne("Fastretro.API.Data.Domain.CurrentUserInRetroBoard", "CurrentUserInRetroBoard")
                         .WithMany("firebaseUsersData")
                         .HasForeignKey("CurrentUserInRetroBoardId");
-                });
-
-            modelBuilder.Entity("Fastretro.API.Data.Domain.MergedRetroBoardCard", b =>
-                {
-                    b.HasOne("Fastretro.API.Data.Domain.RetroBoardCard", "RetroBoardCard")
-                        .WithMany("MergetRetroBoardCards")
-                        .HasForeignKey("RetroBoardCardId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Fastretro.API.Data.Domain.RetroBoardCardMergedGroup", "RetroBoardCardMergedGroup")
-                        .WithMany()
-                        .HasForeignKey("RetroBoardCardMergedGroupId");
-                });
-
-            modelBuilder.Entity("Fastretro.API.Data.Domain.RetroBoardCard", b =>
-                {
-                    b.HasOne("Fastretro.API.Data.Domain.RetroBoardCardMergedGroup", "RetroBoardCardMergedGroup")
-                        .WithMany()
-                        .HasForeignKey("RetroBoardCardMergedGroupId");
                 });
 
             modelBuilder.Entity("Fastretro.API.Data.Domain.UserNotificationWorkspaceWithRequiredAccess", b =>

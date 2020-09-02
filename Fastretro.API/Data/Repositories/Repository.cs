@@ -45,9 +45,19 @@ namespace Fastretro.API.Data.Repositories
             DbContext.Remove(entity);
         }
 
+        public void DeleteRange(IEnumerable<TEntity> entities)
+        {
+            DbContext.RemoveRange(entities);
+        }
+
         public void Update(TEntity entity)
         {
             DbContext.Update(entity);
+        }
+
+        public void UpdateRange(IEnumerable<TEntity> entities)
+        {
+            DbContext.UpdateRange(entities);
         }
 
         public async Task<TEntity> SingleOrDefaultAsync(Expression<Func<TEntity, bool>> predicate)
@@ -100,6 +110,5 @@ namespace Fastretro.API.Data.Repositories
 
             return await query.Where(predicate).ToListAsync();
         }
-
     }
 }

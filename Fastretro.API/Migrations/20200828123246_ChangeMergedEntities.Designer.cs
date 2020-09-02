@@ -4,14 +4,16 @@ using Fastretro.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Fastretro.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20200828123246_ChangeMergedEntities")]
+    partial class ChangeMergedEntities
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -161,20 +163,8 @@ namespace Fastretro.API.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<bool>("IsHidenMergedChild")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsMerged")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsShowMergedParent")
-                        .HasColumnType("bit");
-
                     b.Property<string>("RetroBoardCardFirebaseDocId")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("RetroBoardCardMergedGroupId")
-                        .HasColumnType("int");
 
                     b.Property<string>("RetroBoardFirebaseDocId")
                         .HasColumnType("nvarchar(max)");
@@ -182,12 +172,10 @@ namespace Fastretro.API.Migrations
                     b.Property<string>("Text")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserFirebaseDocId")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<bool>("isMerged")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("RetroBoardCardMergedGroupId");
 
                     b.ToTable("RetroBoardCards");
                 });
@@ -455,13 +443,6 @@ namespace Fastretro.API.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Fastretro.API.Data.Domain.RetroBoardCardMergedGroup", "RetroBoardCardMergedGroup")
-                        .WithMany()
-                        .HasForeignKey("RetroBoardCardMergedGroupId");
-                });
-
-            modelBuilder.Entity("Fastretro.API.Data.Domain.RetroBoardCard", b =>
-                {
                     b.HasOne("Fastretro.API.Data.Domain.RetroBoardCardMergedGroup", "RetroBoardCardMergedGroup")
                         .WithMany()
                         .HasForeignKey("RetroBoardCardMergedGroupId");

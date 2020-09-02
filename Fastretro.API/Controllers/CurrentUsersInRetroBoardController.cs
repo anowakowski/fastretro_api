@@ -26,6 +26,7 @@ namespace Fastretro.API.Controllers
         private readonly IRetroBoardStatusServices retroBoardStatusServices;
         private readonly IUserNotificationServices userNotificationServices;
         private readonly IUserWaitingToApproveWorkspaceJoinServices userWaitingToApproveWorkspaceJoinServices;
+        private readonly IRetroBoardServices retroBoardServices;
 
         public CurrentUsersInRetroBoardController(
             ICurrentUsersInRetroBoardServices currentUsersInRetroBoardServices,
@@ -37,7 +38,8 @@ namespace Fastretro.API.Controllers
             IUsersInActionServices usersInActionServices,
             IRetroBoardStatusServices retroBoardStatusServices,
             IUserNotificationServices userNotificationServices,
-            IUserWaitingToApproveWorkspaceJoinServices userWaitingToApproveWorkspaceJoinServices)
+            IUserWaitingToApproveWorkspaceJoinServices userWaitingToApproveWorkspaceJoinServices,
+            IRetroBoardServices retroBoardServices)
         {
             this.currentUsersInRetroBoardServices = currentUsersInRetroBoardServices;
             this.freshCurrentUserInRetroBoardServices = freshCurrentUserInRetroBoardServices;
@@ -49,6 +51,7 @@ namespace Fastretro.API.Controllers
             this.retroBoardStatusServices = retroBoardStatusServices;
             this.userNotificationServices = userNotificationServices;
             this.userWaitingToApproveWorkspaceJoinServices = userWaitingToApproveWorkspaceJoinServices;
+            this.retroBoardServices = retroBoardServices;
         }
 
         [HttpGet("getCurrentUserInRetroBoard/{retroBoardId}")]
@@ -526,6 +529,141 @@ namespace Fastretro.API.Controllers
             catch (Exception)
             {
                 return BadRequest("Can't get retro board options");
+            }
+        }
+
+        [HttpPost("setRetroBoard")]
+        public async Task<IActionResult> SetRetroBoard([FromBody] RetroBoardModel model)
+        {
+            try
+            {
+                await Task.Run(() => this.retroBoardServices.SetRetroBoard(model));
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return BadRequest("Can't set retro board");
+            }
+        }
+
+        [HttpGet("GetRetroBoard/{retroBoardFirebaseDocId}")]
+        public async Task<IActionResult> GetRetroBoard(string retroBoardFirebaseDocId)
+        {
+            try
+            {
+                return Ok(await this.retroBoardServices.GetRetroBoard(retroBoardFirebaseDocId));
+            }
+            catch (Exception)
+            {
+                return BadRequest("Can't get retro board");
+            }
+        }
+
+        [HttpPost("setRetroBoardCard")]
+        public async Task<IActionResult> SetRetroBoardCard([FromBody] RetroBoardCardModel model)
+        {
+            try
+            {
+                return Ok(await this.retroBoardServices.SetRetroBoardCard(model));
+            }
+            catch (Exception)
+            {
+                return BadRequest("Can't set retro board");
+            }
+        }
+
+        [HttpGet("getRetroBoardCard/{retroBoardFirebaseDocId}")]
+        public async Task<IActionResult> GetRetroBoardCard(string retroBoardFirebaseDocId)
+        {
+            try
+            {
+                return Ok(await this.retroBoardServices.GetRetroBoardCards(retroBoardFirebaseDocId));
+            }
+            catch (Exception)
+            {
+                return BadRequest("Can't get retro board");
+            }
+        }
+
+        [HttpPost("updateRetroBoardCard")]
+        public async Task<IActionResult> UpdateRetroBoardCard([FromBody] RetroBoardCardModel model)
+        {
+            try
+            {
+                await Task.Run(() => this.retroBoardServices.UpdateRetroBoardCardtext(model));
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return BadRequest("Can't set retro board");
+            }
+        }
+
+        [HttpPost("updateRetroBoardCardFirebaseDocId")]
+        public async Task<IActionResult> UpdateRetroBoardCardFirebaseDocId([FromBody] RetroBoardCardModelAfterSaveForAddFirebaseDocId model)
+        {
+            try
+            {
+                await Task.Run(() => this.retroBoardServices.UpdateRetroBoardCardFirebaseDocId(model));
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return BadRequest("Can't set retro board");
+            }
+        }
+
+        [HttpPost("setRetroBoardCardMergetContent")]
+        public async Task<IActionResult> SetRetroBoardCardMergetContent([FromBody] RetroBoardCardMergedContentModel model)
+        {
+            try
+            {
+                return Ok(await this.retroBoardServices.SetRetroBoardCardMergetContent(model));
+            }
+            catch (Exception)
+            {
+                return BadRequest("Can't set merged retro board card");
+            }
+        }
+
+        [HttpPost("setRetroBoardCardUnmerged")]
+        public async Task<IActionResult> SetRetroBoardCardUnmerged([FromBody] RetroBoardCardUnMergedContentModel model)
+        {
+            try
+            {
+                return Ok(await this.retroBoardServices.SetRetroBoardCardUnmerged(model));
+            }
+            catch (Exception)
+            {
+                return BadRequest("Can't set merged retro board card");
+            }
+        }
+
+        [HttpPost("setRetroBoardMergedFirebaseDocId")]
+        public async Task<IActionResult> SetRetroBoardMergedFirebaseDocId([FromBody] RetroBoardCardMergedSetCardFirebaseIdModel model)
+        {
+            try
+            {
+                await Task.Run(() => this.retroBoardServices.SetRetroBoardMergedFirebaseDocId(model));
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return BadRequest("Can't set merged retro board card");
+            }
+        }
+
+        [HttpPost("removeRetroBoardCard")]
+        public async Task<IActionResult> RemoveRetroBoardCard([FromBody] RetroBoardCardRemoveModel model)
+        {
+            try
+            {
+                await Task.Run(() => this.retroBoardServices.RemoveRetroBoardCard(model));
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return BadRequest("Can't set retro board");
             }
         }
     }
