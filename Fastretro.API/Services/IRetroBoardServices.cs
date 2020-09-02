@@ -16,5 +16,6 @@ namespace Fastretro.API.Services
         Task<RetroBoardCardMergedContentGetModel> SetRetroBoardCardMergetContent(RetroBoardCardMergedContentModel model);
         Task SetRetroBoardMergedFirebaseDocId(RetroBoardCardMergedSetCardFirebaseIdModel model);
         Task<RetroBoardCardUnMergedContentGetModel> SetRetroBoardCardUnmerged(RetroBoardCardUnMergedContentModel model);
+        Task RemoveRetroBoardCard(RetroBoardCardRemoveModel model);
     }
 }
