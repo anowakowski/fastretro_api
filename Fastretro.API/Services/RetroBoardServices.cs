@@ -224,10 +224,14 @@ namespace Fastretro.API.Services
             }
 
             this.retroBoardCardRepository.UpdateRange(mergedChildCardsToMakeVisible.Select(rc => rc.RetroBoardCard));
+            
             this.mergedRetroBoardCardRepository.DeleteRange(mergedChildCardsToMakeVisible);
-            this.retroBoardCardMergetGroupRepository.Delete(findedRetroBoardCardMergedParent.RetroBoardCardMergedGroup);
-            this.retroBoardCardRepository.Delete(findedRetroBoardCardMergedParent);
+            await this.unitOfWork.CompleteAsync();
 
+            this.retroBoardCardMergetGroupRepository.Delete(findedRetroBoardCardMergedParent.RetroBoardCardMergedGroup);
+            await this.unitOfWork.CompleteAsync();
+
+            this.retroBoardCardRepository.Delete(findedRetroBoardCardMergedParent);
             await this.unitOfWork.CompleteAsync();
 
             return unMergedRetroBoardCardsModel;
@@ -267,7 +271,7 @@ namespace Fastretro.API.Services
             {
                 var mergedGroup = findedRetroBoardCardToMergeFrom.RetroBoardCardMergedGroup;
 
-                var mergedRetroBoardCardFrom = PrepareMergedRetroBoardCard(findedRetroBoardCardToMergeFrom, mergedGroup);
+                var mergedRetroBoardCardFrom = PrepareMergedRetroBoardCard(findedRetroBoardCardToMergeToCurrent, mergedGroup);
                 await this.mergedRetroBoardCardRepository.AddAsync(mergedRetroBoardCardFrom);
 
                 this.PrepareToUpdateWithMergedInfo(findedRetroBoardCardToMergeToCurrent, mergedGroup);
