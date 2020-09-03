@@ -10,7 +10,7 @@ namespace Fastretro.API.Data.Domain
         public string FirebaseUserDocId { get; set; }
         public CurrentUserInRetroBoard CurrentUserInRetroBoard { get; set; }
         public string DateOfExistingCheck { get; set; }
-        public string ChosenAvatarUrl { get; set; }
+        public string ChosenAvatarName { get; set; }
         public string DisplayName { get; set; }
     }
 }
