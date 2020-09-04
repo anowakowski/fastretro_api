@@ -46,7 +46,7 @@ namespace Fastretro.API.Services
                     UserFirebaseDocId = model.UserFirebaseDocId,
                     TeamFirebaseDocId = model.TeamFirebaseDocId,
                     WorkspaceFirebaseDocId = model.WorkspaceFirebaseDocId,
-                    ChosenAvatarUrl = model.ChosenAvatarUrl,
+                    ChosenAvatarName = model.ChosenAvatarName,
                     DisplayName = model.DisplayName
                 };
 
