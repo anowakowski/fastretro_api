@@ -10,6 +10,7 @@ namespace Fastretro.API.Models
         public string UserId { get; set; }
         public string RetroBoardId { get; set; }
         public string ChosenAvatarName { get; set; }
+        public string PhotoUrl { get; set; }
         public string DisplayName { get; set; }
     }
 }

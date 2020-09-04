@@ -47,6 +47,7 @@ namespace Fastretro.API.Services
             {
                 FirebaseUserDocId = currentUserDataModel.UserId,
                 ChosenAvatarName = currentUserDataModel.ChosenAvatarName,
+                PhotoUrl = currentUserDataModel.PhotoUrl,
                 DisplayName = currentUserDataModel.DisplayName,
                 DateOfExistingCheck = DateTime.Now.ToString()
             };
