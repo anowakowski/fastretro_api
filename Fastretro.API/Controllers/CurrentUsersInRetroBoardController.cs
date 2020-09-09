@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Fastretro.API.Data.Domain;
 using Fastretro.API.Models;
 using Fastretro.API.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -664,6 +665,19 @@ namespace Fastretro.API.Controllers
             catch (Exception)
             {
                 return BadRequest("Can't set retro board");
+            }
+        }
+
+        [HttpPost("setRetroBoardAction")]
+        public async Task<IActionResult> SetRetroBoardActionCard([FromBody] RetroBoardActionCardModel model)
+        {
+            try
+            {
+                return Ok(await this.retroBoardServices.SetRetroBoardAction(model));
+            }
+            catch (Exception)
+            {
+                return BadRequest("Can't set merged retro board card");
             }
         }
     }
