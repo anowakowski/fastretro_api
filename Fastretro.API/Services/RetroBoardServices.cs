@@ -15,6 +15,7 @@ namespace Fastretro.API.Services
         private readonly IRepository<RetroBoardCard> retroBoardCardRepository;
         private readonly IRepository<MergedRetroBoardCard> mergedRetroBoardCardRepository;
         private readonly IRepository<RetroBoardCardMergedGroup> retroBoardCardMergetGroupRepository;
+        private readonly IRepository<RetroBoardActionCard> retroBoardActionCardRepository;
         private readonly IUnitOfWork unitOfWork;
 
         public RetroBoardServices(
@@ -22,12 +23,14 @@ namespace Fastretro.API.Services
             IRepository<RetroBoardCard> retroBoardCardRepository,
             IRepository<MergedRetroBoardCard> mergedRetroBoardCardRepository,
             IRepository<RetroBoardCardMergedGroup> retroBoardCardMergetGroupRepository,
+            IRepository<RetroBoardActionCard> retroBoardActionCardRepository,
             IUnitOfWork unitOfWork)
         {
             this.retroBoardRepository = retroBoardRepository;
             this.retroBoardCardRepository = retroBoardCardRepository;
             this.mergedRetroBoardCardRepository = mergedRetroBoardCardRepository;
             this.retroBoardCardMergetGroupRepository = retroBoardCardMergetGroupRepository;
+            this.retroBoardActionCardRepository = retroBoardActionCardRepository;
             this.unitOfWork = unitOfWork;
         }
 
@@ -255,7 +258,14 @@ namespace Fastretro.API.Services
                 Text = model.Text
             };
 
-            var retroBoardActionModelToGet = new RetroBoardActionCardGetAfrerAddModel();
+            await this.retroBoardActionCardRepository.AddAsync(retroBoardActionToSave);
+            await this.unitOfWork.CompleteAsync();
+
+            var retroBoardActionModelToGet = new RetroBoardActionCardGetAfrerAddModel
+            {
+                RetroBoardApiDocId = retroBoardActionToSave.Id,
+                RetroBoardActionCardFirebaseDocId = model.RetroBoardActionCardFirebaseDocId
+            };
 
             return retroBoardActionModelToGet;
         }
