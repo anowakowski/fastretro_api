@@ -680,5 +680,19 @@ namespace Fastretro.API.Controllers
                 return BadRequest("Can't set merged retro board card");
             }
         }
+
+
+        [HttpGet("getRetroBoardActionCard/{retroBoardActionCardApiId}")]
+        public async Task<IActionResult> GetRetroBoardActionCard(string retroBoardActionCardApiId)
+        {
+            try
+            {
+                return Ok(await this.retroBoardServices.GetRetroBoardAction(retroBoardActionCardApiId));
+            }
+            catch (Exception)
+            {
+                return BadRequest("Can't get retro board");
+            }
+        }
     }
 }
