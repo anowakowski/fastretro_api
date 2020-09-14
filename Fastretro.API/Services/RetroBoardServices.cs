@@ -270,6 +270,10 @@ namespace Fastretro.API.Services
             return retroBoardActionModelToGet;
         }
 
+        public async Task<> GetRetroBoardAction(){
+
+        }
+
         private async Task MergeCardsWithMergeRules(RetroBoardCard findedRetroBoardCardToMergeFrom, RetroBoardCard findedRetroBoardCardToMergeToCurrent, RetroBoardCardMergedContentGetModel retrunModel)
         {
             if (!findedRetroBoardCardToMergeFrom.IsMerged && !findedRetroBoardCardToMergeToCurrent.IsMerged)
