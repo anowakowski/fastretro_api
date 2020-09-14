@@ -277,7 +277,7 @@ namespace Fastretro.API.Services
 
             var modelToReturn = new RetroBoardActionCardGetReturnModel {
                 RetroBoardActionCardFirebaseDocId = retroBoardActionCard.RetroBoardActionCardFirebaseDocId,
-                RetroBoardApiDocId = retroBoardActionCard.Id,
+                RetroBoardActionCardApiDocId = retroBoardActionCard.Id,
                 Text = retroBoardActionCard.Text
             };
 
