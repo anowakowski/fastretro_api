@@ -694,5 +694,18 @@ namespace Fastretro.API.Controllers
                 return BadRequest("Can't get retro board");
             }
         }
+
+        [HttpGet("getRetroBoardActionsForCard/{retroBoardCardFirebaseId}")]
+        public async Task<IActionResult> GetRetroBoardActionsForCard(string retroBoardCardFirebaseId)
+        {
+            try
+            {
+                return Ok(await this.retroBoardServices.GetRetroBoardActionsForCard(retroBoardCardFirebaseId));
+            }
+            catch (Exception)
+            {
+                return BadRequest("Can't get retro board");
+            }
+        }        
     }
 }
