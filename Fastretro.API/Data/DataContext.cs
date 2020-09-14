@@ -22,5 +22,6 @@ namespace Fastretro.API.Data
         public DbSet<RetroBoardCard> RetroBoardCards { get; set; }
         public DbSet<MergedRetroBoardCard> MergedRetroBoardCards { get; set; }
         public DbSet<RetroBoardCardMergedGroup> RetroBoardCardMergedGroups { get; set; }
+        public DbSet<RetroBoardActionCard> RetroBoardActionCards { get; set; }
     }
 }
