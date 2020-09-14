@@ -683,7 +683,7 @@ namespace Fastretro.API.Controllers
 
 
         [HttpGet("getRetroBoardActionCard/{retroBoardActionCardApiId}")]
-        public async Task<IActionResult> GetRetroBoardActionCard(string retroBoardActionCardApiId)
+        public async Task<IActionResult> GetRetroBoardActionCard(int retroBoardActionCardApiId)
         {
             try
             {
