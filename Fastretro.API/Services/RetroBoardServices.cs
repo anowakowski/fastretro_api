@@ -270,8 +270,18 @@ namespace Fastretro.API.Services
             return retroBoardActionModelToGet;
         }
 
-        public async Task<> GetRetroBoardAction(){
+        public async Task<RetroBoardActionCardGetReturnModel> GetRetroBoardAction(RetroBoardActionCardGetModel model)
+        {
+            var retroBoardActionCard = 
+                await this.retroBoardActionCardRepository.FirstOrDefaultAsync(ac => ac.Id == model.RetroBoardApiDocId);
 
+            var modelToReturn = new RetroBoardActionCardGetReturnModel {
+                RetroBoardActionCardFirebaseDocId = retroBoardActionCard.RetroBoardActionCardFirebaseDocId,
+                RetroBoardApiDocId = retroBoardActionCard.Id,
+                Text = retroBoardActionCard.Text
+            };
+
+            return modelToReturn;    
         }
 
         private async Task MergeCardsWithMergeRules(RetroBoardCard findedRetroBoardCardToMergeFrom, RetroBoardCard findedRetroBoardCardToMergeToCurrent, RetroBoardCardMergedContentGetModel retrunModel)
