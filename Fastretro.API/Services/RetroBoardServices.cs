@@ -310,7 +310,7 @@ namespace Fastretro.API.Services
             var findedRetroBoardActionCard =
                 await this.retroBoardActionCardRepository.FirstOrDefaultAsync(
                     ac => 
-                        ac.RetroBoardFirebaseDocId == model.RetroBoardActionCardFirebaseDocId &&
+                        ac.RetroBoardActionCardFirebaseDocId == model.RetroBoardActionCardFirebaseDocId &&
                         ac.Id == model.RetroBoardActionCardApiDocId);
 
             findedRetroBoardActionCard.Text = model.Text;
