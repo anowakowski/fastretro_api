@@ -713,9 +713,10 @@ namespace Fastretro.API.Controllers
         {
             try
             {
-                return Ok(await this.retroBoardServices.UpdateRetroBoardAction(model));
+                await Task.Run(() => this.retroBoardServices.UpdateRetroBoardAction(model));
+                return Ok();                
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return BadRequest("Can't set merged retro board card");
             }
