@@ -319,6 +319,19 @@ namespace Fastretro.API.Services
             await this.unitOfWork.CompleteAsync();
         }
 
+
+        public async Task RemoveRetroBoardActionCard(RetroBoardActionCardRemoveModel model)
+        {
+            var findedRetroBoardActionCard =
+                await this.retroBoardActionCardRepository.FirstOrDefaultAsync(
+                    ac => 
+                        ac.RetroBoardActionCardFirebaseDocId == model.RetroBoardActionCardFirebaseDocId &&
+                        ac.Id == model.RetroBoardActionCardApiDocId);
+
+            this.retroBoardActionCardRepository.Delete(findedRetroBoardActionCard);
+            await this.unitOfWork.CompleteAsync();
+        }
+
         private async Task MergeCardsWithMergeRules(RetroBoardCard findedRetroBoardCardToMergeFrom, RetroBoardCard findedRetroBoardCardToMergeToCurrent, RetroBoardCardMergedContentGetModel retrunModel)
         {
             if (!findedRetroBoardCardToMergeFrom.IsMerged && !findedRetroBoardCardToMergeToCurrent.IsMerged)

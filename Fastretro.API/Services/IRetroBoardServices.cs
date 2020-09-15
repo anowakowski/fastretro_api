@@ -21,5 +21,6 @@ namespace Fastretro.API.Services
         Task<RetroBoardActionCardGetReturnModel> GetRetroBoardAction(int retroBoardActionCardId);
         Task<IEnumerable<RetroBoardActionCardGetReturnModel>> GetRetroBoardActionsForCard(string retroBoardCardFirebaseId);
         Task UpdateRetroBoardAction(RetroBoardActionCardUpdateModel model);
+        Task RemoveRetroBoardActionCard(RetroBoardActionCardRemoveModel model);
     }
 }
