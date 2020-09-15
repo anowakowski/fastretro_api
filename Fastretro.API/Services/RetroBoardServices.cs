@@ -305,9 +305,13 @@ namespace Fastretro.API.Services
             return modelToReturn;
         }
 
-        public async Task UpdateRetroBoardAction(RetroBoardActionCard model)
+        public async Task UpdateRetroBoardAction(RetroBoardActionCardUpdateModel model)
         {
-            var findedRetroBoardActionCard = await this.retroBoardActionCardRepository.FirstOrDefaultAsync(ac => ac.RetroBoardFirebaseDocId == model.RetroBoardCardFirebaseDocId);
+            var findedRetroBoardActionCard =
+                await this.retroBoardActionCardRepository.FirstOrDefaultAsync(
+                    ac => 
+                        ac.RetroBoardFirebaseDocId == model.RetroBoardActionCardFirebaseDocId &&
+                        ac.Id == model.RetroBoardActionCardApiDocId);
 
             findedRetroBoardActionCard.Text = model.Text;
 

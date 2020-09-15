@@ -709,11 +709,11 @@ namespace Fastretro.API.Controllers
         }  
 
         [HttpPost("updateRetroBoardActionCard")]
-        public async Task<IActionResult> UpdateRetroBoardActionCard([FromBody] RetroBoardActionCardModel model)
+        public async Task<IActionResult> UpdateRetroBoardActionCard([FromBody] RetroBoardActionCardUpdateModel model)
         {
             try
             {
-                return Ok(await this.retroBoardServices.SetRetroBoardAction(model));
+                return Ok(await this.retroBoardServices.UpdateRetroBoardAction(model));
             }
             catch (Exception ex)
             {
