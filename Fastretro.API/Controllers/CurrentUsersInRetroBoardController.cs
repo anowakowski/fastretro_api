@@ -271,7 +271,7 @@ namespace Fastretro.API.Controllers
         }
 
         [HttpPost("removeUserInTeam")]
-        public async Task<IActionResult> RemoveUserInTeam([FromBody] UsersInTeamModel model)
+        public async Task<IActionResult> RemoveUserInTeam([FromBody] IEnumerable<UsersInTeamRemoveModel> model)
         {
             try
             {

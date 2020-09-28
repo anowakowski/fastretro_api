@@ -35,14 +35,18 @@ namespace Fastretro.API.Services
             return findedUsersInTeam.ToList();
         }
 
-        public async Task RemoveUserInTeam(UsersInTeamModel model)
+        public async Task RemoveUserInTeam(IEnumerable<UsersInTeamRemoveModel> model)
         {
-            var findedUserInTeams = await this.repository.FirstOrDefaultAsync(uit =>
-                uit.TeamFirebaseDocId == model.TeamFirebaseDocId &&
-                uit.UserFirebaseDocId == model.UserFirebaseDocId &&
-                uit.WorkspaceFirebaseDocId == model.WorkspaceFirebaseDocId);
+            foreach(var teamToLeave in model)
+            {
+                var findedUserInTeams = await this.repository.FirstOrDefaultAsync(uit =>
+                    uit.TeamFirebaseDocId == teamToLeave.TeamFirebaseDocId &&
+                    uit.UserFirebaseDocId == teamToLeave.UserFirebaseDocId &&
+                    uit.WorkspaceFirebaseDocId == teamToLeave.WorkspaceFirebaseDocId);
 
-            this.repository.Delete(findedUserInTeams);
+                this.repository.Delete(findedUserInTeams);
+                await this.unitOfWork.CompleteAsync();
+            }
         }
 
         public async Task SetUserInTeam(UsersInTeamModel model)

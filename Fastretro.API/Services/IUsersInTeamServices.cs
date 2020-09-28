@@ -8,7 +8,7 @@ namespace Fastretro.API.Services
     public interface IUsersInTeamServices
     {
         Task SetUserInTeam(UsersInTeamModel model);
-        Task RemoveUserInTeam(UsersInTeamModel model);
+        Task RemoveUserInTeam(IEnumerable<UsersInTeamRemoveModel> model);
         Task<IEnumerable<UsersInTeam>> GetUsersInTeam(UsersInTeamToGetModel model);
     }
 }
