@@ -270,6 +270,21 @@ namespace Fastretro.API.Controllers
             }
         }
 
+        [HttpPost("removeUserInTeam")]
+        public async Task<IActionResult> RemoveUserInTeam([FromBody] IEnumerable<UsersInTeamRemoveModel> model)
+        {
+            try
+            {
+                await Task.Run(() => this.usersInTeamServices.RemoveUserInTeam(model));
+
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return BadRequest("Can't unfollow that user");
+            }
+        }
+
         [HttpGet("GetUsersInTeam/{workspaceFirebaseDocId}/{teamFirebaseDocId}")]
         public async Task<IActionResult> GetUsersInTeam(string workspaceFirebaseDocId, string teamFirebaseDocId)
         {
