@@ -782,7 +782,7 @@ namespace Fastretro.API.Controllers
             }
         }
 
-        [HttpGet("GetUserSettings/{userFirebaseDocId}")]
+        [HttpGet("getUserSettings/{userFirebaseDocId}")]
         public async Task<IActionResult> GetUserSettings(string userFirebaseDocId)
         {
             try
