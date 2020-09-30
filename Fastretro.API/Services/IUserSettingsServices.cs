@@ -8,6 +8,6 @@ namespace Fastretro.API.Services
     {
         Task AddNewUserSettings(UserSettingsModel model);
         Task UpdateUserSettings(UserSettingsModel model);
-        Task<UserSettings> GetUserSettings(UserSettingsModel model);
+        Task<UserSettings> GetUserSettings(string firebaseDocId);
     }
 }

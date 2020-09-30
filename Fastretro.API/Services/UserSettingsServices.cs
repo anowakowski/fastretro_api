@@ -32,14 +32,23 @@ namespace Fastretro.API.Services
             await this.unitOfWork.CompleteAsync();
         }
 
-        public Task<UserSettings> GetUserSettings(UserSettingsModel model)
+        public async Task<UserSettings> GetUserSettings(string firebaseDocId)
         {
-            throw new NotImplementedException();
+            var userSettings = await this.repository.FirstOrDefaultAsync(us => us.UserFirebaseDocId == firebaseDocId);
+
+            return userSettings;
         }
 
-        public Task UpdateUserSettings(UserSettingsModel model)
+        public async Task UpdateUserSettings(UserSettingsModel model)
         {
-            throw new NotImplementedException();
+            var userSettings = await this.repository.FirstOrDefaultAsync(us => us.UserFirebaseDocId == model.UserFirebaseDocId);
+
+            if (userSettings != null)
+            {
+                userSettings.ChosenImageBackgroundName = model.ChosenImageBackgroundName;
+                this.repository.Update(userSettings);
+                await this.unitOfWork.CompleteAsync();
+            }
         }
     }
 }
