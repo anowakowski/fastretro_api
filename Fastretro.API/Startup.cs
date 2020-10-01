@@ -44,6 +44,7 @@ namespace Fastretro.API
             services.AddScoped<IUserNotificationServices, UserNotificationServices>();
             services.AddScoped<IUserWaitingToApproveWorkspaceJoinServices, UserWaitingToApproveWorkspaceJoinServices>();
             services.AddScoped<IRetroBoardServices, RetroBoardServices>();
+            services.AddScoped<IUserSettingsServices, UserSettingsServices>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             /*

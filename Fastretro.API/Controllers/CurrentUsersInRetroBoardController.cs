@@ -28,6 +28,7 @@ namespace Fastretro.API.Controllers
         private readonly IUserNotificationServices userNotificationServices;
         private readonly IUserWaitingToApproveWorkspaceJoinServices userWaitingToApproveWorkspaceJoinServices;
         private readonly IRetroBoardServices retroBoardServices;
+        private readonly IUserSettingsServices userSettingsServices;
 
         public CurrentUsersInRetroBoardController(
             ICurrentUsersInRetroBoardServices currentUsersInRetroBoardServices,
@@ -40,7 +41,8 @@ namespace Fastretro.API.Controllers
             IRetroBoardStatusServices retroBoardStatusServices,
             IUserNotificationServices userNotificationServices,
             IUserWaitingToApproveWorkspaceJoinServices userWaitingToApproveWorkspaceJoinServices,
-            IRetroBoardServices retroBoardServices)
+            IRetroBoardServices retroBoardServices,
+            IUserSettingsServices userSettingsServices)
         {
             this.currentUsersInRetroBoardServices = currentUsersInRetroBoardServices;
             this.freshCurrentUserInRetroBoardServices = freshCurrentUserInRetroBoardServices;
@@ -53,6 +55,7 @@ namespace Fastretro.API.Controllers
             this.userNotificationServices = userNotificationServices;
             this.userWaitingToApproveWorkspaceJoinServices = userWaitingToApproveWorkspaceJoinServices;
             this.retroBoardServices = retroBoardServices;
+            this.userSettingsServices = userSettingsServices;
         }
 
         [HttpGet("getCurrentUserInRetroBoard/{retroBoardId}")]
@@ -749,6 +752,47 @@ namespace Fastretro.API.Controllers
             {
                 return BadRequest("Can't set merged retro board card");
             }
-        }                     
+        }
+
+        [HttpPost("setUserSettings")]
+        public async Task<IActionResult> SetUserSettings([FromBody] UserSettingsModel model)
+        {
+            try
+            {
+                await Task.Run(() => this.userSettingsServices.AddNewUserSettings(model));
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Can't set merged retro board card");
+            }
+        }
+
+        [HttpPost("updateUserSettings")]
+        public async Task<IActionResult> UpdateUserSettings([FromBody] UserSettingsModel model)
+        {
+            try
+            {
+                await Task.Run(() => this.userSettingsServices.UpdateUserSettings(model));
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Can't set merged retro board card");
+            }
+        }
+
+        [HttpGet("getUserSettings/{userFirebaseDocId}")]
+        public async Task<IActionResult> GetUserSettings(string userFirebaseDocId)
+        {
+            try
+            {
+                return Ok(await this.userSettingsServices.GetUserSettings(userFirebaseDocId));
+            }
+            catch (Exception)
+            {
+                return BadRequest("Can't get retro board");
+            }
+        }
     }
 }
