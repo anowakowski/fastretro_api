@@ -1,13 +1,3 @@
-/****** Script for SelectTopNRows command from SSMS  ******/
-SELECT TOP (1000) [Id]
-      ,[RetroBoardId]
-  FROM [anowakowski_retrodb].[anowakowski_retrousr].[CurrentUserInRetroBoards]
-
-  
-
-
-  select * from FirebaseUsersData
-
   truncate table FirebaseUsersData
   delete from [anowakowski_retrodb].[anowakowski_retrousr].[CurrentUserInRetroBoards]
   truncate table CurrentUserVotes
@@ -19,11 +9,11 @@ SELECT TOP (1000) [Id]
   truncate table RetroBoards
   truncate table RetroBoardOptions
   truncate table RetroBoardStatuses
-
-  truncate table RetroBoardOptions
-  truncate table RetroBoardOptions
-  truncate table RetroBoardOptions
-
-  RetroBoardActionCards
-
+  delete from userWaitingToApproveWorkspaceJoins
+  truncate table UserNotificationWorkspaceWithRequiredAccessResponses
+  truncate table UserNotificationWorkspaceWithRequiredAccesses
+  delete from userNotifications
+  truncate table UserSettings
+  truncate table UsersInActions
+  truncate table UsersInTeams
 
