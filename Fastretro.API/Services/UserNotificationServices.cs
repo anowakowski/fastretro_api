@@ -55,7 +55,7 @@ namespace Fastretro.API.Services
         public async Task SetUserNotification(UserNotificationModel model)
         {
             var currentDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-            UserNotification userNotification = PrepareUserNotification(currentDate, model.UserNotificationFirebaseDocId);
+            UserNotification userNotification = PrepareUserNotification(currentDate, model.UserNotificationFirebaseDocId, "WorkspaceWithRequiredAccess");
 
             await this.userNotificatonRepository.AddAsync(userNotification);
 
@@ -97,11 +97,11 @@ namespace Fastretro.API.Services
             };
         }
 
-        private static UserNotification PrepareUserNotification(string currentDate, string userNotificationFirebaseDocId)
+        private static UserNotification PrepareUserNotification(string currentDate, string userNotificationFirebaseDocId, string notificationType)
         {
             return new UserNotification
             {
-                NotyficationType = "WorkspaceWithRequiredAccess",
+                NotyficationType = notificationType,
                 CreatonDate = currentDate,
                 IsRead = false,
                 UserNotificationFirebaseDocId = userNotificationFirebaseDocId
@@ -167,6 +167,15 @@ namespace Fastretro.API.Services
             var currentDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
 
             await SetUserNotificationWorkspaceWithRequiredAccessResponse(model, findedUserNotificationWorkspaceWithRequiredAccess, currentDate);
+        }
+
+        public async Task SetNewUserNotification(UserNotificationNewUserModel model)
+        {
+            var currentDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+            UserNotification userNotification = PrepareUserNotification(currentDate, model.UserNotificationFirebaseDocId, "NewUserNotification");
+
+            await this.userNotificatonRepository.AddAsync(userNotification);
+            await this.unitOfWork.CompleteAsync();
         }
 
         private async Task SetUserNotificationWorkspaceWithRequiredAccessResponse(UserNotificationForUserWaitingToApproveWorkspaceJoinModel model, UserNotificationWorkspaceWithRequiredAccess findedUserNotificationWorkspaceWithRequiredAccess, string currentDate)
