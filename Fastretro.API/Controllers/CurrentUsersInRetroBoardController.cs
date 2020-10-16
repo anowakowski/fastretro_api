@@ -435,6 +435,20 @@ namespace Fastretro.API.Controllers
             }
         }
 
+        [HttpPost("setNewUserNotification")]
+        public async Task<IActionResult> SetNewUserNotification([FromBody] UserNotificationNewUserModel model)
+        {
+            try
+            {
+                await Task.Run(() => this.userNotificationServices.SetNewUserNotification(model));
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return BadRequest("Can't set new notification");
+            }
+        }
+
         [HttpPost("setApproveUserWantToJoinToWorkspace")]
         public async Task<IActionResult> SetApproveUserWantToJoinToWorkspace([FromBody] UserWaitingToApproveWorkspaceJoinModel model)
         {

@@ -10,5 +10,6 @@ namespace Fastretro.API.Models
     {
         public IEnumerable<UserNotificationWorkspaceWithRequiredAccess> UserNotificationWorkspaceWithRequiredAccesses { get; set; }
         public IEnumerable<UserNotificationWorkspaceWithRequiredAccessResponse> UserNotificationWorkspaceWithRequiredAccessResponses { get; set; }
+        public UserNotification NewUserNotification { get; set; }
     }
 }
