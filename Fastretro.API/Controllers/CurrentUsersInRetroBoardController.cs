@@ -477,6 +477,20 @@ namespace Fastretro.API.Controllers
             }
         }
 
+        [HttpPost("setUserNotificationNewUserAsRead")]
+        public async Task<IActionResult> SetUserNotificationNewUserAsRead([FromBody] UserNotificationAsReadForNewUserModel model)
+        {
+            try
+            {
+                await Task.Run(() => this.userNotificationServices.SetUserNotificationNewUserAsRead(model));
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return BadRequest("Can't unfollow that user");
+            }
+        }
+
         [HttpPost("setUserNotificationAsReadForWorkspaceWithRequiredAccessResponse")]
         public async Task<IActionResult> SetUserNotificationAsReadForWorkspaceWithRequiredAccessResponse([FromBody] UserNotificationAsReadForWorkspaceResonseAccessModel model)
         {

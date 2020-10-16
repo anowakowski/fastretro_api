@@ -74,44 +74,6 @@ namespace Fastretro.API.Services
             await this.unitOfWork.CompleteAsync();
         }
 
-        private static UserNotificationWorkspaceWithRequiredAccess PrepareUserNotificationWorkspaceWithRequiredAccess(UserNotificationModel model, UserNotification userNotification, UserWaitingToApproveWorkspaceJoin userWaitingToApproveWorkspaceJoin)
-        {
-            return new UserNotificationWorkspaceWithRequiredAccess
-            {
-                UserWantToJoinFirebaseId = model.UserWantToJoinFirebaseId,
-                CreatorUserFirebaseId = model.CreatorUserFirebaseId,
-                WorkspceWithRequiredAccessFirebaseId = model.WorkspceWithRequiredAccessFirebaseId,
-                WorkspaceName = model.WorkspaceName,
-                DisplayName = model.DisplayName,
-                Email = model.Email,
-                UserNotification = userNotification,
-                UserWaitingToApproveWorkspaceJoin = userWaitingToApproveWorkspaceJoin
-            };
-        }
-
-        private static UserWaitingToApproveWorkspaceJoin PrepareUserWaitingToApproveWorkspaceJoin(UserNotificationModel model, string currentDate)
-        {
-            return new UserWaitingToApproveWorkspaceJoin
-            {
-                LastModifyDate = currentDate,
-                CreatorUserFirebaseId = model.CreatorUserFirebaseId,
-                UserWantToJoinFirebaseId = model.UserWantToJoinFirebaseId,
-                WorkspceWithRequiredAccessFirebaseId = model.WorkspceWithRequiredAccessFirebaseId,
-                RequestIsApprove = false
-            };
-        }
-
-        private static UserNotification PrepareUserNotification(string currentDate, string userNotificationFirebaseDocId, string notificationType)
-        {
-            return new UserNotification
-            {
-                NotyficationType = notificationType,
-                CreatonDate = currentDate,
-                IsRead = false,
-                UserNotificationFirebaseDocId = userNotificationFirebaseDocId
-            };
-        }
-
         public async Task SetUserNotificationAsRead(UserNotificationAsReadModel model)
         {
             var userNotificationWorkspaceWithRequiredAccess =
@@ -129,6 +91,19 @@ namespace Fastretro.API.Services
 
                 this.UserNotificationWorkspaceWithRequiredAccessRepository.Update(userNotificationWorkspaceWithRequiredAccess);
 
+                await this.unitOfWork.CompleteAsync();
+            }
+        }
+
+        public async Task SetUserNotificationNewUserAsRead(UserNotificationAsReadForNewUserModel model)
+        {
+            var userNotification = await this.userNotificatonRepository.FirstOrDefaultAsync(un => un.Id == model.UserNotificationId);
+
+            if (userNotification != null)
+            {
+                userNotification.IsRead = true;
+
+                this.userNotificatonRepository.Update(userNotification);
                 await this.unitOfWork.CompleteAsync();
             }
         }
@@ -207,6 +182,44 @@ namespace Fastretro.API.Services
             await this.userNotificationWorkspaceWithRequiredAccessResponseRepository.AddAsync(userNotificationWorkspaceWithRequiredAccessResponse);
 
             await this.unitOfWork.CompleteAsync();
+        }
+
+        private static UserNotificationWorkspaceWithRequiredAccess PrepareUserNotificationWorkspaceWithRequiredAccess(UserNotificationModel model, UserNotification userNotification, UserWaitingToApproveWorkspaceJoin userWaitingToApproveWorkspaceJoin)
+        {
+            return new UserNotificationWorkspaceWithRequiredAccess
+            {
+                UserWantToJoinFirebaseId = model.UserWantToJoinFirebaseId,
+                CreatorUserFirebaseId = model.CreatorUserFirebaseId,
+                WorkspceWithRequiredAccessFirebaseId = model.WorkspceWithRequiredAccessFirebaseId,
+                WorkspaceName = model.WorkspaceName,
+                DisplayName = model.DisplayName,
+                Email = model.Email,
+                UserNotification = userNotification,
+                UserWaitingToApproveWorkspaceJoin = userWaitingToApproveWorkspaceJoin
+            };
+        }
+
+        private static UserWaitingToApproveWorkspaceJoin PrepareUserWaitingToApproveWorkspaceJoin(UserNotificationModel model, string currentDate)
+        {
+            return new UserWaitingToApproveWorkspaceJoin
+            {
+                LastModifyDate = currentDate,
+                CreatorUserFirebaseId = model.CreatorUserFirebaseId,
+                UserWantToJoinFirebaseId = model.UserWantToJoinFirebaseId,
+                WorkspceWithRequiredAccessFirebaseId = model.WorkspceWithRequiredAccessFirebaseId,
+                RequestIsApprove = false
+            };
+        }
+
+        private static UserNotification PrepareUserNotification(string currentDate, string userNotificationFirebaseDocId, string notificationType)
+        {
+            return new UserNotification
+            {
+                NotyficationType = notificationType,
+                CreatonDate = currentDate,
+                IsRead = false,
+                UserNotificationFirebaseDocId = userNotificationFirebaseDocId
+            };
         }
     }
 }
